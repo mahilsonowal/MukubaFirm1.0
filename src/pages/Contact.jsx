@@ -21,6 +21,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import SendIcon from '@mui/icons-material/Send';
 import emailjs from 'emailjs-com';
+import { databases } from '../appwrite/config';
+import { ID } from 'appwrite';
 
 const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
 const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
@@ -90,7 +92,25 @@ const Contact = () => {
       },
       USER_ID
     )
-    .then((result) => {
+    .then(async (result) => {
+      // Store in Appwrite
+      try {
+        await databases.createDocument(
+          import.meta.env.VITE_DATABASE_ID,
+          import.meta.env.VITE_CONTACT_COLLECTION_ID,
+          ID.unique(),
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            subject: formData.subject,
+            message: formData.message,
+          }
+        );
+      } catch (err) {
+        // Optionally handle Appwrite error
+        console.error('Appwrite error:', err);
+      }
       setSuccess('Message sent successfully!');
       setFormData({
         name: '',
