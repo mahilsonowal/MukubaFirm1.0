@@ -67,12 +67,7 @@ const BlessingsNtesa = () => {
               <img
                 src="/assets/team/blessings.jpg"
                 alt="Blessings Ntesa"
-                style={{
-                  width: '100%',
-                  height: '300px',
-                  objectFit: 'cover',
-                  borderRadius: '8px'
-                }}
+
               />
             </ProfileImage>
             <Typography 

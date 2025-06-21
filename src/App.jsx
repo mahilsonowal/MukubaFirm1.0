@@ -46,6 +46,7 @@ import UserDashboard from './pages/UserDashboard';
 import { PrivateRoutes } from './components/PrivateRoutes';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import Governance from './pages/About/Governance';
 
 // ScrollToTop component
 const ScrollToTop = () => {
@@ -94,6 +95,7 @@ function App() {
               <Route path="/about/team/brad-elledge" element={<BradElledge />} />
               <Route path="/about/team/blessings-ntesa" element={<BlessingsNtesa />} />
               <Route path="/about/staff/thomson-silomba" element={<ThomsonSilomba />} />
+              <Route path="/about/governance" element={<Governance />} />
               <Route element={<PrivateRoutes />}>
                 <Route path="/reports/annual-reports" element={<AnnualReports />} />
                 <Route path="/reports/strategic-plans" element={<StrategicPlans />} />

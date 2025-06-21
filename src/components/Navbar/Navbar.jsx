@@ -27,6 +27,7 @@ const menuItems = [
       { name: "Institutional Insights", link: "/about/institutional-insights" },
       { name: "Team Management", link: "/about/team-management" },
       { name: "Staff Management", link: "/about/staff-management" },
+      { name: "Governance", link: "/about/governance" },
       { name: "Internship", link: "/about/internship" },
     ],
   },

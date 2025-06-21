@@ -1,12 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, IconButton } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, IconButton, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import EmailIcon from '@mui/icons-material/Email';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import BusinessIcon from '@mui/icons-material/Business';
+import GroupIcon from '@mui/icons-material/Group';
 
 const ExecutiveCard = styled(Paper)(({ theme }) => ({
+  height: '100%',
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  overflow: 'hidden',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'scale(1.02)',
+    boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
+  },
+}));
+
+const BoardCard = styled(Paper)(({ theme }) => ({
   height: '100%',
   width: '100%',
   display: 'flex',
@@ -49,9 +64,9 @@ const TeamManagement = () => {
   const executives = [
     {
       id: 'clement-malala',
-      name: 'Clement Malala',
-      title: 'Director/Chief Executive Officer (CEO)',
-      description: 'Leading strategic initiatives and overseeing company operations with over 2 years of experience in economic consulting.',
+      name: 'Mr. Clement Malala',
+      title: 'Chief Executive Officer (CEO)',
+      description: 'Oversees strategic vision, partnerships, operations, and represents the firm on the Board.',
       image: '/assets/team/malala.jpg',
       socials: {
         linkedin: '#',
@@ -59,34 +74,105 @@ const TeamManagement = () => {
       }
     },
     {
-      id: 'brad-elledge',
-      name: 'Brad Elledge',
-      title: 'Chief Business Development Officer',
-      description: 'Driving business growth and fostering key partnerships with expertise in operational improvements and growth strategies.',
-      image: '/assets/team/brad.jpg',
+      id: 'coo',
+      name: 'Chief Operating Officer (COO)',
+      title: 'COO',
+      description: 'Manages daily operations, staff coordination, and process efficiency.',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
       socials: {
         linkedin: '#',
-        email: 'brad@mukuba.com'
-      }
+        email: 'coo@mukuba.com'
+      },
+      placeholder: true
+    },
+    {
+      id: 'cfo',
+      name: 'Chief Financial Officer (CFO)',
+      title: 'CFO',
+      description: 'Leads financial planning, resource allocation, reporting, and compliance.',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
+      socials: {
+        linkedin: '#',
+        email: 'cfo@mukuba.com'
+      },
+      placeholder: true
     },
     {
       id: 'blessings-ntesa',
-      name: 'Blessings Ntesa',
-      title: 'Managing Director',
-      description: 'Economics professional specializing in risk management, investment analysis, and social economic sustainability with expertise in resource optimization and strategic planning.',
+      name: 'Mr. Ntesa Blessings',
+      title: 'Chief Research Officer (CRO)',
+      description: 'Heads research initiatives, methodologies, quality control, and publications.',
       image: '/assets/team/blessings.jpg',
       socials: {
         linkedin: '#',
         email: 'blessings@mukuba.com'
       }
+    },
+    {
+      id: 'cmbdo',
+      name: 'Chief Marketing & Business Development Officer (CMBDO)',
+      title: 'CMBDO',
+      description: 'Develops client relationships, branding strategy, and growth channels.',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
+      socials: {
+        linkedin: '#',
+        email: 'cmbdo@mukuba.com'
+      },
+      placeholder: true
+    }
+  ];
+
+  const boardMembers = [
+    {
+      id: 'chairperson',
+      name: 'Chairperson',
+      title: '[To Be Appointed]',
+      description: 'Board Chairperson position',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
+      email: 'chairperson@mukuba.com',
+      placeholder: true
+    },
+    {
+      id: 'clement-malala-board',
+      name: 'Mr. Clement Malala',
+      title: 'Executive Director',
+      description: 'Current position and organization details',
+      image: '/assets/team/malala.jpg',
+      email: 'clement@mukuba.com'
+    },
+    {
+      id: 'brad-elledge-board',
+      name: 'Mr. Brad Elledge',
+      title: 'Independent Director',
+      description: 'Current position and organization details',
+      image: '/assets/team/brad.jpg',
+      email: 'brad@mukuba.com'
+    },
+    {
+      id: 'legal-director',
+      name: 'Non-Executive Director (Legal)',
+      title: '[Vacant/To Be Filled]',
+      description: 'Legal expertise position on the board',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
+      email: 'legal@mukuba.com',
+      placeholder: true
+    },
+    {
+      id: 'finance-director',
+      name: 'Non-Executive Director (Finance)',
+      title: '[Vacant/To Be Filled]',
+      description: 'Financial expertise position on the board',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
+      email: 'finance@mukuba.com',
+      placeholder: true
     }
   ];
 
   return (
-    <Box sx={{ py: { xs: 6, md: 5 }, bgcolor: '#f5f5f5' }}>
-      {/* Hero Section */}
+    <Box sx={{ py: { xs: 6, md: 8 }, bgcolor: '#f5f5f5' }}>
       <Container maxWidth="lg">
-        <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 }, py: 6, px: 2, borderRadius: 1 }}>
+        {/* Hero Section */}
+        <Box sx={{ textAlign: 'center', mb: { xs: 6, md: 8 }, py: 6, px: 2, borderRadius: 1 }}>
           <Typography 
             variant="h3" 
             component="h1" 
@@ -97,7 +183,7 @@ const TeamManagement = () => {
               fontSize: { xs: '1.75rem', sm: '2rem', md: '2.5rem' }
             }}
           >
-            Executive Management Team
+            Team Management
           </Typography>
           <Typography 
             variant="h5" 
@@ -110,60 +196,80 @@ const TeamManagement = () => {
               mx: 'auto'
             }}
           >
-            Meet our experienced leadership team driving innovation and excellence in economic consulting.
+            Meet our leadership team and board members driving excellence in economic consulting.
           </Typography>
         </Box>
 
-        {/* Team Grid */}
-        <Grid 
-          container 
-          display="flex" 
-          justifyContent="center" 
-          alignItems="stretch" 
-          spacing={2}
-          sx={{ maxWidth: '1000px', mx: 'auto' }}
-        >
-          {executives.map((executive) => (
-            <Grid 
-              key={executive.id}
-              sx={{ 
-                flexBasis: { xs: '100%', sm: '33.33%' },
-                maxWidth: { xs: '100%', sm: '33.33%' },
-                display: 'flex',
-                height: 'auto'
-              }}
-            >
-              <Link 
-                to={`/about/team/${executive.id}`} 
-                style={{ 
-                  textDecoration: 'none', 
-                  display: 'flex',
-                  width: '100%'
+        {/* Executive Leadership Section */}
+        <Box sx={{ mb: { xs: 6, md: 8 } }}>
+          <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+              <BusinessIcon sx={{ color: '#C9AA74', mr: 1, fontSize: '2rem' }} />
+              <Typography 
+                variant="h4" 
+                sx={{ 
+                  fontWeight: 700,
+                  color: '#1B2441',
+                  fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
                 }}
               >
-                <ExecutiveCard elevation={2}>
+                Executive Leadership
+              </Typography>
+            </Box>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                color: 'text.secondary',
+                maxWidth: '600px',
+                mx: 'auto'
+              }}
+            >
+              Our executive team leads strategic initiatives and drives organizational excellence.
+            </Typography>
+          </Box>
+
+          <Grid 
+            container 
+            spacing={3}
+            sx={{ maxWidth: '1200px', mx: 'auto' }}
+          >
+            {executives.map((executive) => (
+              <Grid 
+                key={executive.id}
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                sx={{ display: 'flex' }}
+              >
+                <ExecutiveCard elevation={2} sx={{ 
+                  width: '100%', 
+                  maxWidth: '350px',
+                  minWidth: '300px',
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  mx: 'auto'
+                }}>
                   <ImageContainer sx={{
-                    height: '300px',
+                    height: '280px',
                     overflow: 'hidden',
+                    flexShrink: 0,
                     '& img': {
                       width: '100%',
                       height: '100%',
                       objectFit: 'cover',
-                      objectPosition: 'top',
+                      objectPosition: 'top center',
                       transition: 'transform 0.5s ease',
                     },
                   }}>
                     <img
                       src={executive.image}
                       alt={executive.name}
-                      style={{
-                        objectPosition: executive.id === 'clement-malala' ? 'top' : 'center'
-                      }}
                     />
                   </ImageContainer>
 
                   <Box sx={{ 
-                    p: 2, 
+                    p: 3, 
                     flexGrow: 1, 
                     display: 'flex', 
                     flexDirection: 'column',
@@ -175,10 +281,8 @@ const TeamManagement = () => {
                         fontWeight: 600,
                         color: '#1B2441',
                         mb: 0.5,
-                        fontSize: '1.1rem',
-                        '&:hover': {
-                          color: '#C9AA74',
-                        }
+                        fontSize: '1rem',
+                        lineHeight: 1.3
                       }}
                     >
                       {executive.name}
@@ -187,8 +291,8 @@ const TeamManagement = () => {
                       sx={{ 
                         color: '#C9AA74',
                         fontWeight: 600,
-                        mb: 1,
-                        fontSize: '0.85rem'
+                        mb: 1.5,
+                        fontSize: '0.9rem'
                       }}
                     >
                       {executive.title}
@@ -196,7 +300,7 @@ const TeamManagement = () => {
                     <Typography 
                       sx={{ 
                         color: 'text.secondary',
-                        mb: 1.5,
+                        mb: 2,
                         fontSize: '0.85rem',
                         lineHeight: 1.5,
                         flexGrow: 1
@@ -205,34 +309,196 @@ const TeamManagement = () => {
                       {executive.description}
                     </Typography>
 
-                    <Box sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between', 
-                      alignItems: 'center',
-                      mt: 'auto'
-                    }}>
-                      <Box sx={{ display: 'flex', gap: 0.5 }}>
+                    {!executive.placeholder && (
+                      <Box sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        mt: 'auto'
+                      }}>
+                        <Box sx={{ display: 'flex', gap: 0.5 }}>
+                          <IconButton 
+                            size="small"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              window.open(executive.socials.linkedin, '_blank');
+                            }}
+                            sx={{ 
+                              color: 'text.secondary',
+                              '&:hover': { color: '#C9AA74' },
+                              padding: '4px'
+                            }}
+                          >
+                            <LinkedInIcon sx={{ fontSize: '1rem' }} />
+                          </IconButton>
+                          <IconButton 
+                            size="small"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              window.location.href = `mailto:${executive.socials.email}`;
+                            }}
+                            sx={{ 
+                              color: 'text.secondary',
+                              '&:hover': { color: '#C9AA74' },
+                              padding: '4px'
+                            }}
+                          >
+                            <EmailIcon sx={{ fontSize: '1rem' }} />
+                          </IconButton>
+                        </Box>
+                        {executive.id === 'clement-malala' || executive.id === 'blessings-ntesa' ? (
+                          <Link 
+                            to={`/about/team/${executive.id}`} 
+                            style={{ textDecoration: 'none' }}
+                          >
+                            <Typography 
+                              sx={{ 
+                                color: '#C9AA74',
+                                fontSize: '0.8rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.5
+                              }}
+                            >
+                              View Profile <ArrowForwardIcon sx={{ fontSize: '0.9rem' }} />
+                            </Typography>
+                          </Link>
+                        ) : null}
+                      </Box>
+                    )}
+                  </Box>
+                </ExecutiveCard>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+
+        <Divider sx={{ my: 6, borderColor: '#C9AA74', opacity: 0.3 }} />
+
+        {/* The Board Section */}
+        <Box>
+          <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+              <GroupIcon sx={{ color: '#C9AA74', mr: 1, fontSize: '2rem' }} />
+              <Typography 
+                variant="h4" 
+                sx={{ 
+                  fontWeight: 700,
+                  color: '#1B2441',
+                  fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
+                }}
+              >
+                The Board
+              </Typography>
+            </Box>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                color: 'text.secondary',
+                maxWidth: '600px',
+                mx: 'auto'
+              }}
+            >
+              Our board of directors provides strategic oversight and governance.
+            </Typography>
+          </Box>
+
+          <Grid 
+            container 
+            spacing={3}
+            sx={{ maxWidth: '1200px', mx: 'auto' }}
+          >
+            {boardMembers.map((member, index) => (
+              <Grid 
+                key={member.id}
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                sx={{ display: 'flex' }}
+              >
+                <BoardCard elevation={2} sx={{ 
+                  width: '100%', 
+                  maxWidth: '350px',
+                  minWidth: '300px',
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  mx: 'auto'
+                }}>
+                  <ImageContainer sx={{
+                    height: '280px',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                    '& img': {
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'top center',
+                      transition: 'transform 0.5s ease',
+                    },
+                  }}>
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                    />
+                  </ImageContainer>
+
+                  <Box sx={{ 
+                    p: 3, 
+                    flexGrow: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    minHeight: '200px'
+                  }}>
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        fontWeight: 600,
+                        color: '#1B2441',
+                        mb: 0.5,
+                        fontSize: '1rem',
+                        lineHeight: 1.3
+                      }}
+                    >
+                      {index + 1}. {member.name}
+                    </Typography>
+                    <Typography 
+                      sx={{ 
+                        color: '#C9AA74',
+                        fontWeight: 600,
+                        mb: 1.5,
+                        fontSize: '0.9rem'
+                      }}
+                    >
+                      {member.title}
+                    </Typography>
+                    <Typography 
+                      sx={{ 
+                        color: 'text.secondary',
+                        mb: 2,
+                        fontSize: '0.85rem',
+                        lineHeight: 1.5,
+                        flexGrow: 1
+                      }}
+                    >
+                      {member.description}
+                    </Typography>
+
+                    {!member.placeholder && (
+                      <Box sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between', 
+                        alignItems: 'center',
+                        mt: 'auto'
+                      }}>
                         <IconButton 
                           size="small"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            window.open(executive.socials.linkedin, '_blank');
-                          }}
-                          sx={{ 
-                            color: 'text.secondary',
-                            '&:hover': { color: '#C9AA74' },
-                            padding: '4px'
-                          }}
-                        >
-                          <LinkedInIcon sx={{ fontSize: '1rem' }} />
-                        </IconButton>
-                        <IconButton 
-                          size="small"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            window.location.href = `mailto:${executive.socials.email}`;
+                            window.location.href = `mailto:${member.email}`;
                           }}
                           sx={{ 
                             color: 'text.secondary',
@@ -242,25 +508,32 @@ const TeamManagement = () => {
                         >
                           <EmailIcon sx={{ fontSize: '1rem' }} />
                         </IconButton>
+                        {(member.id === 'clement-malala-board' || member.id === 'brad-elledge-board') && (
+                          <Link 
+                            to={`/about/team/${member.id.replace('-board', '')}`} 
+                            style={{ textDecoration: 'none' }}
+                          >
+                            <Typography 
+                              sx={{ 
+                                color: '#C9AA74',
+                                fontSize: '0.8rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 0.5
+                              }}
+                            >
+                              View Profile <ArrowForwardIcon sx={{ fontSize: '0.9rem' }} />
+                            </Typography>
+                          </Link>
+                        )}
                       </Box>
-                      <Typography 
-                        sx={{ 
-                          color: '#C9AA74',
-                          fontSize: '0.8rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 0.5
-                        }}
-                      >
-                        View Profile <ArrowForwardIcon sx={{ fontSize: '0.9rem' }} />
-                      </Typography>
-                    </Box>
+                    )}
                   </Box>
-                </ExecutiveCard>
-              </Link>
-            </Grid>
-          ))}
-        </Grid>
+                </BoardCard>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Container>
     </Box>
   );
