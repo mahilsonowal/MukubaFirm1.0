@@ -244,6 +244,83 @@ const Governance = () => {
 
         <Divider sx={{ my: 6, borderColor: '#C9AA74', opacity: 0.3 }} />
 
+        {/* Board Sub-Committees Section */}
+        <Box sx={{ mb: { xs: 6, md: 8 } }}>
+          <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 } }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
+              <GroupIcon sx={{ color: '#C9AA74', mr: 1, fontSize: '2rem' }} />
+              <Typography 
+                variant="h4" 
+                sx={{ 
+                  fontWeight: 700,
+                  color: '#1B2441',
+                  fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
+                }}
+              >
+                Board Sub-Committees
+              </Typography>
+            </Box>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                color: 'text.secondary',
+                maxWidth: '800px',
+                mx: 'auto',
+                textAlign: 'left',
+                mb: 2,
+              }}
+            >
+              Mukuba Economic Research and Consulting Firm is governed by a Board of Directors composed of individuals of high integrity and professional standing, representing diverse sectors including government, private enterprise, academia, civil society, and professional bodies. The Board is responsible for providing strategic oversight, ensuring good governance, and guiding the firm toward its mission and long-term goals.
+            </Typography>
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                color: 'text.secondary',
+                maxWidth: '800px',
+                mx: 'auto',
+                textAlign: 'left',
+              }}
+            >
+              To strengthen governance and support effective decision-making, the Board operates through the following three Sub-Committees:
+            </Typography>
+          </Box>
+
+          <Box sx={{ maxWidth: '900px', mx: 'auto' }}>
+            <Box sx={{ mb: 4 }}>
+                <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600, color: '#1B2441' }}>
+                  1. Audit and Risk Committee
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                  This committee provides oversight and expert advice on matters related to internal and external audits, risk management, and internal controls. It ensures that the firm maintains high standards of accountability, transparency, and compliance. The committee makes appropriate recommendations to the Board regarding risk mitigation and audit outcomes.
+                </Typography>
+            </Box>
+            
+            <Divider sx={{ my: 2 }}/>
+
+            <Box sx={{ mb: 4 }}>
+                <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600, color: '#1B2441' }}>
+                  2. Finance and Administration Committee
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                  This committee oversees the firm's financial planning, budgeting, resource allocation, and administrative operations, including human resource management. It provides guidance on financial sustainability and operational efficiency. The committee reviews financial reports, staff policies, and administrative frameworks, making recommendations to the Board as needed.
+                </Typography>
+            </Box>
+
+            <Divider sx={{ my: 2 }}/>
+
+            <Box>
+                <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600, color: '#1B2441' }}>
+                  3. Technical and Research Committee
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                  This committee provides strategic input and oversight on the firm's research agenda, policy analysis, consulting projects, and knowledge dissemination activities. It supports the development of rigorous methodologies, promotes evidence-based outputs, and ensures the relevance and quality of research and consulting deliverables. It also advises on capacity-building and stakeholder engagement initiatives.
+                </Typography>
+            </Box>
+          </Box>
+        </Box>
+
+        <Divider sx={{ my: 6, borderColor: '#C9AA74', opacity: 0.3 }} />
+
         {/* Governance Policies Section */}
         <Box sx={{ mb: { xs: 6, md: 8 } }}>
           <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 } }}>
