@@ -11,13 +11,17 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  CircularProgress,
+  Alert
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SchoolIcon from '@mui/icons-material/School';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { storage, databases } from '../../appwrite/config';
+import { ID } from 'appwrite';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -53,10 +57,50 @@ const Internship = () => {
     email: '',
     resume: null
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    if (!formData.resume) {
+      setError("Please upload your resume.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      // 1. Upload the resume
+      const fileResponse = await storage.createFile(
+        '68545f180007a9aee1c1',
+        ID.unique(),
+        formData.resume
+      );
+
+      // 2. Create a document in the database
+      const applicationData = {
+        name: formData.name,
+        email: formData.email,
+        resumeId: fileResponse.$id,
+      };
+
+      await databases.createDocument(
+        import.meta.env.VITE_DATABASE_ID,
+        import.meta.env.VITE_INTERNSHIP_COLLECTION_ID,
+        ID.unique(),
+        applicationData
+      );
+      
+      setSuccess(true);
+      setFormData({ name: '', email: '', resume: null });
+    } catch (error) {
+      console.error('Application submission failed:', error);
+      setError('Failed to submit application. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFileChange = (e) => {
@@ -64,6 +108,7 @@ const Internship = () => {
       ...formData,
       resume: e.target.files[0]
     });
+    setError(null);
   };
 
   return (
@@ -436,6 +481,8 @@ const Internship = () => {
           </Typography>
           <Paper elevation={2} sx={{ p: 4 }}>
             <form onSubmit={handleSubmit}>
+              {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+              {success && <Alert severity="success" sx={{ mb: 2 }}>Application submitted successfully!</Alert>}
               <TextField
                 fullWidth
                 label="Name"
@@ -444,6 +491,7 @@ const Internship = () => {
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
                 sx={{ mb: 3 }}
+                disabled={loading}
               />
               <TextField
                 fullWidth
@@ -454,6 +502,7 @@ const Internship = () => {
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
                 sx={{ mb: 3 }}
+                disabled={loading}
               />
               <Box sx={{ mb: 3 }}>
                 <Typography 
@@ -469,6 +518,7 @@ const Internship = () => {
                   variant="outlined"
                   component="label"
                   startIcon={<UploadFileIcon />}
+                  disabled={loading}
                   sx={{ 
                     width: '100%',
                     py: 1.5,
@@ -486,22 +536,28 @@ const Internship = () => {
                     onChange={handleFileChange}
                     accept=".pdf,.doc,.docx"
                     required
+                    disabled={loading}
                   />
                 </Button>
               </Box>
+              <Typography sx={{ color: 'warning.main', mb: 2, fontWeight: 500, textAlign: 'center' }}>
+                <b>Note:</b> The name of your resume file matters a lot as it will be used to define your application resume. Please use a clear and identifiable filename (e.g., <i>Firstname_Lastname_Resume.pdf</i>).
+              </Typography>
               <Button
                 type="submit"
                 variant="contained"
                 fullWidth
+                disabled={loading}
                 sx={{ 
                   bgcolor: '#0F1E56',
                   py: 1.5,
                   '&:hover': {
                     bgcolor: '#0a1640'
-                  }
+                  },
+                  position: 'relative'
                 }}
               >
-                Submit Application
+                {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Submit Application'}
               </Button>
             </form>
           </Paper>

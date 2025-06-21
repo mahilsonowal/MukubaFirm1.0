@@ -135,77 +135,119 @@ const FeaturedProgram = () => {
         {/* Black Box Section */}
         <Box
           sx={{
+            position: 'relative',
             bgcolor: '#000',
             color: 'white',
             p: { xs: 3, md: 4 },
             borderRadius: 2,
             mt: 4,
             maxWidth: '800px',
-            mx: 'auto'
+            mx: 'auto',
+            overflow: 'hidden',
+            minHeight: { xs: 350, md: 400 },
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
           }}
         >
-          <Typography 
-            variant="h4" 
-            component="h3" 
-            sx={{ 
-              fontWeight: 700,
-              mb: 3,
-              fontSize: { xs: '1.5rem', md: '2rem' }
-            }}
-          >
-            The Pathways of Success Program
-          </Typography>
-
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              mb: 3,
-              fontSize: { xs: '0.875rem', md: '1rem' }
-            }}
-          >
-            A transformative initiative that focuses on:
-          </Typography>
-
-          <Box component="ul" sx={{ pl: 2, mb: 4 }}>
-            {programFocus.map((focus, index) => (
-              <Typography
-                key={index}
-                component="li"
-                sx={{
-                  mb: 1.5,
-                  fontSize: { xs: '0.875rem', md: '1rem' },
-                  display: 'flex',
-                  alignItems: 'center',
-                  '&::before': {
-                    content: '""',
-                    display: 'inline-block',
-                    width: '6px',
-                    height: '6px',
-                    borderRadius: '50%',
-                    bgcolor: '#C9AA74',
-                    mr: 2
-                  }
-                }}
-              >
-                {focus}
-              </Typography>
-            ))}
-          </Box>
-
-          <Button
-            variant="contained"
+          {/* Video Background */}
+          <Box
+            component="video"
+            src="/assets/The_Pathways_of_Succ.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-label="Featured Program Background Video"
             sx={{
-              bgcolor: 'white',
-              color: 'black',
-              '&:hover': {
-                bgcolor: '#f5f5f5'
-              }
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              zIndex: 0,
+              opacity: 0.35,
+              pointerEvents: 'none',
             }}
-            component={Link}
-            to="/pages/contact"
-          >
-            Apply Now
-          </Button>
+          />
+          {/* Overlay for readability */}
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              bgcolor: 'rgba(0, 0, 0, 0)',
+              zIndex: 1,
+            }}
+          />
+          {/* Content */}
+          <Box sx={{ position: 'relative', zIndex: 2 }}>
+            <Typography 
+              variant="h4" 
+              component="h3" 
+              sx={{ 
+                fontWeight: 700,
+                mb: 3,
+                fontSize: { xs: '1.5rem', md: '2rem' }
+              }}
+            >
+              The Pathways of Success Program
+            </Typography>
+
+            <Typography 
+              variant="body1" 
+              sx={{ 
+                mb: 3,
+                fontSize: { xs: '0.875rem', md: '1rem' }
+              }}
+            >
+              A transformative initiative that focuses on:
+            </Typography>
+
+            <Box component="ul" sx={{ pl: 2, mb: 4 }}>
+              {programFocus.map((focus, index) => (
+                <Typography
+                  key={index}
+                  component="li"
+                  sx={{
+                    mb: 1.5,
+                    fontSize: { xs: '0.875rem', md: '1rem' },
+                    display: 'flex',
+                    alignItems: 'center',
+                    '&::before': {
+                      content: '""',
+                      display: 'inline-block',
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      bgcolor: '#C9AA74',
+                      mr: 2
+                    }
+                  }}
+                >
+                  {focus}
+                </Typography>
+              ))}
+            </Box>
+
+            <Button
+              variant="contained"
+              sx={{
+                bgcolor: 'white',
+                color: 'black',
+                '&:hover': {
+                  bgcolor: '#f5f5f5'
+                }
+              }}
+              component={Link}
+              to="/pages/contact"
+            >
+              Apply Now
+            </Button>
+          </Box>
         </Box>
       </Container>
     </Box>
