@@ -165,37 +165,16 @@ const CapacityBuilding = () => {
             }
           }}
         >
-          {/* <Box
-            component="img"
-            src="/src/assets/serv4.jpg"
+          <img
+            src="/assets/serv4.jpg"
             alt="Capacity Building"
-            sx={{
+            style={{
               width: '100%',
-              height: { xs: 300, md: 500 },
+              height: '300px',
               objectFit: 'cover',
+              borderRadius: '8px'
             }}
           />
-          <Box
-            className="overlay"
-            sx={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              bgcolor: 'rgba(0, 0, 0, 0.5)',
-              color: 'white',
-              p: 3,
-              opacity: 0,
-              transition: 'opacity 0.3s ease',
-            }}
-          >
-            <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
-              Professional Development
-            </Typography>
-            <Typography>
-              Building expertise through comprehensive training programs
-            </Typography>
-          </Box> */}
         </Box>
 
         {/* Programs Section */}

@@ -65,8 +65,14 @@ const BradElledge = () => {
           <HeaderSection>
             <ProfileImage>
               <img
-                src="/src/assets/team/brad.jpg"
+                src="/assets/team/brad.jpg"
                 alt="Brad Elledge"
+                style={{
+                  width: '100%',
+                  height: '300px',
+                  objectFit: 'cover',
+                  borderRadius: '8px'
+                }}
               />
             </ProfileImage>
             <Typography 

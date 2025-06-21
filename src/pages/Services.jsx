@@ -32,7 +32,7 @@ const mainServices = [
     ],
     link: "/services/economic-research",
     color: "#E3F2FD",
-    image: "/src/assets/serv1.jpg"
+    image: "/assets/serv1.jpg"
   },
   {
     id: 'feasibility-studies',
@@ -47,7 +47,7 @@ const mainServices = [
     ],
     link: "/services/feasibility-studies",
     color: "#E8F5E9",
-    image: "/src/assets/serv2.jpg"
+    image: "/assets/serv2.jpg"
   },
   {
     id: 'data-collection',
@@ -62,7 +62,7 @@ const mainServices = [
     ],
     link: "/services/data-collection",
     color: "#F3E5F5",
-    image: "/src/assets/serv3.jpg"
+    image: "/assets/serv3.jpg"
   },
   {
     id: 'capacity-building',
@@ -77,7 +77,7 @@ const mainServices = [
     ],
     link: "/services/capacity-building",
     color: "#FFF3E0",
-    image: "/src/assets/serv4.jpg"
+    image: "/assets/serv4.jpg"
   },
   {
     id: 'consultancy',
@@ -92,7 +92,7 @@ const mainServices = [
     ],
     link: "/services/consultancy-services",
     color: "#FFEBEE",
-    image: "/src/assets/serv5.jpg"
+    image: "/assets/serv5.jpg"
   }
 ];
 

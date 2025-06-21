@@ -10,7 +10,7 @@ const ExpertTeam = () => {
       name: "Clement Malala",
       title: "Director/Chief Executive Officer (CEO)",
       description: "Leading strategic initiatives and overseeing company operations with over 2 years of experience in economic consulting.",
-      image: "/src/assets/team/malala.jpg",
+      image: "/assets/team/malala.jpg",
       style: "object-top",
       socials: {
         linkedin: "https://www.linkedin.com/in/clement-malala-b70000100/",
@@ -21,7 +21,7 @@ const ExpertTeam = () => {
       name: "Brad Elledge",
       title: "Chief Business Development Officer",
       description: "Driving business growth and fostering key partnerships with expertise in operational improvements and growth strategies.",
-      image: "/src/assets/team/brad.jpg",
+      image: "/assets/team/brad.jpg",
       socials: {
         linkedin: "#",
         email: "brad@mukuba.com"
@@ -31,7 +31,7 @@ const ExpertTeam = () => {
       name: "Blessings Ntesa",
       title: "Managing Director",
       description: "Economics professional specializing in risk management, investment analysis, and social economic sustainability with expertise in resource optimization and strategic planning.",
-      image: "/src/assets/team/blessings.jpg",
+      image: "/assets/team/blessings.jpg",
       socials: {
         linkedin: "#",
         email: "blessings@mukuba.com"

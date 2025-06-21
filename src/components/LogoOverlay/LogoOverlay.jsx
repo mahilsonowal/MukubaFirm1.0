@@ -28,8 +28,8 @@ const LogoOverlay = () => {
         }}
       >
         <img
-          src="/src/assets/logo.png"
-          alt="Company Logo"
+          src="/assets/logo.png"
+          alt="Mukuba Logo"
           style={{
             width: '100%',
             height: 'auto',

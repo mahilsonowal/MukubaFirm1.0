@@ -38,7 +38,7 @@ const WhyChooseUs = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundImage: 'url(/src/assets/whychoose.jpg)',
+          backgroundImage: 'url(/assets/whychoose.jpg)',
           backgroundSize: 'fit',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',

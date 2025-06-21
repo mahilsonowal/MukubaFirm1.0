@@ -156,12 +156,11 @@ const Navbar = () => {
             onClick={() => handleNavigation('/')}
           >
             <img 
-              src="/src/assets/company-logo.jpg" 
+              src="/assets/company-logo.jpg" 
               alt="Mukuba Logo" 
               style={{ 
-                height: '48px',
-                width: '48px',
-                objectFit: 'contain',
+                height: '40px',
+                width: 'auto',
               }} 
             />
             <Typography 

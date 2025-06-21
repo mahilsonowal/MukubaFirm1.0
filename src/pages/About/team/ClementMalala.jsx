@@ -65,8 +65,14 @@ const ClementMalala = () => {
           <HeaderSection>
             <ProfileImage>
               <img
-                src="/src/assets/team/malala.jpg"
+                src="/assets/team/malala.jpg"
                 alt="Clement Malala"
+                style={{
+                  width: '100%',
+                  height: '300px',
+                  objectFit: 'cover',
+                  borderRadius: '8px'
+                }}
               />
             </ProfileImage>
             <Typography 

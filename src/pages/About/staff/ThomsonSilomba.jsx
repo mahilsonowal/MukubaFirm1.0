@@ -66,8 +66,14 @@ const ThomsonSilomba = () => {
           <HeaderSection>
             <ProfileImage>
               <img
-                src="/src/assets/staff/thomson-silomba.jpg"
+                src="/assets/staff/thomson-silomba.jpg"
                 alt="Thomson Silomba"
+                style={{
+                  width: '100%',
+                  height: '300px',
+                  objectFit: 'cover',
+                  borderRadius: '8px'
+                }}
               />
             </ProfileImage>
             <Typography 

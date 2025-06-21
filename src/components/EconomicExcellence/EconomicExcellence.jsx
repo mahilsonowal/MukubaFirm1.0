@@ -36,14 +36,14 @@ const EconomicExcellence = () => {
               boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
             }}
           >
-            <Box
-              component="img"
-              src="/src/assets/hero2.jpg"
+            <img
+              src="/assets/hero2.jpg"
               alt="Economic Excellence"
-              sx={{
+              style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'fit',
+                objectFit: 'cover',
+                borderRadius: '8px'
               }}
             />
           </Box>

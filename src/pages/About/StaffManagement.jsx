@@ -53,7 +53,7 @@ const StaffManagement = () => {
       name: 'Thomson Silomba',
       title: 'Program Director - Pathways of Success Program',
       description: 'A leader driven by Christian faith and diversity, founder of Rethinking Economics Zambia, and advocate for economic discussions.',
-      image: '/src/assets/staff/thomson-silomba.jpg',
+      image: '/assets/staff/thomson-silomba.jpg',
       socials: {
         linkedin: '#',
         twitter: '#',

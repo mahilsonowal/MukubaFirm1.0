@@ -26,25 +26,25 @@ const PathwaysDetails = () => {
 
   const slides = [
     {
-      image: '/src/assets/youth-leadership.jpg',
+      image: '/assets/youth-leadership.jpg',
       alt: 'Youth Empowerment',
       title: 'Youth Empowerment',
       description: 'Developing future leaders through comprehensive training and mentorship'
     },
     {
-      image: '/src/assets/organization-building.jpg',
+      image: '/assets/organization-building.jpg',
       alt: 'Organizational Development',
       title: 'Organizational Development',
       description: 'Strengthening institutional capacity and strategic planning'
     },
     {
-      image: '/src/assets/economic-empowerment.jpg',
+      image: '/assets/economic-empowerment.jpg',
       alt: 'Economic Empowerment',
       title: 'Economic Empowerment',
       description: 'Creating sustainable economic opportunities and growth'
     },
     {
-      image: '/src/assets/community-development.jpg',
+      image: '/assets/community-development.jpg',
       alt: 'Community Impact',
       title: 'Community Impact',
       description: 'Building stronger, more resilient communities'
@@ -427,15 +427,14 @@ const PathwaysDetails = () => {
                 width: { xs: '100%', md: '33.33%' }
               }}
             >
-              <Box
-                component="img"
-                src="/src/assets/staff/thomson-silomba.jpg"
+              <img
+                src="/assets/staff/thomson-silomba.jpg"
                 alt="Thomson Silomba"
-                sx={{
+                style={{
                   width: '100%',
-                  height: '100%',
+                  height: '200px',
                   objectFit: 'cover',
-                  borderRadius: 2
+                  borderRadius: '8px'
                 }}
               />
             </Grid>

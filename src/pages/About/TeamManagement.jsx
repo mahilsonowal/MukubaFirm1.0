@@ -52,7 +52,7 @@ const TeamManagement = () => {
       name: 'Clement Malala',
       title: 'Director/Chief Executive Officer (CEO)',
       description: 'Leading strategic initiatives and overseeing company operations with over 2 years of experience in economic consulting.',
-      image: '/src/assets/team/malala.jpg',
+      image: '/assets/team/malala.jpg',
       socials: {
         linkedin: '#',
         email: 'clement@mukuba.com'
@@ -63,7 +63,7 @@ const TeamManagement = () => {
       name: 'Brad Elledge',
       title: 'Chief Business Development Officer',
       description: 'Driving business growth and fostering key partnerships with expertise in operational improvements and growth strategies.',
-      image: '/src/assets/team/brad.jpg',
+      image: '/assets/team/brad.jpg',
       socials: {
         linkedin: '#',
         email: 'brad@mukuba.com'
@@ -74,7 +74,7 @@ const TeamManagement = () => {
       name: 'Blessings Ntesa',
       title: 'Managing Director',
       description: 'Economics professional specializing in risk management, investment analysis, and social economic sustainability with expertise in resource optimization and strategic planning.',
-      image: '/src/assets/team/blessings.jpg',
+      image: '/assets/team/blessings.jpg',
       socials: {
         linkedin: '#',
         email: 'blessings@mukuba.com'

@@ -18,8 +18,8 @@ const Hero = () => {
           right: 0,
           bottom: 0,
           backgroundImage: {
-            xs: 'url(/src/assets/hero7.jpg)', // Mobile image
-            md: 'url(/src/assets/hero7.jpg)' // Desktop image
+            xs: 'url(/assets/hero7.jpg)', // Mobile image
+            md: 'url(/assets/hero7.jpg)' // Desktop image
           },
           backgroundSize: 'cover',
           backgroundPosition: { xs: 'right', md: 'center' },

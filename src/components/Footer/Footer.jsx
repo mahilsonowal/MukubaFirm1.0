@@ -29,7 +29,7 @@ const Footer = () => {
           >
             <Box sx={{ mb: 2 }}>
               <MuiLink href="/">
-                <img src="/src/assets/company-logo.jpg" alt="Mukuba Logo" style={{ height: '64px', width: 'auto' }} />
+                <img src="/assets/company-logo.jpg" alt="Mukuba Logo" style={{ height: '64px', width: 'auto' }} />
               </MuiLink>
             </Box>
             <Typography 

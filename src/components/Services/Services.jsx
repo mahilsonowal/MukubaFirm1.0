@@ -7,31 +7,31 @@ const serviceItems = [
   {
     title: 'Economic Research and Analysis',
     description: 'In-depth economic studies, reports, and data analysis tailored to clients\' needs to inform policy, business strategies, and project evaluations.',
-    image: '/src/assets/serv1.jpg',
+    image: '/assets/serv1.jpg',
     link: '/services/economic-research'
   },
   {
     title: 'Consultancy and Advisory Services',
     description: 'Providing strategic advice to businesses, government agencies, and international organizations in areas such as economic policy, development planning, and investment strategies.',
-    image: '/src/assets/serv5.jpg',
+    image: '/assets/serv5.jpg',
     link: '/services/consultancy-services'
   },
   {
     title: 'Feasibility Studies',
     description: 'Comprehensive assessments to evaluate the viability of new ventures, investments, and policies, helping clients make informed decisions.',
-    image: '/src/assets/serv2.jpg',
+    image: '/assets/serv2.jpg',
     link: '/services/feasibility-studies'
   },
   {
     title: 'Capacity Building',
     description: 'Customized training programs to enhance the skills and capabilities of clients in areas like data analysis, economics, policy design, and project management.',
-    image: '/src/assets/serv3.jpg',
+    image: '/assets/serv3.jpg',
     link: '/services/capacity-building'
   },
   {
     title: 'Data Collection',
     description: 'Expert data collection, monitoring, and evaluation services to ensure accurate information for decision-making and policy assessment.',
-    image: '/src/assets/serv4.jpg',
+    image: '/assets/serv4.jpg',
     link: '/services/data-collection'
   }
 ];

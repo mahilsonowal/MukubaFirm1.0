@@ -113,8 +113,8 @@ const Contact = () => {
           <Box sx={{ textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
             <Box 
               component="img"
-              src="/src/assets/logo.png"
-              alt="Mukuba Economic Research Logo"
+              src="/assets/logo.png"
+              alt="Mukuba Logo"
               sx={{ 
                 height: { xs: 80, md: 100 },
                 mb: 3
