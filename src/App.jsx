@@ -41,6 +41,10 @@ import DataCollection from './pages/Services/DataCollection';
 import ServicePage from './pages/Services';
 import Contact from './pages/Contact';
 import PathwaysDetails from './pages/Programs/PathwaysDetails';
+import PastEvents from './pages/Programs/PastEvents';
+import TargetAudience from './pages/Programs/TargetAudience';
+import VisionMission from './pages/Programs/VisionMission';
+import Sponsors from './pages/Programs/Sponsors';
 import LoginRegister from './pages/LoginRegister';
 import UserDashboard from './pages/UserDashboard';
 import { PrivateRoutes } from './components/PrivateRoutes';
@@ -116,6 +120,10 @@ function App() {
               <Route path="/pages/services" element={<ServicePage />} />
               <Route path="/pages/contact" element={<Contact />} />
               <Route path="/program/pathways-details" element={<PathwaysDetails />} />
+              <Route path="/pathways-details/past-events" element={<PastEvents />} />
+              <Route path="/pathways-details/target-audience" element={<TargetAudience />} />
+              <Route path="/pathways-details/vision-mission" element={<VisionMission />} />
+              <Route path="/pathways-details/sponsors" element={<Sponsors />} />
               <Route path="/login" element={<LoginRegister />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
