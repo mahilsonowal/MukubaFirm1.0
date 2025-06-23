@@ -1,21 +1,35 @@
 import React, { useRef, useState } from "react";
 import { Box, Paper, Typography, TextField, Button, Stack, Alert } from '@mui/material';
+import { account } from "../appwrite/config";
 
 const RegisterFrom = ({ setActiveForm }) => {
     const formRef = useRef(null);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+    const [loading, setLoading] = useState(false);
 
-    // You may want to add registration logic here
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
+        const name = formRef.current.name.value;
+        const email = formRef.current.email.value;
         const password = formRef.current.password.value;
         const confirmPassword = formRef.current.confirmPassword.value;
         if (password !== confirmPassword) {
             setError("Passwords do not match");
+            setSuccess("");
             return;
         }
         setError("");
-        // Registration logic here
+        setSuccess("");
+        setLoading(true);
+        try {
+            await account.create('unique()', email, password, name);
+            setSuccess("Registration successful! Please login.");
+            setTimeout(() => setActiveForm("login"), 1500);
+        } catch (err) {
+            setError(err.message || "Registration failed");
+        }
+        setLoading(false);
     };
 
     return (
@@ -25,6 +39,7 @@ const RegisterFrom = ({ setActiveForm }) => {
                     Register
                 </Typography>
                 {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+                {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
                 <Box component="form" ref={formRef} onSubmit={handleRegister}>
                     <Stack spacing={2}>
                         <TextField
@@ -55,8 +70,8 @@ const RegisterFrom = ({ setActiveForm }) => {
                             fullWidth
                             required
                         />
-                        <Button type="submit" variant="contained" color="primary" size="large" fullWidth sx={{ fontWeight: 600 }}>
-                            Signup
+                        <Button type="submit" variant="contained" color="primary" size="large" fullWidth sx={{ fontWeight: 600 }} disabled={loading}>
+                            {loading ? "Signing up..." : "Signup"}
                         </Button>
                     </Stack>
                 </Box>
