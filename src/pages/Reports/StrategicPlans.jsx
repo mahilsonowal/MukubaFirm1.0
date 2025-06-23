@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DescriptionIcon from '@mui/icons-material/Description';
+import { storage } from '../../appwrite/config';
 
 const ReportCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -18,6 +19,10 @@ const ReportCard = styled(Paper)(({ theme }) => ({
   },
 }));
 
+const getDownloadUrl = (fileId) => {
+  return storage.getFileView('68545f180007a9aee1c1', fileId);
+};
+
 const plans = [
   {
     id: '2024-2028',
@@ -25,7 +30,8 @@ const plans = [
     description: 'Our comprehensive five-year strategic plan focusing on economic development, research innovation, and sustainable growth in Zambia.',
     fileSize: '2.8 MB',
     date: 'January 2024',
-    thumbnail: '/images/reports/strategic-2024.jpg'
+    thumbnail: '/images/reports/strategic-2024.jpg',
+    fileId: '68599b5a000b3438f969',
   },
   {
     id: '2023-initiatives',
@@ -33,7 +39,8 @@ const plans = [
     description: 'Detailed framework outlining our approach to economic research, policy analysis, and market development strategies.',
     fileSize: '1.5 MB',
     date: 'September 2023',
-    thumbnail: '/images/reports/framework-2023.jpg'
+    thumbnail: '/images/reports/framework-2023.jpg',
+    fileId: '68599bd8003b582fd5f3',
   },
   {
     id: 'research-roadmap',
@@ -52,6 +59,11 @@ const plans = [
     thumbnail: '/images/reports/market-2023.jpg'
   }
 ];
+
+const handleDownload = (fileId) => {
+  const url = getDownloadUrl(fileId);
+  window.open(url, '_blank');
+};
 
 const StrategicPlans = () => {
   return (
@@ -169,26 +181,26 @@ const StrategicPlans = () => {
                       borderColor: 'divider'
                     }}
                   >
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
-                    >
-                      PDF • {plan.fileSize}
-                    </Typography>
-                    <Button
-                      startIcon={<DownloadIcon sx={{ fontSize: { xs: 16, sm: 20 } }} />}
-                      sx={{ 
-                        color: '#C9AA74',
-                        fontSize: { xs: '0.75rem', sm: '0.875rem' },
-                        '&:hover': { 
-                          color: '#AF9871',
-                          bgcolor: 'transparent'
-                        }
-                      }}
-                    >
-                      Download
-                    </Button>
+                    {plan.fileId ? (
+                      <Button
+                        startIcon={<DownloadIcon sx={{ fontSize: { xs: 16, sm: 20 } }} />}
+                        sx={{ 
+                          color: '#C9AA74',
+                          fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                          '&:hover': { 
+                            color: '#AF9871',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                        onClick={() => handleDownload(plan.fileId)}
+                      >
+                        Download
+                      </Button>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">
+                        Coming Soon
+                      </Typography>
+                    )}
                   </Box>
                 </Box>
               </ReportCard>

@@ -43,6 +43,7 @@ const reports = [
   {
     id: '2023-q4',
     title: 'Q4 2023 Impact Report',
+    fileId: '6859997400064ee35775',
     description: 'Detailed analysis of our fourth quarter performance and economic research outcomes.',
     highlights: [
       'Quarterly Highlights',
@@ -245,14 +246,7 @@ const AnnualReports = () => {
                         borderColor: 'divider'
                       }}
                     >
-                      <Typography 
-                        variant="body2" 
-                        color="text.secondary"
-                        sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
-                      >
-                        PDF • {report.fileSize}
-                      </Typography>
-                      {idx === 0 && report.fileId ? (
+                      {report.fileId ? (
                         <Button
                           startIcon={<DownloadIcon sx={{ fontSize: { xs: 16, sm: 20 } }} />}
                           sx={{ 
@@ -269,7 +263,7 @@ const AnnualReports = () => {
                         </Button>
                       ) : (
                         <Typography variant="body2" color="text.secondary">
-                          {idx === 0 ? '' : 'Coming Soon'}
+                          {'Coming Soon'}
                         </Typography>
                       )}
                     </Box>
