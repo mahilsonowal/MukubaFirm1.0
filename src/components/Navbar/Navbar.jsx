@@ -171,6 +171,7 @@ const Navbar = () => {
                 fontWeight: 700,
                 fontFamily: 'Poppins, sans-serif',
                 transition: 'color 0.2s',
+                display: { xs: 'none', sm: 'block' },
               }}
             >
               Mukuba Economic Research and Consulting Firm
