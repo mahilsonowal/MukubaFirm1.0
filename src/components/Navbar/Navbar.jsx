@@ -305,7 +305,13 @@ const Navbar = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Button
                   onClick={handleProfileMenuOpen}
-                  sx={{ fontWeight: 600, color: '#C9AA74', textTransform: 'none' }}
+                  sx={{
+                    fontWeight: 600,
+                    color: '#C9AA74',
+                    textTransform: 'none',
+                    boxShadow: '0 2px 8px 0 rgba(201, 170, 116, 0.25)',
+                    borderRadius: 2,
+                  }}
                   endIcon={<KeyboardArrowDownIcon />}
                 >
                   {user.name || user.email}
@@ -434,7 +440,14 @@ const Navbar = () => {
                   <Button
                     onClick={handleMobileProfileMenuOpen}
                     fullWidth
-                    sx={{ fontWeight: 600, color: '#C9AA74', textTransform: 'none', mb: 1 }}
+                    sx={{
+                      fontWeight: 600,
+                      color: '#C9AA74',
+                      textTransform: 'none',
+                      mb: 1,
+                      boxShadow: '0 2px 8px 0 rgba(201, 170, 116, 0.25)',
+                      borderRadius: 2,
+                    }}
                     endIcon={<KeyboardArrowDownIcon />}
                   >
                     {user.name || user.email}
