@@ -9,7 +9,7 @@ const BrandedLoader = () => (
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      bgcolor: "#f5f5f5",
+      bgcolor: "#1B2441",
       zIndex: 9999,
       position: "fixed",
       top: 0,
@@ -23,7 +23,7 @@ const BrandedLoader = () => (
       alt="Mukuba Logo"
       style={{ width: 100, height: 100, marginBottom: 24 }}
     />
-    <CircularProgress color="secondary" />
+    <CircularProgress sx={{ color: '#C9AA74' }} />
   </Box>
 );
 
