@@ -67,6 +67,32 @@ const Navbar = () => {
   const { user, logoutUser } = useAuth();
   const navigate = useNavigate();
 
+  // Profile menu state
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
+  const handleProfileMenuOpen = (event) => {
+    setProfileAnchorEl(event.currentTarget);
+  };
+  const handleProfileMenuClose = () => {
+    setProfileAnchorEl(null);
+  };
+  const handleDashboardClick = () => {
+    handleProfileMenuClose();
+    navigate('/dashboard');
+  };
+
+  // Add new state for mobile profile menu anchor
+  const [mobileProfileAnchorEl, setMobileProfileAnchorEl] = useState(null);
+  const handleMobileProfileMenuOpen = (event) => {
+    setMobileProfileAnchorEl(event.currentTarget);
+  };
+  const handleMobileProfileMenuClose = () => {
+    setMobileProfileAnchorEl(null);
+  };
+  const handleMobileDashboardClick = () => {
+    handleMobileProfileMenuClose();
+    navigate('/dashboard');
+  };
+
   const handleMobileMenuOpen = (event) => {
     setMobileAnchorEl(event.currentTarget);
   };
@@ -278,34 +304,22 @@ const Navbar = () => {
             {user ? (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Button
-                  component={Link}
-                  to="/dashboard"
-                  variant="outlined"
-                  color="secondary"
-                  sx={{ fontWeight: 600 }}
+                  onClick={handleProfileMenuOpen}
+                  sx={{ fontWeight: 600, color: '#C9AA74', textTransform: 'none' }}
+                  endIcon={<KeyboardArrowDownIcon />}
                 >
-                  Dashboard
-                </Button>
-                <Typography sx={{ fontWeight: 600, mx: 1 }}>
                   {user.name || user.email}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  color="inherit"
-                  onClick={logoutUser}
-                  sx={{
-                    borderColor: '#AF9871',
-                    color: '#AF9871',
-                    fontWeight: 600,
-                    '&:hover': {
-                      backgroundColor: '#f5f5f5',
-                      borderColor: '#977F59',
-                      color: '#977F59',
-                    },
-                  }}
-                >
-                  Logout
                 </Button>
+                <Menu
+                  anchorEl={profileAnchorEl}
+                  open={Boolean(profileAnchorEl)}
+                  onClose={handleProfileMenuClose}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  <MenuItem onClick={handleDashboardClick}>Dashboard</MenuItem>
+                  <MenuItem onClick={() => { handleProfileMenuClose(); logoutUser(); }}>Logout</MenuItem>
+                </Menu>
               </Box>
             ) : (
               <Button 
@@ -418,36 +432,23 @@ const Navbar = () => {
               {user ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'column' }}>
                   <Button
-                    component={Link}
-                    to="/dashboard"
-                    variant="outlined"
-                    color="secondary"
+                    onClick={handleMobileProfileMenuOpen}
                     fullWidth
-                    sx={{ fontWeight: 600, mb: 1 }}
+                    sx={{ fontWeight: 600, color: '#C9AA74', textTransform: 'none', mb: 1 }}
+                    endIcon={<KeyboardArrowDownIcon />}
                   >
-                    Dashboard
-                  </Button>
-                  <Typography sx={{ fontWeight: 600, mb: 1 }}>
                     {user.name || user.email}
-                  </Typography>
-                  <Button
-                    variant="outlined"
-                    color="inherit"
-                    fullWidth
-                    onClick={logoutUser}
-                    sx={{
-                      borderColor: '#AF9871',
-                      color: '#AF9871',
-                      fontWeight: 600,
-                      '&:hover': {
-                        backgroundColor: '#f5f5f5',
-                        borderColor: '#977F59',
-                        color: '#977F59',
-                      },
-                    }}
-                  >
-                    Logout
                   </Button>
+                  <Menu
+                    anchorEl={mobileProfileAnchorEl}
+                    open={Boolean(mobileProfileAnchorEl)}
+                    onClose={handleMobileProfileMenuClose}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                  >
+                    <MenuItem onClick={handleMobileDashboardClick}>Dashboard</MenuItem>
+                    <MenuItem onClick={() => { handleMobileProfileMenuClose(); logoutUser(); }}>Logout</MenuItem>
+                  </Menu>
                 </Box>
               ) : (
                 <Button
