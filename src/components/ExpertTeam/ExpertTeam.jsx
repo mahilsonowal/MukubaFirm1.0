@@ -8,7 +8,7 @@ const ExpertTeam = () => {
   const experts = [
     {
       name: "Clement Malala",
-      title: "Director/Chief Executive Officer (CEO)",
+      title: "Chief Executive Officer (CEO)",
       description: "Leading strategic initiatives and overseeing company operations with over 2 years of experience in economic consulting.",
       image: "/assets/team/malala.jpg",
       style: "object-top",
@@ -19,7 +19,7 @@ const ExpertTeam = () => {
     },
     {
       name: "Brad Elledge",
-      title: "Chief Business Development Officer",
+      title: "Independent Director",
       description: "Driving business growth and fostering key partnerships with expertise in operational improvements and growth strategies.",
       image: "/assets/team/brad.jpg",
       socials: {
@@ -29,7 +29,7 @@ const ExpertTeam = () => {
     },
     {
       name: "Blessings Ntesa",
-      title: "Managing Director",
+      title: "Chief Research Officer (CRO)",
       description: "Economics professional specializing in risk management, investment analysis, and social economic sustainability with expertise in resource optimization and strategic planning.",
       image: "/assets/team/blessings.jpg",
       socials: {
