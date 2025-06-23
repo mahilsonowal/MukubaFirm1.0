@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { account } from "../appwrite/config";
+import BrandedLoader from "../components/common/BrandedLoader";
 
 const AuthContext = createContext();
 
@@ -48,7 +49,7 @@ const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={contextData}>
-            {loading ? <p>Loading...</p> : children}
+            {loading ? <BrandedLoader /> : children}
         </AuthContext.Provider>
     );
 };
