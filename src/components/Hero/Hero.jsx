@@ -17,10 +17,7 @@ const Hero = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundImage: {
-            xs: 'url(/assets/hero7.jpg)', // Mobile image
-            md: 'url(/assets/hero7.jpg)' // Desktop image
-          },
+          backgroundImage: `url(/assets/hero7.webp), url(/assets/hero7.jpg)`, // WebP first, then JPG fallback
           backgroundSize: 'cover',
           backgroundPosition: { xs: 'right', md: 'center' },
           backgroundRepeat: 'no-repeat',
