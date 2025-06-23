@@ -9,7 +9,7 @@ const BrandedLoader = () => (
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      bgcolor: "#1B2441",
+      bgcolor: "#0C2237",
       zIndex: 9999,
       position: "fixed",
       top: 0,
