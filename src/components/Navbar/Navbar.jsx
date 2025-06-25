@@ -146,8 +146,8 @@ const Navbar = () => {
       position="sticky"
       elevation={0}
       sx={{
-        backgroundColor: '#0C2237',
-        color: 'white',
+        backgroundColor: '#ffffff',
+        color: 'black',
       }}
     >
       <Container 
