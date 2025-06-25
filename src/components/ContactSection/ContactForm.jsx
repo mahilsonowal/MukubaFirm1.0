@@ -259,7 +259,7 @@ const ContactForm = () => {
                 color="primary"
               />
             }
-            label="I agree to the storage and handling of my data."
+            label="I agree to the Terms and Conditions and Privacy Policy*"
           />
           {errors.allowStorage && (
             <Typography color="error" variant="body2">
