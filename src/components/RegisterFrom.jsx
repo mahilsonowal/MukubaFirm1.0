@@ -1,12 +1,14 @@
 import React, { useRef, useState } from "react";
 import { Box, Paper, Typography, TextField, Button, Stack, Alert } from '@mui/material';
 import { account } from "../appwrite/config";
+import { useNavigate } from 'react-router-dom';
 
 const RegisterFrom = ({ setActiveForm }) => {
     const formRef = useRef(null);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -24,8 +26,8 @@ const RegisterFrom = ({ setActiveForm }) => {
         setLoading(true);
         try {
             await account.create('unique()', email, password, name);
-            setSuccess("Registration successful! Please login.");
-            setTimeout(() => setActiveForm("login"), 1500);
+            setSuccess("Registration successful! Redirecting to home page...");
+            setTimeout(() => navigate('/'), 1500);
         } catch (err) {
             setError(err.message || "Registration failed");
         }

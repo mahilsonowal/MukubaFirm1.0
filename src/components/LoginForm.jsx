@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Box, Paper, Typography, TextField, Button, Stack } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -6,10 +6,20 @@ import { Link } from 'react-router-dom';
 const LoginForm = ({ setActiveForm }) => {
     const { loginUser } = useAuth();
     const formRef = useRef(null);
+    const [error, setError] = useState("");
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        loginUser(formRef.current.email.value, formRef.current.password.value);
+        setError("");
+        try {
+            await loginUser(formRef.current.email.value, formRef.current.password.value);
+        } catch (err) {
+            if (err.message && (err.message.toLowerCase().includes("user") || err.message.toLowerCase().includes("not found"))) {
+                setError("No account found with this email.");
+            } else {
+                setError("Login failed. Please check your credentials.");
+            }
+        }
     };
 
     return (
@@ -18,6 +28,7 @@ const LoginForm = ({ setActiveForm }) => {
                 <Typography variant="h4" sx={{ mb: 2, color: 'primary.main', fontWeight: 700, textAlign: 'center' }}>
                     Login
                 </Typography>
+                {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
                 <Box component="form" ref={formRef} onSubmit={handleLogin}>
                     <Stack spacing={2}>
                         <TextField

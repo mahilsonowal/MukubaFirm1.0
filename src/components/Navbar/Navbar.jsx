@@ -113,6 +113,7 @@ const Navbar = () => {
   };
 
   const handleNavigation = (link) => {
+    if (mobileAnchorEl) handleMobileMenuClose();
     window.location.href = link;
   };
 
