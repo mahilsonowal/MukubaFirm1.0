@@ -479,6 +479,9 @@ const Navbar = () => {
                       backgroundColor: '#977F59',
                     },
                   }}
+                  onClick={() => {
+                    if (mobileAnchorEl) handleMobileMenuClose();
+                  }}
                 >
                   Sign In
                 </Button>
