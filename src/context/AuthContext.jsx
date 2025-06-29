@@ -5,7 +5,7 @@ import BrandedLoader from "../components/common/BrandedLoader";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-    const [loading, setLoading] = useState(true);
+    const [authLoading, setAuthLoading] = useState(true); // ✅ changed name
     const [user, setUser] = useState(null);
 
     useEffect(() => {
@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
     const init = async () => {
         const response = await checkUserStatus();
         setUser(response);
-        setLoading(false);
+        setAuthLoading(false); // ✅ not 'loading'
     };
 
     const checkUserStatus = async () => {
@@ -29,15 +29,16 @@ const AuthProvider = ({ children }) => {
     };
 
     const loginUser = async (email, password) => {
-        setLoading(true);
+        // Don't set `authLoading` here — let UI component handle its own loading
         try {
             await account.createEmailPasswordSession(email, password);
             const response = await checkUserStatus();
             setUser(response);
         } catch (error) {
+            setUser(null);
             console.error(error);
+            throw error;
         }
-        setLoading(false);
     };
 
     const logoutUser = async () => {
@@ -49,10 +50,11 @@ const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={contextData}>
-            {loading ? <BrandedLoader /> : children}
+            {authLoading ? <BrandedLoader /> : children}
         </AuthContext.Provider>
     );
 };
+
 
 const useAuth = () => {
     return useContext(AuthContext);

@@ -1,25 +1,36 @@
 import { useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
-import { Box, Paper, Typography, TextField, Button, Stack } from '@mui/material';
+import { Box, Paper, Typography, TextField, Button, Stack, Alert } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const LoginForm = ({ setActiveForm }) => {
     const { loginUser } = useAuth();
     const formRef = useRef(null);
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
         try {
             await loginUser(formRef.current.email.value, formRef.current.password.value);
         } catch (err) {
-            if (err.message && (err.message.toLowerCase().includes("user") || err.message.toLowerCase().includes("not found"))) {
+            const code = err.code || err.type || '';
+            const msg = (err.message || '').toLowerCase();
+            if (code === 401 || msg.includes('invalid credentials') || msg.includes('invalid password')) {
+                setError("Incorrect password. Please try again.");
+            } else if (code === 404 || msg.includes('user not found') || msg.includes('no user') || msg.includes('not found')) {
                 setError("No account found with this email.");
+            } else if (code === 429 || msg.includes('rate limit')) {
+                setError("Too many login attempts. Please wait and try again.");
+            } else if (err.message) {
+                setError(err.message);
             } else {
-                setError("Login failed. Please check your credentials.");
+                setError("Login failed. Please check your credentials or try again later.");
             }
         }
+        setLoading(false);
     };
 
     return (
@@ -28,7 +39,7 @@ const LoginForm = ({ setActiveForm }) => {
                 <Typography variant="h4" sx={{ mb: 2, color: 'primary.main', fontWeight: 700, textAlign: 'center' }}>
                     Login
                 </Typography>
-                {error && <div style={{ color: 'red', marginBottom: 8 }}>{error}</div>}
+                {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
                 <Box component="form" ref={formRef} onSubmit={handleLogin}>
                     <Stack spacing={2}>
                         <TextField
@@ -45,14 +56,16 @@ const LoginForm = ({ setActiveForm }) => {
                             fullWidth
                             required
                         />
-                        <Button type="submit" variant="contained" color="primary" size="large" fullWidth sx={{ fontWeight: 600 }}>
-                            Login
+                        <Button type="submit" variant="contained" color="primary" size="large" fullWidth sx={{ fontWeight: 600 }} disabled={loading}>
+                            {loading ? "Logging in..." : "Login"}
                         </Button>
                     </Stack>
                 </Box>
                 <Typography sx={{ mt: 2, textAlign: 'center' }}>
                     Don't have an account?{' '}
-                    <Button variant="text" color="secondary" sx={{ textTransform: 'none', fontWeight: 600 }} onClick={() => setActiveForm("register")}>Signup</Button>
+                    <Button variant="text" color="secondary" sx={{ textTransform: 'none', fontWeight: 600 }} onClick={() => setActiveForm("register")}>
+                        Signup
+                    </Button>
                 </Typography>
                 <Button
                     component={Link}
