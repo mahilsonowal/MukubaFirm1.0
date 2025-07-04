@@ -64,7 +64,7 @@ const WhyChooseUs = () => {
             sx={{
               maxWidth: '700px',
               mx: 'auto',
-              color: 'text.secondary',
+              color: 'white',
               fontSize: { xs: '0.9rem', md: '1rem' }
             }}
           >
