@@ -16,12 +16,30 @@ const LoginForm = ({ setActiveForm }) => {
         try {
             await loginUser(formRef.current.email.value, formRef.current.password.value);
         } catch (err) {
-            const code = err.code || err.type || '';
+            // Robust error handling for Appwrite
+            const code = err.code || err.response?.code || '';
+            const type = err.type || err.response?.type || '';
             const msg = (err.message || '').toLowerCase();
-            if (code === 401 || msg.includes('invalid credentials') || msg.includes('invalid password')) {
-                setError("Incorrect password. Please try again.");
-            } else if (code === 404 || msg.includes('user not found') || msg.includes('no user') || msg.includes('not found')) {
+            if (
+                code === 401 ||
+                type === 'user_invalid_credentials' ||
+                msg.includes('invalid credentials') ||
+                msg.includes('invalid password')
+            ) {
+                setError("Incorrect email or password. Please try again.");
+            } else if (
+                code === 404 ||
+                type === 'user_not_found' ||
+                msg.includes('user not found') ||
+                msg.includes('no user') ||
+                msg.includes('not found')
+            ) {
                 setError("No account found with this email.");
+            } else if (
+                code === 400 &&
+                (type === 'general_argument_invalid' || msg.includes('password must be between'))
+            ) {
+                setError("Password must be between 8 and 256 characters long.");
             } else if (code === 429 || msg.includes('rate limit')) {
                 setError("Too many login attempts. Please wait and try again.");
             } else if (err.message) {
