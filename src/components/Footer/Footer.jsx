@@ -288,6 +288,19 @@ const Footer = () => {
                 >
                   Terms of Service
                 </MuiLink>
+                <MuiLink 
+                  component={RouterLink}
+                  to="/admin-login"
+                  sx={{ 
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease',
+                    fontSize: { xs: '0.75rem', md: '0.875rem' },
+                    '&:hover': { color: '#AF9871' }
+                  }}
+                >
+                  Admin Login
+                </MuiLink>
               </Box>
             </Grid>
           </Grid>

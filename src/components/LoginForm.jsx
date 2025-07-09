@@ -1,13 +1,25 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Box, Paper, Typography, TextField, Button, Stack, Alert } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 const LoginForm = ({ setActiveForm }) => {
-    const { loginUser } = useAuth();
+    const { user, loginUser, logoutUser } = useAuth();
     const formRef = useRef(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [loginAttempted, setLoginAttempted] = useState(false);
+
+    useEffect(() => {
+        if (loginAttempted) {
+            if (user && user.prefs && user.prefs.role === "admin") {
+                logoutUser();
+                setError("Admins cannot log in from the user login page.");
+            }
+            setLoading(false);
+            setLoginAttempted(false);
+        }
+    }, [user, loginAttempted, logoutUser]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -15,6 +27,7 @@ const LoginForm = ({ setActiveForm }) => {
         setLoading(true);
         try {
             await loginUser(formRef.current.email.value, formRef.current.password.value);
+            setLoginAttempted(true);
         } catch (err) {
             // Robust error handling for Appwrite
             const code = err.code || err.response?.code || '';
@@ -47,8 +60,8 @@ const LoginForm = ({ setActiveForm }) => {
             } else {
                 setError("Login failed. Please check your credentials or try again later.");
             }
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (

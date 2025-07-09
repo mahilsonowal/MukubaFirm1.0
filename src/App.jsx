@@ -51,6 +51,15 @@ import { PrivateRoutes } from './components/PrivateRoutes';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import Governance from './pages/About/Governance';
+import AdminLogin from './pages/AdminLogin';
+import AdminDashboard from './pages/AdminDashboard';
+import { useAuth } from './context/AuthContext';
+import { Navigate, Outlet } from 'react-router-dom';
+
+const AdminPrivateRoute = () => {
+  const { user } = useAuth();
+  return user && user.prefs && user.prefs.role === 'admin' ? <Outlet /> : <Navigate to="/admin-login" />;
+};
 
 // ScrollToTop component
 const ScrollToTop = () => {
@@ -125,6 +134,10 @@ function App() {
               <Route path="/pathways-details/vision-mission" element={<VisionMission />} />
               <Route path="/pathways-details/sponsors" element={<Sponsors />} />
               <Route path="/login" element={<LoginRegister />} />
+              <Route path="/admin-login" element={<AdminLogin />} />
+              <Route element={<AdminPrivateRoute />}>
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              </Route>
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
             </Routes>
