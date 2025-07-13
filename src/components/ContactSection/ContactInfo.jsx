@@ -10,7 +10,7 @@ const ContactInfo = () => {
     {
       icon: <LocationOnIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
       title: 'Our Location',
-      content: '123 Economic Avenue, Lusaka, Zambia',
+      content: 'Plot #38 Kudu Rd, Kabulonga, Lusaka',
       link: 'https://maps.google.com'
     },
     {
