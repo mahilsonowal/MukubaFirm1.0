@@ -10,14 +10,14 @@ const ContactInfo = () => {
     {
       icon: <LocationOnIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
       title: 'Our Location',
-      content: '123 Economic Avenue, Lusaka, Zambia',
+      content: 'Plot #38 Kudu Rd, Kabulonga, Lusaka',
       link: 'https://maps.google.com'
     },
     {
       icon: <PhoneIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
       title: 'Phone Number',
-      content: '+260 123 456 789',
-      link: 'tel:+260123456789'
+      content: '+260 768 112 551',
+      link: 'tel:+260768112551'
     },
     {
       icon: <EmailIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
@@ -28,7 +28,7 @@ const ContactInfo = () => {
     {
       icon: <AccessTimeIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
       title: 'Working Hours',
-      content: 'Mon - Sun: 8:00 AM - 5:00 PM',
+      content: 'Mon - Fri: 9:00 AM - 4:00 PM',
       link: null
     }
   ];
