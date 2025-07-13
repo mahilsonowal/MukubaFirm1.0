@@ -194,7 +194,7 @@ const Footer = () => {
               <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
                 <LocationOnIcon sx={{ color: '#AF9871', mr: 1, mt: 0.5 }} />
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                  Plot #36 Kudu Rd, Kabulonga, Lusaka
+                  Plot #38 Kudu Rd, Kabulonga, Lusaka
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
