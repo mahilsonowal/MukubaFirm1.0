@@ -101,7 +101,7 @@ const AdminDashboard = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {users.map((u) => (
+                        {users.filter(u => u.role === 'user').map((u) => (
                           <TableRow key={u.id}>
                             <TableCell>{u.name}</TableCell>
                             <TableCell>{u.email}</TableCell>
