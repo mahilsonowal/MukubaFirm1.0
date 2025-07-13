@@ -194,20 +194,20 @@ const Footer = () => {
               <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
                 <LocationOnIcon sx={{ color: '#AF9871', mr: 1, mt: 0.5 }} />
                 <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                  123 Economic Avenue, Lusaka, Zambia
+                  Plot #36 Kudu Rd, Kabulonga, Lusaka
                 </Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <PhoneIcon sx={{ color: '#AF9871', mr: 1 }} />
                 <MuiLink 
-                  href="tel:+260123456789" 
+                  href="tel:+260768112551" 
                   sx={{ 
                     color: 'rgba(255, 255, 255, 0.7)',
                     textDecoration: 'none',
                     '&:hover': { color: '#AF9871' }
                   }}
                 >
-                  +260 123 456 789
+                  +260 768 112 551
                 </MuiLink>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
