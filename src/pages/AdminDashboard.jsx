@@ -199,11 +199,9 @@ const AdminDashboard = () => {
                             <TableCell>{i.name}</TableCell>
                             <TableCell>{i.email}</TableCell>
                             <TableCell>
-                              {/* Hide the View Resume link for now */}
-                              {/* {i.resume_url ? (
+                              {i.resume_url ? (
                                 <a href={i.resume_url} target="_blank" rel="noopener noreferrer">View Resume</a>
-                              ) : ''} */}
-                              Available in the supabase storage
+                              ) : 'Not uploaded'}
                             </TableCell>
                             <TableCell>{i.created_at ? new Date(i.created_at).toLocaleString() : ''}</TableCell>
                           </TableRow>

@@ -95,6 +95,7 @@ const Navbar = () => {
   };
   const handleDashboardClick = () => {
     handleProfileMenuClose();
+    handleDropdownClose();
     if (profile?.role === 'admin') {
       navigate('/admin-dashboard');
     } else {
@@ -112,6 +113,7 @@ const Navbar = () => {
   };
   const handleMobileDashboardClick = () => {
     handleMobileProfileMenuClose();
+    handleMobileMenuClose();
     if (profile?.role === 'admin') {
       navigate('/admin-dashboard');
     } else {
@@ -138,8 +140,9 @@ const Navbar = () => {
     setActiveMenu(null);
   };
 
-  const handleNavigation = (link) => {
+  const handleNavigation = (link, closeDropdown = false) => {
     if (mobileAnchorEl) handleMobileMenuClose();
+    if (closeDropdown) handleDropdownClose();
     window.location.href = link;
   };
 
@@ -298,7 +301,7 @@ const Navbar = () => {
                       {item.subItems.map((subItem) => (
                         <MenuItem 
                           key={subItem.name}
-                          onClick={() => handleNavigation(subItem.link)}
+                          onClick={() => handleNavigation(subItem.link, true)}
                           sx={{
                             px: 2,
                             py: 1.5,
@@ -352,7 +355,7 @@ const Navbar = () => {
                 >
                   <MenuItem onClick={handleDashboardClick}>Dashboard</MenuItem>
                   {profile?.role === 'admin' && (
-                    <MenuItem onClick={() => { handleProfileMenuClose(); navigate('/admin-upload-report'); }}>Upload documents</MenuItem>
+                    <MenuItem onClick={() => { handleProfileMenuClose(); handleDropdownClose(); navigate('/admin-upload-report'); }}>Upload documents</MenuItem>
                   )}
                   <MenuItem onClick={() => { handleProfileMenuClose(); logoutUser(); }}>Logout</MenuItem>
                 </Menu>
@@ -434,7 +437,7 @@ const Navbar = () => {
                         {item.subItems.map((subItem) => (
                           <MenuItem
                             key={subItem.name}
-                            onClick={() => handleNavigation(subItem.link)}
+                            onClick={() => { handleNavigation(subItem.link); handleMobileMenuClose(); }}
                             sx={{
                               pl: 4,
                               py: 1.5,
@@ -491,7 +494,7 @@ const Navbar = () => {
                   >
                     <MenuItem onClick={handleMobileDashboardClick}>Dashboard</MenuItem>
                     {profile?.role === 'admin' && (
-                      <MenuItem onClick={() => { handleMobileProfileMenuClose(); navigate('/admin-upload-report'); }}>Upload Documents</MenuItem>
+                      <MenuItem onClick={() => { handleMobileProfileMenuClose(); handleMobileMenuClose(); navigate('/admin-upload-report'); }}>Upload Documents</MenuItem>
                     )}
                     <MenuItem onClick={() => { handleMobileProfileMenuClose(); logoutUser(); }}>Logout</MenuItem>
                   </Menu>
