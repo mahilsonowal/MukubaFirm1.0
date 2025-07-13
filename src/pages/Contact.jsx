@@ -327,8 +327,8 @@ const Contact = () => {
                       Our Location
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      123 Economic Research Avenue<br />
-                      Lusaka, Zambia
+                      Plot #36 Kudu Rd<br />
+                      Kabulonga, lusaka
                     </Typography>
                   </Box>
                 </Box>
@@ -369,7 +369,7 @@ const Contact = () => {
                       Working Hours
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Monday - Sun: 8:00 AM - 5:00 PM<br />
+                      Monday - Fri: 9:00 AM - 4:00 PM<br />
                     </Typography>
                   </Box>
                 </Box>
