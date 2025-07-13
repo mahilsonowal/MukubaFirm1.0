@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Box, Container, Typography, TextField, Button, Alert, CircularProgress } from '@mui/material';
-import { databases } from '../../appwrite/config'; // adjust path as needed
-
-const DATABASE_ID = import.meta.env.VITE_DATABASE_ID; // find in Appwrite console
-const COLLECTION_ID = import.meta.env.VITE_NEWSLETTER_COLLECTION_ID; // find in Appwrite console
+import { supabase } from '../../utils/supabaseClient'; // adjust path as needed
 
 const Newsletter = () => {
   const [subscribeEmail, setSubscribeEmail] = useState('');
@@ -15,12 +12,10 @@ const Newsletter = () => {
     setLoading(true);
     setSubscribeStatus('');
     try {
-      await databases.createDocument(
-        DATABASE_ID,
-        COLLECTION_ID,
-        'unique()', // auto-generate ID
-        { email: subscribeEmail }
-      );
+      const { error: insertError } = await supabase
+        .from('newsletter_subscribers')
+        .insert([{ email: subscribeEmail }]);
+      if (insertError) throw insertError;
       setSubscribeStatus('success');
       setSubscribeEmail('');
     } catch (error) {

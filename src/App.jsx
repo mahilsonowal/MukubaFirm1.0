@@ -55,11 +55,8 @@ import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
 import { useAuth } from './context/AuthContext';
 import { Navigate, Outlet } from 'react-router-dom';
-
-const AdminPrivateRoute = () => {
-  const { user } = useAuth();
-  return user && user.prefs && user.prefs.role === 'admin' ? <Outlet /> : <Navigate to="/admin-login" />;
-};
+import AdminPrivateRoute from './components/AdminPrivateRoute';
+import AdminReportUpload from './pages/AdminReportUpload';
 
 // ScrollToTop component
 const ScrollToTop = () => {
@@ -118,8 +115,8 @@ function App() {
                 <Route path="/research/parliamentary-submissions" element={<ParliamentarySubmissions />} />
                 <Route path="/research/policy-briefs" element={<PolicyBriefs />} />
                 <Route path="/research/working-papers" element={<WorkingPapers />} />
-                <Route path="/dashboard" element={<UserDashboard />} />
               </Route>
+              <Route path="/user-dashboard" element={<UserDashboard />} />
               <Route path="/notice-board/updates" element={<Updates />} />
               <Route path="/services/capacity-building" element={<CapacityBuilding />} />
               <Route path="/services/feasibility-studies" element={<FeasibilityStudies />} />
@@ -137,6 +134,7 @@ function App() {
               <Route path="/admin-login" element={<AdminLogin />} />
               <Route element={<AdminPrivateRoute />}>
                 <Route path="/admin-dashboard" element={<AdminDashboard />} />
+                <Route path="/admin-upload-report" element={<AdminReportUpload />} />
               </Route>
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />

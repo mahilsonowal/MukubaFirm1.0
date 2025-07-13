@@ -20,13 +20,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import SendIcon from '@mui/icons-material/Send';
-import emailjs from 'emailjs-com';
-import { databases } from '../appwrite/config';
-import { ID } from 'appwrite';
-
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const USER_ID = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+import { supabase } from '../utils/supabaseClient'; // adjust path as needed
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -72,7 +66,7 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess("");
     setError("");
@@ -80,37 +74,17 @@ const Contact = () => {
       setError('Please agree to the terms and conditions');
       return;
     }
-    emailjs.send(
-      SERVICE_ID,
-      TEMPLATE_ID,
-      {
-        from_name: formData.name,
-        from_email: formData.email,
-        phone: formData.phone,
-        subject: formData.subject,
-        message: formData.message,
-      },
-      USER_ID
-    )
-    .then(async (result) => {
-      // Store in Appwrite
-      try {
-        await databases.createDocument(
-          import.meta.env.VITE_DATABASE_ID,
-          import.meta.env.VITE_CONTACT_COLLECTION_ID,
-          ID.unique(),
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            subject: formData.subject,
-            message: formData.message,
-          }
-        );
-      } catch (err) {
-        // Optionally handle Appwrite error
-        console.error('Appwrite error:', err);
-      }
+    try {
+      const { error: insertError } = await supabase
+        .from('contact_messages')
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+        }]);
+      if (insertError) throw insertError;
       setSuccess('Message sent successfully!');
       setFormData({
         name: '',
@@ -120,9 +94,9 @@ const Contact = () => {
         message: '',
         terms: false
       });
-    }, (error) => {
+    } catch (err) {
       setError('Failed to send message. Please try again later.');
-    });
+    }
   };
 
   return (
@@ -195,7 +169,6 @@ const Contact = () => {
               </Typography>
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
-                  {/* Make sure your EmailJS template variables are exactly: from_name, from_email, phone, subject, message */}
                   {success && <Grid><Alert severity="success">{success}</Alert></Grid>}
                   {error && <Grid><Alert severity="error">{error}</Alert></Grid>}
                   <Grid sx={{ width: '100%' }}>

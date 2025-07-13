@@ -18,6 +18,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import { supabase } from '../../utils/supabaseClient';
 
 const menuItems = [
   {
@@ -66,6 +67,23 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const { user, logoutUser } = useAuth();
   const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    async function fetchProfile() {
+      if (user) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        if (!error) setProfile(data);
+      } else {
+        setProfile(null);
+      }
+    }
+    fetchProfile();
+  }, [user]);
 
   // Profile menu state
   const [profileAnchorEl, setProfileAnchorEl] = useState(null);
@@ -77,7 +95,11 @@ const Navbar = () => {
   };
   const handleDashboardClick = () => {
     handleProfileMenuClose();
-    navigate('/dashboard');
+    if (profile?.role === 'admin') {
+      navigate('/admin-dashboard');
+    } else {
+      navigate('/user-dashboard');
+    }
   };
 
   // Add new state for mobile profile menu anchor
@@ -90,7 +112,11 @@ const Navbar = () => {
   };
   const handleMobileDashboardClick = () => {
     handleMobileProfileMenuClose();
-    navigate('/dashboard');
+    if (profile?.role === 'admin') {
+      navigate('/admin-dashboard');
+    } else {
+      navigate('/user-dashboard');
+    }
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -315,7 +341,7 @@ const Navbar = () => {
                   }}
                   endIcon={<KeyboardArrowDownIcon />}
                 >
-                  {user.name || user.email}
+                  {user.user_metadata?.name || user.email}
                 </Button>
                 <Menu
                   anchorEl={profileAnchorEl}
@@ -325,6 +351,9 @@ const Navbar = () => {
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
                   <MenuItem onClick={handleDashboardClick}>Dashboard</MenuItem>
+                  {profile?.role === 'admin' && (
+                    <MenuItem onClick={() => { handleProfileMenuClose(); navigate('/admin-upload-report'); }}>Upload documents</MenuItem>
+                  )}
                   <MenuItem onClick={() => { handleProfileMenuClose(); logoutUser(); }}>Logout</MenuItem>
                 </Menu>
               </Box>
@@ -451,7 +480,7 @@ const Navbar = () => {
                     }}
                     endIcon={<KeyboardArrowDownIcon />}
                   >
-                    {user.name || user.email}
+                    {user.user_metadata?.name || user.email}
                   </Button>
                   <Menu
                     anchorEl={mobileProfileAnchorEl}
@@ -461,6 +490,9 @@ const Navbar = () => {
                     transformOrigin={{ vertical: 'top', horizontal: 'center' }}
                   >
                     <MenuItem onClick={handleMobileDashboardClick}>Dashboard</MenuItem>
+                    {profile?.role === 'admin' && (
+                      <MenuItem onClick={() => { handleMobileProfileMenuClose(); navigate('/admin-upload-report'); }}>Upload Documents</MenuItem>
+                    )}
                     <MenuItem onClick={() => { handleMobileProfileMenuClose(); logoutUser(); }}>Logout</MenuItem>
                   </Menu>
                 </Box>

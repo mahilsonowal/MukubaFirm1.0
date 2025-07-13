@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, Button } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Button, CircularProgress, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DescriptionIcon from '@mui/icons-material/Description';
-import { storage } from '../../appwrite/config';
+import { supabase } from '../../utils/supabaseClient';
 
 const ReportCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -19,53 +19,52 @@ const ReportCard = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const getDownloadUrl = (fileId) => {
-  return storage.getFileView('68545f180007a9aee1c1', fileId);
-};
-
-const plans = [
-  {
-    id: '2024-2028',
-    title: 'Strategic Vision 2024-2028',
-    description: 'Our comprehensive five-year strategic plan focusing on economic development, research innovation, and sustainable growth in Zambia.',
-    fileSize: '2.8 MB',
-    date: 'January 2024',
-    thumbnail: '/images/reports/strategic-2024.jpg',
-    fileId: '68599b5a000b3438f969',
-  },
-  {
-    id: '2023-initiatives',
-    title: 'Economic Initiatives Framework',
-    description: 'Detailed framework outlining our approach to economic research, policy analysis, and market development strategies.',
-    fileSize: '1.5 MB',
-    date: 'September 2023',
-    thumbnail: '/images/reports/framework-2023.jpg',
-    fileId: '68599bd8003b582fd5f3',
-  },
-  {
-    id: 'research-roadmap',
-    title: 'Research & Development Roadmap',
-    description: 'Strategic roadmap for enhancing our research capabilities and expanding our economic analysis methodologies.',
-    fileSize: '3.2 MB',
-    date: 'June 2023',
-    thumbnail: '/images/reports/roadmap-2023.jpg'
-  },
-  {
-    id: 'market-strategy',
-    title: 'Market Analysis Strategy',
-    description: 'Comprehensive strategy for market research, data analysis, and economic forecasting methodologies.',
-    fileSize: '2.1 MB',
-    date: 'March 2023',
-    thumbnail: '/images/reports/market-2023.jpg'
-  }
-];
-
-const handleDownload = (fileId) => {
-  const url = getDownloadUrl(fileId);
-  window.open(url, '_blank');
-};
-
 const StrategicPlans = () => {
+  const [plans, setPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [downloading, setDownloading] = useState(null);
+
+  useEffect(() => {
+    const fetchPlans = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const { data, error } = await supabase
+          .from('strategic_plans')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        setPlans(data || []);
+      } catch (err) {
+        setError('Failed to load strategic plans.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPlans();
+  }, []);
+
+  const handleDownload = async (plan) => {
+    setDownloading(plan.id);
+    try {
+      let url = plan.file_url;
+      if (plan.access === 'paid') {
+        const { data, error } = await supabase
+          .storage
+          .from('strategic-plans')
+          .createSignedUrl(plan.file_name, 60 * 60);
+        if (error) throw error;
+        url = data.signedUrl;
+      }
+      window.open(url, '_blank');
+    } catch (err) {
+      alert('Failed to download plan.');
+    } finally {
+      setDownloading(null);
+    }
+  };
+
   return (
     <Box>
       {/* Hero Section */}
@@ -100,88 +99,98 @@ const StrategicPlans = () => {
 
       {/* Plans Grid */}
       <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
-        <Grid 
-          container 
-          display="flex" 
-          justifyContent="center" 
-          alignItems="stretch" 
-          spacing={2}
-          sx={{ maxWidth: '1200px', mx: 'auto' }}
-        >
-          {plans.map((plan) => (
-            <Grid 
-              key={plan.id}
-              sx={{ 
-                flexBasis: { xs: '100%', sm: '50%', md: '33.33%' },
-                maxWidth: { xs: '100%', sm: '50%', md: '33.33%' },
-                display: 'flex',
-                height: 'auto'
-              }}
-            >
-              <ReportCard elevation={1}>
-                {/* Thumbnail */}
-                <Box 
-                  sx={{ 
-                    height: { xs: 160, sm: 200 },
-                    bgcolor: 'grey.100',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <DescriptionIcon sx={{ fontSize: { xs: 40, sm: 60 }, color: 'grey.400' }} />
-                </Box>
-
-                {/* Content */}
-                <Box sx={{ 
-                  p: { xs: 2, sm: 3 },
-                  flexGrow: 1, 
-                  display: 'flex', 
-                  flexDirection: 'column' 
-                }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 1, sm: 2 } }}>
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        color: '#1B2441', 
-                        fontWeight: 600,
-                        fontSize: { xs: '1rem', sm: '1.25rem' }
-                      }}
-                    >
-                      {plan.title}
-                    </Typography>
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
-                    >
-                      {plan.date}
-                    </Typography>
-                  </Box>
-
-                  <Typography 
-                    variant="body2" 
-                    color="text.secondary" 
-                    sx={{ 
-                      mb: { xs: 1.5, sm: 2 },
-                      fontSize: { xs: '0.813rem', sm: '0.875rem' }
-                    }}
-                  >
-                    {plan.description}
-                  </Typography>
-
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="30vh">
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Alert severity="error">{error}</Alert>
+        ) : plans.length === 0 ? (
+          <Typography align="center" color="text.secondary" sx={{ my: 6 }}>
+            No strategic plans available yet.
+          </Typography>
+        ) : (
+          <Grid 
+            container 
+            display="flex" 
+            justifyContent="center" 
+            alignItems="stretch" 
+            spacing={2}
+            sx={{ maxWidth: '1200px', mx: 'auto' }}
+          >
+            {plans.map((plan) => (
+              <Grid 
+                key={plan.id}
+                sx={{ 
+                  flexBasis: { xs: '100%', sm: '33.33%' },
+                  maxWidth: { xs: '100%', sm: '33.33%' },
+                  display: 'flex',
+                  height: 'auto'
+                }}
+              >
+                <ReportCard elevation={1}>
+                  {/* Thumbnail */}
                   <Box 
                     sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between',
+                      height: { xs: 160, sm: 200 },
+                      bgcolor: 'grey.100',
+                      display: 'flex',
                       alignItems: 'center',
-                      pt: { xs: 1.5, sm: 2 },
-                      mt: 'auto',
-                      borderTop: 1,
-                      borderColor: 'divider'
+                      justifyContent: 'center'
                     }}
                   >
-                    {plan.fileId ? (
+                    <DescriptionIcon sx={{ fontSize: { xs: 40, sm: 60 }, color: 'grey.400' }} />
+                  </Box>
+
+                  {/* Content */}
+                  <Box sx={{ 
+                    p: { xs: 2, sm: 3 },
+                    flexGrow: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column' 
+                  }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: { xs: 1, sm: 2 } }}>
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          color: '#1B2441', 
+                          fontWeight: 600,
+                          fontSize: { xs: '1rem', sm: '1.25rem' }
+                        }}
+                      >
+                        {plan.title}
+                      </Typography>
+                      <Typography 
+                        variant="body2" 
+                        color="text.secondary"
+                        sx={{ fontSize: { xs: '0.75rem', sm: '0.875rem' } }}
+                      >
+                        {plan.created_at ? new Date(plan.created_at).toLocaleDateString() : ''}
+                      </Typography>
+                    </Box>
+
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary" 
+                      sx={{ 
+                        mb: { xs: 1.5, sm: 2 },
+                        fontSize: { xs: '0.813rem', sm: '0.875rem' }
+                      }}
+                    >
+                      {plan.description}
+                    </Typography>
+
+                    <Box 
+                      sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        pt: { xs: 1.5, sm: 2 },
+                        mt: 'auto',
+                        borderTop: 1,
+                        borderColor: 'divider'
+                      }}
+                    >
                       <Button
                         startIcon={<DownloadIcon sx={{ fontSize: { xs: 16, sm: 20 } }} />}
                         sx={{ 
@@ -192,21 +201,21 @@ const StrategicPlans = () => {
                             bgcolor: 'transparent'
                           }
                         }}
-                        onClick={() => handleDownload(plan.fileId)}
+                        onClick={() => handleDownload(plan)}
+                        disabled={downloading === plan.id}
                       >
-                        Download
+                        {downloading === plan.id ? 'Preparing...' : 'Download'}
                       </Button>
-                    ) : (
                       <Typography variant="body2" color="text.secondary">
-                        Coming Soon
+                        {plan.access === 'paid' ? 'Paid' : 'Free'}
                       </Typography>
-                    )}
+                    </Box>
                   </Box>
-                </Box>
-              </ReportCard>
-            </Grid>
-          ))}
-        </Grid>
+                </ReportCard>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Container>
 
       {/* CTA Section */}

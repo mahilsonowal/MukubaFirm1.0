@@ -5,8 +5,29 @@ import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
+import { useAuth } from '../../context/AuthContext';
+import { supabase } from '../../utils/supabaseClient';
+import { useEffect, useState } from 'react';
 
 const Footer = () => {
+  const { user } = useAuth();
+  const [profile, setProfile] = useState(null);
+  useEffect(() => {
+    async function fetchProfile() {
+      if (user) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        if (!error) setProfile(data);
+      } else {
+        setProfile(null);
+      }
+    }
+    fetchProfile();
+  }, [user]);
+
   return (
     <Box sx={{ bgcolor: 'black', color: 'white', py: 6 }}>
       <Container maxWidth="lg">
@@ -290,16 +311,18 @@ const Footer = () => {
                 </MuiLink>
                 <MuiLink 
                   component={RouterLink}
-                  to="/admin-login"
+                  to={profile?.role === 'admin' ? '/admin-dashboard' : '/admin-login'}
                   sx={{ 
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    color: profile?.role === 'admin' ? '#AF9871' : 'rgba(255, 255, 255, 0.7)',
                     textDecoration: 'none',
                     transition: 'color 0.3s ease',
                     fontSize: { xs: '0.75rem', md: '0.875rem' },
+                    pointerEvents: profile?.role === 'admin' ? 'auto' : 'auto',
+                    fontWeight: profile?.role === 'admin' ? 700 : 400,
                     '&:hover': { color: '#AF9871' }
                   }}
                 >
-                  Admin Login
+                  {profile?.role === 'admin' ? 'Admin Dashboard' : 'Admin Login'}
                 </MuiLink>
               </Box>
             </Grid>

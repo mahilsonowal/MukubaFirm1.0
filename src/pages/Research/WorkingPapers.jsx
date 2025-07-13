@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, Button, Chip } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Button, Chip, CircularProgress, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import { supabase } from '../../utils/supabaseClient';
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -21,40 +22,52 @@ const PaperCard = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const papers = [
-  {
-    id: 'monetary-policy',
-    title: 'Monetary Policy Effects on Economic Growth',
-    authors: ['Dr. John Banda', 'Sarah Mulenga'],
-    abstract: "An analysis of the relationship between monetary policy decisions and economic growth indicators in Zambia's developing economy.",
-    keywords: ['Monetary Policy', 'Economic Growth', 'Central Banking'],
-    fileSize: '3.2 MB',
-    date: 'March 2024',
-    series: 'WP/2024/01'
-  },
-  {
-    id: 'trade-patterns',
-    title: 'Regional Trade Patterns and Economic Integration',
-    authors: ['Dr. Michael Phiri', 'Elizabeth Tembo'],
-    abstract: 'Examining the evolution of regional trade patterns and their impact on economic integration in Southern Africa.',
-    keywords: ['International Trade', 'Regional Integration', 'SADC'],
-    fileSize: '2.8 MB',
-    date: 'February 2024',
-    series: 'WP/2024/02'
-  },
-  {
-    id: 'financial-inclusion',
-    title: 'Financial Inclusion and Digital Banking',
-    authors: ['Prof. David Mwanza', 'Grace Chipeta'],
-    abstract: 'Investigating the role of digital banking in promoting financial inclusion among underserved populations.',
-    keywords: ['Financial Inclusion', 'Digital Banking', 'Financial Technology'],
-    fileSize: '2.5 MB',
-    date: 'January 2024',
-    series: 'WP/2024/03'
-  }
-];
-
 const WorkingPapers = () => {
+  const [papers, setPapers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [downloading, setDownloading] = useState(null);
+
+  useEffect(() => {
+    const fetchPapers = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const { data, error } = await supabase
+          .from('working_papers')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        setPapers(data || []);
+      } catch (err) {
+        setError('Failed to load working papers.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPapers();
+  }, []);
+
+  const handleDownload = async (paper) => {
+    setDownloading(paper.id);
+    try {
+      let url = paper.file_url;
+      if (paper.access === 'paid') {
+        const { data, error } = await supabase
+          .storage
+          .from('working-papers')
+          .createSignedUrl(paper.file_name, 60 * 60);
+        if (error) throw error;
+        url = data.signedUrl;
+      }
+      window.open(url, '_blank');
+    } catch (err) {
+      alert('Failed to download paper.');
+    } finally {
+      setDownloading(null);
+    }
+  };
+
   return (
     <Box sx={{ py: { xs: 6, md: 5 }, bgcolor: '#f5f5f5' }}>
       {/* Hero Section */}
@@ -87,137 +100,139 @@ const WorkingPapers = () => {
           </Typography>
         </Box>
 
-        {/* Papers Grid */}
-        <Grid 
-          container 
-          display="flex" 
-          justifyContent="center" 
-          alignItems="stretch" 
-          spacing={2}
-          sx={{ maxWidth: '1200px', mx: 'auto' }}
-        >
-          {papers.map((paper) => (
-            <Grid 
-              key={paper.id}
-              sx={{ 
-                flexBasis: { xs: '100%', sm: '50%', md: '33.33%' },
-                maxWidth: { xs: '100%', sm: '50%', md: '33.33%' },
-                display: 'flex',
-                height: 'auto'
-              }}
-            >
-              <PaperCard elevation={2}>
-                <Box sx={{ 
-                  p: 3, 
-                  flexGrow: 1, 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  minHeight: '200px'
-                }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                    <Box>
-                      <Typography 
-                        variant="h6" 
-                        sx={{ 
-                          fontWeight: 600,
-                          color: '#1B2441',
-                          mb: 1,
-                          fontSize: '1.1rem',
-                          '&:hover': {
-                            color: '#C9AA74',
-                          }
-                        }}
-                      >
-                        {paper.title}
-                      </Typography>
-                      <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem', mb: 0.5 }}>
-                        <PersonIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
-                        {paper.authors.join(', ')}
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
-                        <CalendarTodayIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
-                        {paper.date}
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="30vh">
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Alert severity="error">{error}</Alert>
+        ) : papers.length === 0 ? (
+          <Typography align="center" color="text.secondary" sx={{ my: 6 }}>
+            No working papers available yet.
+          </Typography>
+        ) : (
+          <Grid 
+            container 
+            display="flex" 
+            justifyContent="center" 
+            alignItems="stretch" 
+            spacing={2}
+            sx={{ maxWidth: '1200px', mx: 'auto' }}
+          >
+            {papers.map((paper) => (
+              <Grid 
+                key={paper.id}
+                sx={{ 
+                  flexBasis: { xs: '100%', sm: '50%', md: '33.33%' },
+                  maxWidth: { xs: '100%', sm: '50%', md: '33.33%' },
+                  display: 'flex',
+                  height: 'auto'
+                }}
+              >
+                <PaperCard elevation={2}>
+                  <Box sx={{ 
+                    p: 3, 
+                    flexGrow: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    minHeight: '200px'
+                  }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
                         <Typography 
-                          component="span" 
+                          variant="h6" 
                           sx={{ 
-                            mx: 1,
-                            color: 'text.secondary'
+                            fontWeight: 600,
+                            color: '#1B2441',
+                            mb: 1,
+                            fontSize: '1.1rem',
+                            '&:hover': {
+                              color: '#C9AA74',
+                            }
                           }}
                         >
-                          •
+                          {paper.title}
                         </Typography>
-                        Series: {paper.series}
+                        <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem', mb: 0.5 }}>
+                          <PersonIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
+                          {paper.authors ? paper.authors : ''}
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
+                          <CalendarTodayIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
+                          {paper.created_at ? new Date(paper.created_at).toLocaleDateString() : ''}
+                        </Box>
                       </Box>
+                      <DescriptionIcon sx={{ color: 'text.secondary', fontSize: '1.5rem' }} />
                     </Box>
-                    <DescriptionIcon sx={{ color: 'text.secondary', fontSize: '1.5rem' }} />
-                  </Box>
 
-                  <Typography 
-                    sx={{ 
-                      color: 'text.secondary',
-                      mb: 2,
-                      fontSize: '0.875rem',
-                      lineHeight: 1.5
-                    }}
-                  >
-                    {paper.abstract}
-                  </Typography>
-
-                  {/* Keywords */}
-                  <Box sx={{ mb: 2 }}>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {paper.keywords.map((keyword, index) => (
-                        <Chip
-                          key={index}
-                          label={keyword}
-                          size="small"
-                          sx={{ 
-                            bgcolor: 'grey.100',
-                            color: 'text.secondary',
-                            fontSize: '0.75rem'
-                          }}
-                        />
-                      ))}
-                    </Box>
-                  </Box>
-
-                  <Box 
-                    sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      pt: 2,
-                      mt: 'auto',
-                      borderTop: 1,
-                      borderColor: 'divider'
-                    }}
-                  >
                     <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ fontSize: '0.875rem' }}
-                    >
-                      PDF • {paper.fileSize}
-                    </Typography>
-                    <Button
-                      startIcon={<DownloadIcon sx={{ fontSize: '1rem' }} />}
                       sx={{ 
-                        color: '#C9AA74',
+                        color: 'text.secondary',
+                        mb: 2,
                         fontSize: '0.875rem',
-                        '&:hover': { 
-                          color: '#AF9871',
-                          bgcolor: 'transparent'
-                        }
+                        lineHeight: 1.5
                       }}
                     >
-                      Download Paper
-                    </Button>
+                      {paper.description}
+                    </Typography>
+
+                    <Box sx={{ mb: 2 }}>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {paper.keywords && Array.isArray(paper.keywords) && paper.keywords.map((keyword, index) => (
+                          <Chip
+                            key={index}
+                            label={keyword}
+                            size="small"
+                            sx={{ 
+                              bgcolor: 'grey.100',
+                              color: 'text.secondary',
+                              fontSize: '0.75rem'
+                            }}
+                          />
+                        ))}
+                      </Box>
+                    </Box>
+
+                    <Box 
+                      sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        pt: 2,
+                        mt: 'auto',
+                        borderTop: 1,
+                        borderColor: 'divider'
+                      }}
+                    >
+                      <Typography 
+                        variant="body2" 
+                        color="text.secondary"
+                        sx={{ fontSize: '0.875rem' }}
+                      >
+                        {paper.original_file_name ? paper.original_file_name : paper.file_name}
+                      </Typography>
+                      <Button
+                        startIcon={<DownloadIcon sx={{ fontSize: '1rem' }} />}
+                        sx={{ 
+                          color: '#C9AA74',
+                          fontSize: '0.875rem',
+                          '&:hover': { 
+                            color: '#AF9871',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                        onClick={() => handleDownload(paper)}
+                        disabled={downloading === paper.id}
+                      >
+                        {downloading === paper.id ? 'Preparing...' : 'Download Paper'}
+                      </Button>
+                    </Box>
                   </Box>
-                </Box>
-              </PaperCard>
-            </Grid>
-          ))}
-        </Grid>
+                </PaperCard>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Container>
 
       {/* CTA Section */}

@@ -20,8 +20,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import { storage, databases } from '../../appwrite/config';
-import { ID } from 'appwrite';
+import { supabase } from '../../utils/supabaseClient'; // adjust path as needed
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -72,27 +71,33 @@ const Internship = () => {
     setSuccess(false);
 
     try {
-      // 1. Upload the resume
-      const fileResponse = await storage.createFile(
-        '68545f180007a9aee1c1',
-        ID.unique(),
-        formData.resume
-      );
+      // 1. Upload the resume to Supabase Storage
+      const fileExt = formData.resume.name.split('.').pop();
+      const fileName = `${formData.name.replace(/\s+/g, '_')}_${Date.now()}.${fileExt}`;
+      const { data: uploadData, error: uploadError } = await supabase
+        .storage
+        .from('resumes') // bucket name
+        .upload(fileName, formData.resume);
 
-      // 2. Create a document in the database
-      const applicationData = {
-        name: formData.name,
-        email: formData.email,
-        resumeId: fileResponse.$id,
-      };
+      if (uploadError) throw uploadError;
 
-      await databases.createDocument(
-        import.meta.env.VITE_DATABASE_ID,
-        import.meta.env.VITE_INTERNSHIP_COLLECTION_ID,
-        ID.unique(),
-        applicationData
-      );
-      
+      // 2. Get the public URL (or signed URL if private)
+      const { data: urlData } = supabase
+        .storage
+        .from('resumes')
+        .getPublicUrl(fileName);
+
+      // 3. Insert the application into the internships table
+      const { error: insertError } = await supabase
+        .from('internships')
+        .insert([{
+          name: formData.name,
+          email: formData.email,
+          resume_url: urlData.publicUrl, // or use a signed URL if private
+        }]);
+
+      if (insertError) throw insertError;
+
       setSuccess(true);
       setFormData({ name: '', email: '', resume: null });
     } catch (error) {

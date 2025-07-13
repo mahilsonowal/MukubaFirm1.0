@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, Button, Chip, TextField, Select, MenuItem, InputAdornment } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Button, Chip, CircularProgress, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
-import SearchIcon from '@mui/icons-material/Search';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DescriptionIcon from '@mui/icons-material/Description';
+import { supabase } from '../../utils/supabaseClient';
 
 const ResearchCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -22,68 +20,51 @@ const ResearchCard = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const categories = [
-  { id: 'all', name: 'All Research' },
-  { id: 'policy-briefs', name: 'Policy Briefs' },
-  { id: 'working-papers', name: 'Working Papers' },
-  { id: 'case-studies', name: 'Case Studies' },
-  { id: 'technical-notes', name: 'Technical Notes' }
-];
-
-const researchPapers = [
-  {
-    id: 'digital-economy-2024',
-    title: 'Digital Economy Transformation in Zambia',
-    category: 'policy-briefs',
-    description: 'Analysis of digital transformation trends and their impact on economic growth and development.',
-    tags: ['Digital Economy', 'Innovation', 'Technology'],
-    fileSize: '1.8 MB',
-    date: 'March 2024',
-    authors: ['Dr. Sarah Mwanza', 'John Banda']
-  },
-  {
-    id: 'sme-financing',
-    title: 'SME Financing Challenges and Solutions',
-    category: 'working-papers',
-    description: 'Comprehensive study on access to finance for small and medium enterprises in Zambia.',
-    tags: ['SMEs', 'Finance', 'Economic Development'],
-    fileSize: '2.5 MB',
-    date: 'February 2024',
-    authors: ['Dr. Michael Phiri', 'Elizabeth Tembo']
-  },
-  {
-    id: 'renewable-energy',
-    title: 'Renewable Energy Investment Opportunities',
-    category: 'case-studies',
-    description: 'Case study analysis of successful renewable energy projects and investment potential.',
-    tags: ['Energy', 'Investment', 'Sustainability'],
-    fileSize: '3.2 MB',
-    date: 'January 2024',
-    authors: ['Prof. David Mutati']
-  },
-  {
-    id: 'trade-corridors',
-    title: 'Regional Trade Corridors Development',
-    category: 'technical-notes',
-    description: 'Technical analysis of trade corridor development and its economic implications.',
-    tags: ['Trade', 'Infrastructure', 'Regional Integration'],
-    fileSize: '2.1 MB',
-    date: 'December 2023',
-    authors: ['Dr. Lisa Mulenga', 'James Kapesa']
-  }
-];
-
 const MiscellaneousResearch = () => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [papers, setPapers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [downloading, setDownloading] = useState(null);
 
-  const filteredPapers = researchPapers.filter(paper => {
-    const matchesCategory = selectedCategory === 'all' || paper.category === selectedCategory;
-    const matchesSearch = paper.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         paper.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         paper.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  useEffect(() => {
+    const fetchPapers = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const { data, error } = await supabase
+          .from('miscellaneous_research')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        setPapers(data || []);
+      } catch (err) {
+        setError('Failed to load research papers.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPapers();
+  }, []);
+
+  const handleDownload = async (paper) => {
+    setDownloading(paper.id);
+    try {
+      let url = paper.file_url;
+      if (paper.access === 'paid') {
+        const { data, error } = await supabase
+          .storage
+          .from('miscellaneous-research')
+          .createSignedUrl(paper.file_name, 60 * 60);
+        if (error) throw error;
+        url = data.signedUrl;
+      }
+      window.open(url, '_blank');
+    } catch (err) {
+      alert('Failed to download paper.');
+    } finally {
+      setDownloading(null);
+    }
+  };
 
   return (
     <Box sx={{ py: { xs: 6, md: 5 }, bgcolor: '#f5f5f5' }}>
@@ -100,7 +81,7 @@ const MiscellaneousResearch = () => {
               fontSize: { xs: '1.75rem', sm: '2rem', md: '2.5rem' }
             }}
           >
-            Miscellaneous Research
+            Miscellaneous Research Papers
           </Typography>
           <Typography 
             variant="h5" 
@@ -113,105 +94,55 @@ const MiscellaneousResearch = () => {
               mx: 'auto'
             }}
           >
-            Explore our diverse collection of research papers, policy briefs, working papers, and technical notes.
+            Explore our collection of miscellaneous research papers and special reports.
           </Typography>
         </Box>
 
-        {/* Search and Filter Section */}
-        <Box sx={{ bgcolor: 'white', borderBottom: 1, borderColor: 'divider', mb: 4 }}>
-          <Container maxWidth="lg" sx={{ py: 3 }}>
-            <Grid container spacing={2} alignItems="center">
-              <Grid xs={12} md={8}>
-                <TextField
-                  fullWidth
-                  placeholder="Search research papers..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon sx={{ color: 'text.secondary' }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '&:hover fieldset': {
-                        borderColor: '#1B2441',
-                      },
-                      '&.Mui-focused fieldset': {
-                        borderColor: '#1B2441',
-                      },
-                    },
-                  }}
-                />
-              </Grid>
-              <Grid xs={12} md={4}>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <FilterListIcon sx={{ color: 'text.secondary' }} />
-                  <Select
-                    fullWidth
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    sx={{
-                      '& .MuiOutlinedInput-notchedOutline': {
-                        borderColor: 'rgba(0, 0, 0, 0.23)',
-                      },
-                      '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#1B2441',
-                      },
-                      '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#1B2441',
-                      },
-                    }}
-                  >
-                    {categories.map(category => (
-                      <MenuItem key={category.id} value={category.id}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </Box>
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
-
-        {/* Research Papers Grid */}
-        <Grid 
-          container 
-          display="flex" 
-          justifyContent="center" 
-          alignItems="stretch" 
-          spacing={2}
-          sx={{ maxWidth: '1200px', mx: 'auto' }}
-        >
-          {filteredPapers.map((paper) => (
-            <Grid 
-              key={paper.id}
-              sx={{ 
-                flexBasis: { xs: '100%', sm: '50%', md: '33.33%' },
-                maxWidth: { xs: '100%', sm: '50%', md: '33.33%' },
-                display: 'flex',
-                height: 'auto'
-              }}
-            >
-              <ResearchCard elevation={2}>
-                <Box sx={{ 
-                  p: 3, 
-                  flexGrow: 1, 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  minHeight: '200px'
-                }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="30vh">
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Alert severity="error">{error}</Alert>
+        ) : papers.length === 0 ? (
+          <Typography align="center" color="text.secondary" sx={{ my: 6 }}>
+            No research papers available yet.
+          </Typography>
+        ) : (
+          <Grid 
+            container 
+            display="flex" 
+            justifyContent="center" 
+            alignItems="stretch" 
+            spacing={2}
+            sx={{ maxWidth: '1200px', mx: 'auto' }}
+          >
+            {papers.map((paper) => (
+              <Grid 
+                key={paper.id}
+                sx={{ 
+                  flexBasis: { xs: '100%', sm: '50%', md: '33.33%' },
+                  maxWidth: { xs: '100%', sm: '50%', md: '33.33%' },
+                  display: 'flex',
+                  height: 'auto'
+                }}
+              >
+                <ResearchCard elevation={2}>
+                  <Box sx={{ 
+                    p: 3, 
+                    flexGrow: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    minHeight: '200px'
+                  }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box>
                         <Typography 
                           variant="h6" 
                           sx={{ 
                             fontWeight: 600,
                             color: '#1B2441',
+                            mb: 1,
                             fontSize: '1.1rem',
                             '&:hover': {
                               color: '#C9AA74',
@@ -220,92 +151,86 @@ const MiscellaneousResearch = () => {
                         >
                           {paper.title}
                         </Typography>
-                        <Chip 
-                          label={categories.find(c => c.id === paper.category)?.name}
-                          size="small"
-                          sx={{ 
-                            ml: 2,
-                            bgcolor: '#C9AA74',
-                            color: 'white',
-                            fontSize: '0.75rem'
-                          }}
-                        />
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
-                        <CalendarTodayIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
-                        {paper.date}
+                        <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem', mb: 0.5 }}>
+                          {paper.authors && (
+                            <>{paper.authors}</>
+                          )}
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
+                          <DescriptionIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
+                          {paper.created_at ? new Date(paper.created_at).toLocaleDateString() : ''}
+                        </Box>
                       </Box>
                     </Box>
-                    <DescriptionIcon sx={{ color: '#C9AA74', fontSize: '1.5rem' }} />
-                  </Box>
 
-                  <Typography 
-                    sx={{ 
-                      color: 'text.secondary',
-                      mb: 2,
-                      fontSize: '0.875rem',
-                      lineHeight: 1.5
-                    }}
-                  >
-                    {paper.description}
-                  </Typography>
-
-                  {/* Tags */}
-                  <Box sx={{ mb: 2 }}>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      <LocalOfferIcon sx={{ color: 'text.secondary', fontSize: '1rem', mr: 0.5 }} />
-                      {paper.tags.map((tag, index) => (
-                        <Chip
-                          key={index}
-                          label={tag}
-                          size="small"
-                          sx={{ 
-                            bgcolor: 'grey.100',
-                            color: 'text.secondary',
-                            fontSize: '0.75rem'
-                          }}
-                        />
-                      ))}
-                    </Box>
-                  </Box>
-
-                  <Box 
-                    sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      pt: 2,
-                      mt: 'auto',
-                      borderTop: 1,
-                      borderColor: 'divider'
-                    }}
-                  >
                     <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ fontSize: '0.875rem' }}
-                    >
-                      By: {paper.authors.join(', ')} • PDF • {paper.fileSize}
-                    </Typography>
-                    <Button
-                      startIcon={<DownloadIcon sx={{ fontSize: '1rem' }} />}
                       sx={{ 
-                        color: '#C9AA74',
+                        color: 'text.secondary',
+                        mb: 2,
                         fontSize: '0.875rem',
-                        '&:hover': { 
-                          color: '#AF9871',
-                          bgcolor: 'transparent'
-                        }
+                        lineHeight: 1.5
                       }}
                     >
-                      Download Paper
-                    </Button>
+                      {paper.description}
+                    </Typography>
+
+                    <Box sx={{ mb: 2 }}>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {paper.keywords && Array.isArray(paper.keywords) && paper.keywords.map((keyword, index) => (
+                          <Chip
+                            key={index}
+                            label={keyword}
+                            size="small"
+                            sx={{ 
+                              bgcolor: 'grey.100',
+                              color: 'text.secondary',
+                              fontSize: '0.75rem'
+                            }}
+                          />
+                        ))}
+                      </Box>
+                    </Box>
+
+                    <Box 
+                      sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        pt: 2,
+                        mt: 'auto',
+                        borderTop: 1,
+                        borderColor: 'divider'
+                      }}
+                    >
+                      <Typography 
+                        variant="body2" 
+                        color="text.secondary"
+                        sx={{ fontSize: '0.875rem' }}
+                      >
+                        {paper.original_file_name ? paper.original_file_name : paper.file_name}
+                      </Typography>
+                      <Button
+                        startIcon={<DownloadIcon sx={{ fontSize: '1rem' }} />}
+                        sx={{ 
+                          color: '#C9AA74',
+                          fontSize: '0.875rem',
+                          '&:hover': { 
+                            color: '#AF9871',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                        onClick={() => handleDownload(paper)}
+                        disabled={downloading === paper.id}
+                      >
+                        {downloading === paper.id ? 'Preparing...' : 'Download Paper'}
+                      </Button>
+                    </Box>
                   </Box>
-                </Box>
-              </ResearchCard>
-            </Grid>
-          ))}
-        </Grid>
+                </ResearchCard>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Container>
 
       {/* CTA Section */}
@@ -359,7 +284,7 @@ const MiscellaneousResearch = () => {
                   component={Link}
                   to="/contact"
                   variant="contained"
-                  endIcon={<DownloadIcon />}
+                  endIcon={<ArrowForwardIcon />}
                   sx={{
                     bgcolor: 'white',
                     color: '#1B2441',

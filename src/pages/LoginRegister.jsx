@@ -1,25 +1,197 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext.jsx";
-import LoginForm from "../components/LoginForm";
-import RegisterForm from "../components/RegisterFrom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../utils/supabaseClient';
+import { Box, Button, TextField, Typography, Tabs, Tab, Alert, CircularProgress, Divider } from '@mui/material';
+import GoogleIcon from '@mui/icons-material/Google';
+import { useAuth } from '../context/AuthContext';
 
 const LoginRegister = () => {
+  const [tab, setTab] = useState(0); // 0 = Login, 1 = Register
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [name, setName] = useState('');
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [activeForm, setActiveForm] = useState("login");
+  const { loginUser, registerUser } = useAuth();
 
-  useEffect(() => {
-    if (user && user.$id) {
-      navigate("/dashboard"); // or "/"
+  const handleTabChange = (event, newValue) => {
+    setTab(newValue);
+    setError('');
+    setSuccess('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+    try {
+      if (tab === 0) {
+        // Login
+        // Sign in with Supabase
+        const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInError) throw signInError;
+        const user = data?.user;
+        if (user) {
+          // Check role in profiles table
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single();
+          if (profileError) throw profileError;
+          if (profile?.role === 'admin') {
+            throw new Error("Didn't find account");
+          }
+        }
+        setTimeout(() => {
+          navigate('/user-dashboard');
+        }, 500);
+      } else {
+        // Register
+        const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
+        if (signUpError) throw signUpError;
+        const user = data?.user;
+        if (user) {
+          // Insert into profiles table
+          const { error: profileError } = await supabase.from('profiles').insert([
+            {
+              id: user.id,
+              email,
+              name,
+              role: 'user',
+            },
+          ]);
+          if (profileError) throw profileError;
+        }
+        setSuccess('Successfully registered! Redirecting to home...');
+        setTimeout(() => {
+          navigate('/');
+        }, 2000);
+        return;
+      }
+    } catch (err) {
+      setError(err.message || 'Authentication error');
+    } finally {
+      setLoading(false);
     }
-  }, [user, navigate]);
+  };
 
-  return activeForm === "login" ? (
-    <LoginForm setActiveForm={setActiveForm} />
-  ) : (
-    <RegisterForm setActiveForm={setActiveForm} />
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+      if (error) throw error;
+      // Wait for the session to be set after redirect
+      // After redirect, check if profile exists, if not, create it
+      const checkProfile = async () => {
+        const session = await supabase.auth.getSession();
+        const user = session.data.session?.user;
+        if (!user) return;
+        // Check if profile exists
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', user.id)
+          .single();
+        if (profileError && profileError.code !== 'PGRST116') throw profileError;
+        if (!profile) {
+          // Create profile for new Google user
+          const { error: insertError } = await supabase.from('profiles').insert([
+            {
+              id: user.id,
+              email: user.email,
+              name: user.user_metadata?.name || '',
+              role: 'user',
+            },
+          ]);
+          if (insertError) throw insertError;
+          navigate('/user-dashboard');
+        } else if (profile.role === 'admin') {
+          throw new Error("Didn't find account");
+        } else {
+          navigate('/user-dashboard');
+        }
+      };
+      // Wait a bit for session to be available
+      setTimeout(checkProfile, 1000);
+    } catch (err) {
+      setError(err.message || 'Google login error');
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Box maxWidth={400} mx="auto" mt={8} p={3} boxShadow={3} borderRadius={2} bgcolor="#fff">
+      <Tabs value={tab} onChange={handleTabChange} centered sx={{ mb: 2 }}>
+        <Tab label="Login" />
+        <Tab label="Register" />
+      </Tabs>
+      {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+      {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+      <form onSubmit={handleSubmit}>
+        {tab === 1 && (
+          <TextField
+            label="Name"
+            type="text"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            fullWidth
+            required
+            sx={{ mb: 2 }}
+          />
+        )}
+        <TextField
+          label="Email"
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          fullWidth
+          required
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          fullWidth
+          required
+          sx={{ mb: 2 }}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          disabled={loading}
+          sx={{ mb: 2, backgroundColor: '#AF9871', '&:hover': { backgroundColor: '#977F59' } }}
+        >
+          {loading ? <CircularProgress size={24} color="inherit" /> : (tab === 0 ? 'Login' : 'Register')}
+        </Button>
+      </form>
+      <Divider sx={{ my: 2 }}>OR</Divider>
+      <Button
+        variant="outlined"
+        fullWidth
+        startIcon={<GoogleIcon />}
+        onClick={handleGoogleLogin}
+        disabled={loading}
+        sx={{ color: '#AF9871', borderColor: '#AF9871', '&:hover': { borderColor: '#977F59', backgroundColor: 'rgba(175, 152, 113, 0.08)' } }}
+      >
+        Continue with Google
+      </Button>
+      <Typography variant="body2" color="textSecondary" align="center" sx={{ mt: 2 }}>
+        {tab === 0 ? "Don't have an account?" : 'Already have an account?'}{' '}
+        <Button color="primary" onClick={() => setTab(tab === 0 ? 1 : 0)} sx={{ textTransform: 'none', p: 0, minWidth: 0 }}>
+          {tab === 0 ? 'Register' : 'Login'}
+        </Button>
+      </Typography>
+    </Box>
   );
 };
 
-export default LoginRegister;
+export default LoginRegister; 

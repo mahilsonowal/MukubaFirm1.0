@@ -1,12 +1,6 @@
 import { useState } from 'react';
 import { Box, TextField, Button, Checkbox, FormControlLabel, Typography, Grid, Alert } from '@mui/material';
-import emailjs from 'emailjs-com';
-import { databases } from '../../appwrite/config';
-import { ID } from 'appwrite';
-
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-const USER_ID = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+import { supabase } from '../../utils/supabaseClient'; // adjust path as needed
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -57,42 +51,22 @@ const ContactForm = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess("");
     setError("");
     if (validateForm()) {
-      emailjs.send(
-        SERVICE_ID,
-        TEMPLATE_ID,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject,
-          message: formData.message,
-        },
-        USER_ID
-      )
-      .then(async (result) => {
-        // Store in Appwrite
-        try {
-          await databases.createDocument(
-            import.meta.env.VITE_DATABASE_ID,
-            import.meta.env.VITE_CONTACT_COLLECTION_ID,
-            ID.unique(),
-            {
-              name: formData.name,
-              email: formData.email,
-              phone: formData.phone,
-              subject: formData.subject,
-              message: formData.message,
-            }
-          );
-        } catch (err) {
-          // Optionally handle Appwrite error
-          console.error('Appwrite error:', err);
-        }
+      try {
+        const { error: insertError } = await supabase
+          .from('contact_messages')
+          .insert([{
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            subject: formData.subject,
+            message: formData.message,
+          }]);
+        if (insertError) throw insertError;
         setSuccess('Message sent successfully!');
         setFormData({
           name: '',
@@ -102,9 +76,9 @@ const ContactForm = () => {
           message: '',
           allowStorage: false
         });
-      }, (error) => {
+      } catch (err) {
         setError('Failed to send message. Please try again later.');
-      });
+      }
     }
   };
 

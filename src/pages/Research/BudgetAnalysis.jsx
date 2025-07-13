@@ -1,12 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, Button, Chip } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Container, Typography, Grid, Paper, Button, Chip, CircularProgress, Alert } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import { supabase } from '../../utils/supabaseClient';
 
 const ReportCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -21,58 +21,54 @@ const ReportCard = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const reports = [
-  {
-    id: 'national-budget-2024',
-    title: '2024 National Budget Analysis',
-    description: 'Comprehensive analysis of the 2024 National Budget, including key allocations, fiscal policies, and economic implications.',
-    sectors: ['National Budget', 'Fiscal Policy', 'Economic Planning'],
-    highlights: [
-      'Revenue and expenditure analysis',
-      'Sector-wise allocation review',
-      'Debt sustainability assessment',
-      'Economic growth projections'
-    ],
-    fileSize: '4.5 MB',
-    date: 'October 2023',
-    type: 'Annual Analysis'
-  },
-  {
-    id: 'health-sector-2024',
-    title: 'Healthcare Sector Budget Review',
-    description: 'Detailed analysis of healthcare sector budget allocations and their impact on public health services.',
-    sectors: ['Healthcare', 'Public Services', 'Social Development'],
-    highlights: [
-      'Healthcare infrastructure funding',
-      'Medical supplies allocation',
-      'Staff recruitment provisions',
-      'Rural healthcare initiatives'
-    ],
-    fileSize: '2.8 MB',
-    date: 'November 2023',
-    type: 'Sector Analysis'
-  },
-  {
-    id: 'education-budget-2024',
-    title: 'Education Sector Budget Analysis',
-    description: 'Analysis of education sector budget allocations, focusing on infrastructure development and quality improvement initiatives.',
-    sectors: ['Education', 'Infrastructure', 'Human Capital'],
-    highlights: [
-      'School infrastructure development',
-      'Teacher recruitment and training',
-      'Educational materials provision',
-      'Special education programs'
-    ],
-    fileSize: '3.2 MB',
-    date: 'December 2023',
-    type: 'Sector Analysis'
-  }
-];
-
 const BudgetAnalysis = () => {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [downloading, setDownloading] = useState(null);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const { data, error } = await supabase
+          .from('budget_analysis')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        setReports(data || []);
+      } catch (err) {
+        setError('Failed to load budget analysis reports.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReports();
+  }, []);
+
+  const handleDownload = async (report) => {
+    setDownloading(report.id);
+    try {
+      let url = report.file_url;
+      if (report.access === 'paid') {
+        const { data, error } = await supabase
+          .storage
+          .from('budget-analysis')
+          .createSignedUrl(report.file_name, 60 * 60);
+        if (error) throw error;
+        url = data.signedUrl;
+      }
+      window.open(url, '_blank');
+    } catch (err) {
+      alert('Failed to download report.');
+    } finally {
+      setDownloading(null);
+    }
+  };
+
   return (
     <Box sx={{ py: { xs: 6, md: 5 }, bgcolor: '#f5f5f5' }}>
-      {/* Hero Section */}
       <Container maxWidth="lg">
         <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 }, py: 6, px: 2, borderRadius: 1 }}>
           <Typography 
@@ -102,178 +98,129 @@ const BudgetAnalysis = () => {
           </Typography>
         </Box>
 
-        {/* Reports Grid */}
-        <Grid 
-          container 
-          display="flex" 
-          justifyContent="center" 
-          alignItems="stretch" 
-          spacing={2}
-          sx={{ maxWidth: '1200px', mx: 'auto' }}
-        >
-          {reports.map((report) => (
-            <Grid 
-              key={report.id}
-              sx={{ 
-                flexBasis: { xs: '100%', sm: '33.33%' },
-                maxWidth: { xs: '100%', sm: '33.33%' },
-                display: 'flex',
-                height: 'auto'
-              }}
-            >
-              <ReportCard elevation={2}>
-                <Box sx={{ 
-                  p: 3, 
-                  flexGrow: 1, 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  minHeight: '200px'
-                }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <Typography 
-                          variant="h6" 
-                          sx={{ 
-                            fontWeight: 600,
-                            color: '#1B2441',
-                            fontSize: '1.1rem',
-                            '&:hover': {
-                              color: '#C9AA74',
-                            }
-                          }}
-                        >
-                          {report.title}
-                        </Typography>
-                        <Chip 
-                          label={report.type}
-                          size="small"
-                          sx={{ 
-                            ml: 2,
-                            bgcolor: '#1B2441',
-                            color: 'white',
-                            fontSize: '0.75rem'
-                          }}
-                        />
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
-                        <CalendarTodayIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
-                        {report.date}
-                      </Box>
-                    </Box>
-                    <BarChartIcon sx={{ color: '#C9AA74', fontSize: '1.5rem' }} />
-                  </Box>
-
-                  <Typography 
-                    sx={{ 
-                      color: 'text.secondary',
-                      mb: 2,
-                      fontSize: '0.875rem',
-                      lineHeight: 1.5
-                    }}
-                  >
-                    {report.description}
-                  </Typography>
-
-                  {/* Sectors */}
-                  <Box sx={{ mb: 2 }}>
-                    <Typography 
-                      variant="subtitle2" 
-                      sx={{ 
-                        mb: 1, 
-                        color: 'text.primary',
-                        fontSize: '0.875rem'
-                      }}
-                    >
-                      Sectors Covered:
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                      {report.sectors.map((sector, index) => (
-                        <Chip
-                          key={index}
-                          label={sector}
-                          size="small"
-                          sx={{ 
-                            bgcolor: 'grey.100',
-                            color: 'text.secondary',
-                            fontSize: '0.75rem'
-                          }}
-                        />
-                      ))}
-                    </Box>
-                  </Box>
-
-                  {/* Highlights */}
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="30vh">
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Alert severity="error">{error}</Alert>
+        ) : reports.length === 0 ? (
+          <Typography align="center" color="text.secondary" sx={{ my: 6 }}>
+            No budget analysis reports available yet.
+          </Typography>
+        ) : (
+          <Grid 
+            container 
+            display="flex" 
+            justifyContent="center" 
+            alignItems="stretch" 
+            spacing={2}
+            sx={{ maxWidth: '1200px', mx: 'auto' }}
+          >
+            {reports.map((report) => (
+              <Grid 
+                key={report.id}
+                sx={{ 
+                  flexBasis: { xs: '100%', sm: '33.33%' },
+                  maxWidth: { xs: '100%', sm: '33.33%' },
+                  display: 'flex',
+                  height: 'auto'
+                }}
+              >
+                <ReportCard elevation={2}>
                   <Box sx={{ 
-                    mb: 2,
-                    bgcolor: 'grey.50',
-                    p: 2,
-                    borderRadius: 1
+                    p: 3, 
+                    flexGrow: 1, 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    minHeight: '200px'
                   }}>
-                    <Typography 
-                      variant="subtitle2" 
-                      sx={{ 
-                        mb: 1, 
-                        color: 'text.primary',
-                        fontSize: '0.875rem'
-                      }}
-                    >
-                      Key Highlights:
-                    </Typography>
-                    <Grid container spacing={1}>
-                      {report.highlights.map((highlight, index) => (
-                        <Grid xs={6} key={index}>
-                          <Box sx={{ 
-                            display: 'flex',
-                            alignItems: 'center',
-                            color: 'text.secondary',
-                            fontSize: '0.875rem'
-                          }}>
-                            <ArrowRightIcon sx={{ fontSize: '0.875rem', mr: 0.5, color: '#C9AA74' }} />
-                            {highlight}
-                          </Box>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                      <Box sx={{ flexGrow: 1 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <Typography 
+                            variant="h6" 
+                            sx={{ 
+                              fontWeight: 600,
+                              color: '#1B2441',
+                              fontSize: '1.1rem',
+                              '&:hover': {
+                                color: '#C9AA74',
+                              }
+                            }}
+                          >
+                            {report.title}
+                          </Typography>
+                          <Chip 
+                            label={report.access === 'paid' ? 'Paid' : 'Free'}
+                            size="small"
+                            sx={{ 
+                              ml: 2,
+                              bgcolor: report.access === 'paid' ? '#AF9871' : '#1B2441',
+                              color: 'white',
+                              fontSize: '0.75rem'
+                            }}
+                          />
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', color: 'text.secondary', fontSize: '0.875rem' }}>
+                          <CalendarTodayIcon sx={{ fontSize: '1rem', mr: 0.5 }} />
+                          {report.created_at ? new Date(report.created_at).toLocaleDateString() : ''}
+                        </Box>
+                      </Box>
+                      <BarChartIcon sx={{ color: '#C9AA74', fontSize: '1.5rem' }} />
+                    </Box>
 
-                  <Box 
-                    sx={{ 
-                      display: 'flex', 
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      pt: 2,
-                      mt: 'auto',
-                      borderTop: 1,
-                      borderColor: 'divider'
-                    }}
-                  >
                     <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ fontSize: '0.875rem' }}
-                    >
-                      PDF • {report.fileSize}
-                    </Typography>
-                    <Button
-                      startIcon={<DownloadIcon sx={{ fontSize: '1rem' }} />}
                       sx={{ 
-                        color: '#C9AA74',
+                        color: 'text.secondary',
+                        mb: 2,
                         fontSize: '0.875rem',
-                        '&:hover': { 
-                          color: '#AF9871',
-                          bgcolor: 'transparent'
-                        }
+                        lineHeight: 1.5
                       }}
                     >
-                      Download Report
-                    </Button>
+                      {report.description}
+                    </Typography>
+
+                    <Box 
+                      sx={{ 
+                        display: 'flex', 
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        pt: 2,
+                        mt: 'auto',
+                        borderTop: 1,
+                        borderColor: 'divider'
+                      }}
+                    >
+                      <Typography 
+                        variant="body2" 
+                        color="text.secondary"
+                        sx={{ fontSize: '0.875rem' }}
+                      >
+                        {report.original_file_name ? report.original_file_name : report.file_name}
+                      </Typography>
+                      <Button
+                        startIcon={<DownloadIcon sx={{ fontSize: '1rem' }} />}
+                        sx={{ 
+                          color: '#C9AA74',
+                          fontSize: '0.875rem',
+                          '&:hover': { 
+                            color: '#AF9871',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                        onClick={() => handleDownload(report)}
+                        disabled={downloading === report.id}
+                      >
+                        {downloading === report.id ? 'Preparing...' : 'Download Report'}
+                      </Button>
+                    </Box>
                   </Box>
-                </Box>
-              </ReportCard>
-            </Grid>
-          ))}
-        </Grid>
+                </ReportCard>
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Container>
 
       {/* CTA Section */}
@@ -324,8 +271,6 @@ const BudgetAnalysis = () => {
                 }}
               >
                 <Button
-                  component={Link}
-                  to="/contact"
                   variant="contained"
                   endIcon={<ArrowForwardIcon />}
                   sx={{

@@ -1,65 +1,51 @@
-import { useState, useEffect, createContext, useContext } from "react";
-import { account } from "../appwrite/config";
-import BrandedLoader from "../components/common/BrandedLoader";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { supabase } from '../utils/supabaseClient';
 
 const AuthContext = createContext();
 
+export const useAuth = () => useContext(AuthContext);
+
 const AuthProvider = ({ children }) => {
-    const [authLoading, setAuthLoading] = useState(true); // ✅ changed name
-    const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        init();
-    }, []);
+  useEffect(() => {
+    // Check active session on mount
+    const session = supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
-    const init = async () => {
-        const response = await checkUserStatus();
-        setUser(response);
-        setAuthLoading(false); // ✅ not 'loading'
+    // Listen for auth state changes
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      listener?.subscription.unsubscribe();
     };
+  }, []);
 
-    const checkUserStatus = async () => {
-        try {
-            const userData = await account.get();
-            return userData;
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
-    };
+  // Auth functions
+  const loginUser = async (email, password) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+  };
 
-    const loginUser = async (email, password) => {
-        // Don't set `authLoading` here — let UI component handle its own loading
-        try {
-            await account.createEmailPasswordSession(email, password);
-            const response = await checkUserStatus();
-            setUser(response);
-        } catch (error) {
-            setUser(null);
-            console.error(error);
-            throw error;
-        }
-    };
+  const registerUser = async (email, password) => {
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
+  };
 
-    const logoutUser = async () => {
-        await account.deleteSession("current");
-        setUser(null);
-    };
+  const logoutUser = async () => {
+    await supabase.auth.signOut();
+  };
 
-    const contextData = { user, loginUser, logoutUser };
-
-    return (
-        <AuthContext.Provider value={contextData}>
-            {authLoading ? <BrandedLoader /> : children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider value={{ user, loading, loginUser, registerUser, logoutUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-
-const useAuth = () => {
-    return useContext(AuthContext);
-};
-
-export { useAuth };
-
-export default AuthProvider;
+export default AuthProvider; 
