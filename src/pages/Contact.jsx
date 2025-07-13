@@ -327,7 +327,7 @@ const Contact = () => {
                       Our Location
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Plot #36 Kudu Rd<br />
+                      Plot #38 Kudu Rd<br />
                       Kabulonga, lusaka
                     </Typography>
                   </Box>
