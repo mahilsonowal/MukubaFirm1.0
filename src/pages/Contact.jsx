@@ -314,7 +314,7 @@ const Contact = () => {
                       Call
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      +260768112551 | +260979140962
+                      +260768112551 | +260979140962 | +260979618112
                     </Typography>
                   </Box>
                 </Box>
@@ -327,7 +327,8 @@ const Contact = () => {
                       WhatsApp
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      +260979618112
+                      
+                      +260768112551
                     </Typography>
                   </Box>
                 </Box>
