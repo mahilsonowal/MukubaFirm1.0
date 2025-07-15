@@ -71,7 +71,7 @@ const ThomsonSilomba = () => {
                 style={{
                   width: '100%',
                   height: '300px',
-                  objectFit: 'cover',
+                  objectFit: 'contain',
                   borderRadius: '8px'
                 }}
               />

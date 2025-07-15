@@ -401,7 +401,23 @@ const StaffManagement = () => {
                             <EmailIcon sx={{ fontSize: '1rem' }} />
                           </IconButton>
                         </Box>
-                        {!staff.placeholder && (
+                        {!staff.placeholder && staff.id === 'thomson-silomba' ? (
+                          <Typography 
+                            component={Link}
+                            to="/about/staff/thomson-silomba"
+                            sx={{ 
+                              color: '#C9AA74',
+                              fontSize: '0.8rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 0.5,
+                              textDecoration: 'none',
+                              '&:hover': { textDecoration: 'underline' }
+                            }}
+                          >
+                            View Profile <ArrowForwardIcon sx={{ fontSize: '0.9rem' }} />
+                          </Typography>
+                        ) : !staff.placeholder && (
                           <Typography 
                             sx={{ 
                               color: '#C9AA74',
