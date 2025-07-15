@@ -311,11 +311,23 @@ const Contact = () => {
                   </ContactIcon>
                   <Box>
                     <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mb: 0.5 }}>
-                      Phone Number
+                      Call
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      +260 123 456 789<br />
-                      +260 987 654 321
+                      +260768112551 | +260979140962
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
+                  <ContactIcon>
+                    <PhoneIcon />
+                  </ContactIcon>
+                  <Box>
+                    <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mb: 0.5 }}>
+                      WhatsApp
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      +260979618112
                     </Typography>
                   </Box>
                 </Box>
