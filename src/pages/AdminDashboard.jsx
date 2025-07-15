@@ -31,7 +31,7 @@ const AdminDashboard = () => {
           supabase.from('profiles').select('id, name, email, role, created_at'),
           supabase.from('newsletter_subscribers').select('email, created_at'),
           supabase.from('contact_messages').select('name, email, phone, subject, message, created_at'),
-          supabase.from('internships').select('name, email, resume_url, created_at'),
+          supabase.from('internships').select('name, email, internship_type, resume_url, created_at'),
         ]);
         if (usersRes.error) throw usersRes.error;
         if (subsRes.error) throw subsRes.error;
@@ -189,6 +189,7 @@ const AdminDashboard = () => {
                         <TableRow>
                           <TableCell>Name</TableCell>
                           <TableCell>Email</TableCell>
+                          <TableCell>Internship Type</TableCell>
                           <TableCell>Resume</TableCell>
                           <TableCell>Applied</TableCell>
                         </TableRow>
@@ -198,6 +199,7 @@ const AdminDashboard = () => {
                           <TableRow key={idx}>
                             <TableCell>{i.name}</TableCell>
                             <TableCell>{i.email}</TableCell>
+                            <TableCell>{i.internship_type || '-'}</TableCell>
                             <TableCell>
                               {i.resume_url ? (
                                 <a href={i.resume_url} target="_blank" rel="noopener noreferrer">View Resume</a>

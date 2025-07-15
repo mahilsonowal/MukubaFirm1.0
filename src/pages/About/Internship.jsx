@@ -54,7 +54,8 @@ const Internship = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    resume: null
+    resume: null,
+    internshipType: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -93,13 +94,14 @@ const Internship = () => {
         .insert([{
           name: formData.name,
           email: formData.email,
+          internship_type: formData.internshipType,
           resume_url: urlData.publicUrl, // or use a signed URL if private
         }]);
 
       if (insertError) throw insertError;
 
       setSuccess(true);
-      setFormData({ name: '', email: '', resume: null });
+      setFormData({ name: '', email: '', resume: null, internshipType: '' });
     } catch (error) {
       console.error('Application submission failed:', error);
       setError('Failed to submit application. Please try again.');
@@ -494,6 +496,16 @@ const Internship = () => {
                 variant="outlined"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                required
+                sx={{ mb: 3 }}
+                disabled={loading}
+              />
+              <TextField
+                fullWidth
+                label="Internship Type (e.g. Research, Business Development)"
+                variant="outlined"
+                value={formData.internshipType}
+                onChange={(e) => setFormData({ ...formData, internshipType: e.target.value })}
                 required
                 sx={{ mb: 3 }}
                 disabled={loading}
