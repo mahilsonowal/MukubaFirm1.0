@@ -7,6 +7,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import Newsletter from '../../components/ContactSection/Newsletter';
 
 const UpdateCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -214,75 +215,8 @@ const Updates = () => {
       </Container>
 
       {/* Subscribe Section */}
-      <Box sx={{ bgcolor: 'white', borderTop: 1, borderColor: 'divider', mt: 6 }}>
-        <Container maxWidth="lg" sx={{ py: { xs: 6, md: 8 } }}>
-          <Paper 
-            sx={{ 
-              bgcolor: '#1B2441',
-              p: { xs: 3, md: 6 },
-              borderRadius: 4,
-              color: 'white'
-            }}
-          >
-            <Grid container display="flex" justifyContent="center" alignItems="stretch" spacing={2}>
-              <Grid 
-                sx={{ 
-                  flexBasis: { xs: '100%', md: '66.67%' },
-                  maxWidth: { xs: '100%', md: '66.67%' }
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                  <NotificationsIcon sx={{ fontSize: '2rem', mr: 2 }} />
-                  <Typography 
-                    variant="h4" 
-                    sx={{ 
-                      fontWeight: 700,
-                      fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' }
-                    }}
-                  >
-                    Stay Updated
-                  </Typography>
-                </Box>
-                <Typography 
-                  sx={{ 
-                    color: 'rgba(255, 255, 255, 0.9)',
-                    mb: { xs: 3, md: 0 },
-                    fontSize: { xs: '1rem', sm: '1.1rem' }
-                  }}
-                >
-                  Subscribe to our newsletter to receive regular updates about our research, events, and advocacy work.
-                </Typography>
-              </Grid>
-              <Grid 
-                sx={{ 
-                  flexBasis: { xs: '100%', md: '33.33%' },
-                  maxWidth: { xs: '100%', md: '33.33%' },
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: { xs: 'flex-start', md: 'flex-end' }
-                }}
-              >
-                <Button
-                  component={Link}
-                  to="/contact"
-                  variant="contained"
-                  endIcon={<ArrowForwardIcon />}
-                  sx={{
-                    bgcolor: 'white',
-                    color: '#1B2441',
-                    px: 4,
-                    py: 1.5,
-                    '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.9)',
-                    }
-                  }}
-                >
-                  Subscribe Now
-                </Button>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Container>
+      <Box sx={{ mt: 10 }}>
+        <Newsletter />
       </Box>
     </Box>
   );
