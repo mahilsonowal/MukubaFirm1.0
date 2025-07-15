@@ -96,7 +96,7 @@ function App() {
 
   // Show loader on first mount
   useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(false), 1500);
+    const timer = setTimeout(() => setShowLoader(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
