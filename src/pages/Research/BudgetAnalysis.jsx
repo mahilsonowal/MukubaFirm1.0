@@ -7,6 +7,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { supabase } from '../../utils/supabaseClient';
+import { Link } from 'react-router-dom';
 
 const ReportCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -271,6 +272,8 @@ const BudgetAnalysis = () => {
                 }}
               >
                 <Button
+                  component={Link}
+                  to="/pages/contact"
                   variant="contained"
                   endIcon={<ArrowForwardIcon />}
                   sx={{

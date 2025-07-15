@@ -267,7 +267,7 @@ const StrategicPlans = () => {
               >
                 <Button
                   component={Link}
-                  to="/contact"
+                  to="/pages/contact"
                   variant="contained"
                   endIcon={<ArrowForwardIcon />}
                   sx={{

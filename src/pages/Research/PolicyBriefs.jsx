@@ -6,6 +6,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DescriptionIcon from '@mui/icons-material/Description';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import { supabase } from '../../utils/supabaseClient';
+import { Link } from 'react-router-dom';
 
 const BriefCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -297,6 +298,8 @@ const PolicyBriefs = () => {
                 }}
               >
                 <Button
+                  component={Link}
+                  to="/pages/contact"
                   variant="contained"
                   endIcon={<ArrowForwardIcon />}
                   sx={{
