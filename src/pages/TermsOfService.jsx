@@ -97,7 +97,7 @@ const TermsOfService = () => (
         9. Contact Us
       </Typography>
       <Typography paragraph>
-        If you have any questions about these Terms, please contact us at <a href="mailto:info@mukuba.com">info@mukuba.com</a>.
+        If you have any questions about these Terms, please contact us at <a href="mailto:info@mukubaecon.io">info@mukubaecon.io</a>.
       </Typography>
     </Box>
   </Container>

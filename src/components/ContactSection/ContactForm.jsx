@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box, TextField, Button, Checkbox, FormControlLabel, Typography, Grid, Alert } from '@mui/material';
-import { supabase } from '../../utils/supabaseClient'; // adjust path as needed
+import { supabase } from '../../utils/supabaseClient';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -233,7 +233,18 @@ const ContactForm = () => {
                 color="primary"
               />
             }
-            label="I agree to the Terms and Conditions and Privacy Policy*"
+            label={
+              <Typography variant="body2" component="span">
+                I agree to the{' '}
+                <a href="/terms" style={{ color: '#1B2441', textDecoration: 'underline' }}>
+                  Terms and Conditions
+                </a>{' '}and{' '}
+                <a href="/privacy" style={{ color: '#1B2441', textDecoration: 'underline' }}>
+                  Privacy Policy
+                </a>
+                <span style={{ color: '#d32f2f', marginLeft: 4 }}>*</span>
+              </Typography>
+            }
           />
           {errors.allowStorage && (
             <Typography color="error" variant="body2">

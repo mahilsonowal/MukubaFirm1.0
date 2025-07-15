@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box, Container, Typography, TextField, Button, Alert, CircularProgress } from '@mui/material';
-import { supabase } from '../../utils/supabaseClient'; // adjust path as needed
+import { supabase } from '../../utils/supabaseClient'; 
 
 const Newsletter = () => {
   const [subscribeEmail, setSubscribeEmail] = useState('');

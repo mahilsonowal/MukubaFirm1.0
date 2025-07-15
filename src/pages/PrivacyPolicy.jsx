@@ -109,7 +109,7 @@ const PrivacyPolicy = () => (
         6. Your Rights
       </Typography>
       <Typography paragraph>
-        You have the right to access, correct, or delete your personal information. To exercise these rights, please contact us at <a href="mailto:info@mukuba.com">info@mukuba.com</a>.
+        You have the right to access, correct, or delete your personal information. To exercise these rights, please contact us at <a href="mailto:info@mukubaecon.io">info@mukubaecon.io</a>.
       </Typography>
     </Box>
 
@@ -127,7 +127,7 @@ const PrivacyPolicy = () => (
         8. Contact Us
       </Typography>
       <Typography paragraph>
-        If you have any questions about this Privacy Policy, please contact us at <a href="mailto:info@mukuba.com">info@mukuba.com</a>.
+        If you have any questions about this Privacy Policy, please contact us at <a href="mailto:info@mukubaecon.io">info@mukubaecon.io</a>.
       </Typography>
     </Box>
   </Container>

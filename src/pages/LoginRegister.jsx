@@ -7,12 +7,15 @@ import { useAuth } from '../context/AuthContext';
 
 const LoginRegister = () => {
   const [tab, setTab] = useState(0); // 0 = Login, 1 = Register
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [registerName, setRegisterName] = useState('');
+  const [registerEmail, setRegisterEmail] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [registerConfirmPassword, setRegisterConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [name, setName] = useState('');
   const navigate = useNavigate();
   const { loginUser, registerUser } = useAuth();
 
@@ -27,15 +30,18 @@ const LoginRegister = () => {
     setLoading(true);
     setError('');
     setSuccess('');
+    if (tab === 1 && registerPassword !== registerConfirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+      return;
+    }
     try {
       if (tab === 0) {
         // Login
-        // Sign in with Supabase
-        const { data, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error: signInError } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
         if (signInError) throw signInError;
         const user = data?.user;
         if (user) {
-          // Check role in profiles table
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
@@ -43,24 +49,24 @@ const LoginRegister = () => {
             .single();
           if (profileError) throw profileError;
           if (profile?.role === 'admin') {
+            await supabase.auth.signOut();
             throw new Error("Didn't find account");
           }
         }
         setTimeout(() => {
-          navigate('/user-dashboard');
+          navigate('/');
         }, 500);
       } else {
         // Register
-        const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
+        const { data, error: signUpError } = await supabase.auth.signUp({ email: registerEmail, password: registerPassword });
         if (signUpError) throw signUpError;
         const user = data?.user;
         if (user) {
-          // Insert into profiles table
           const { error: profileError } = await supabase.from('profiles').insert([
             {
               id: user.id,
-              email,
-              name,
+              email: registerEmail,
+              name: registerName,
               role: 'user',
             },
           ]);
@@ -85,13 +91,10 @@ const LoginRegister = () => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
       if (error) throw error;
-      // Wait for the session to be set after redirect
-      // After redirect, check if profile exists, if not, create it
       const checkProfile = async () => {
         const session = await supabase.auth.getSession();
         const user = session.data.session?.user;
         if (!user) return;
-        // Check if profile exists
         const { data: profile, error: profileError } = await supabase
           .from('profiles')
           .select('role')
@@ -99,7 +102,6 @@ const LoginRegister = () => {
           .single();
         if (profileError && profileError.code !== 'PGRST116') throw profileError;
         if (!profile) {
-          // Create profile for new Google user
           const { error: insertError } = await supabase.from('profiles').insert([
             {
               id: user.id,
@@ -111,12 +113,12 @@ const LoginRegister = () => {
           if (insertError) throw insertError;
           navigate('/user-dashboard');
         } else if (profile.role === 'admin') {
+          await supabase.auth.signOut();
           throw new Error("Didn't find account");
         } else {
           navigate('/user-dashboard');
         }
       };
-      // Wait a bit for session to be available
       setTimeout(checkProfile, 1000);
     } catch (err) {
       setError(err.message || 'Google login error');
@@ -125,7 +127,7 @@ const LoginRegister = () => {
   };
 
   return (
-    <Box maxWidth={400} mx="auto" mt={8} p={3} boxShadow={3} borderRadius={2} bgcolor="#fff">
+    <Box maxWidth={400} mx="auto" mt={8} p={3} boxShadow={3} borderRadius={2} bgcolor="#fff" mb={20}>
       <Tabs value={tab} onChange={handleTabChange} centered sx={{ mb: 2 }}>
         <Tab label="Login" />
         <Tab label="Register" />
@@ -134,34 +136,67 @@ const LoginRegister = () => {
       {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
       <form onSubmit={handleSubmit}>
         {tab === 1 && (
-          <TextField
-            label="Name"
-            type="text"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            fullWidth
-            required
-            sx={{ mb: 2 }}
-          />
+          <>
+            <TextField
+              label="Name"
+              type="text"
+              value={registerName}
+              onChange={e => setRegisterName(e.target.value)}
+              fullWidth
+              required
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Email"
+              type="email"
+              value={registerEmail}
+              onChange={e => setRegisterEmail(e.target.value)}
+              fullWidth
+              required
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              value={registerPassword}
+              onChange={e => setRegisterPassword(e.target.value)}
+              fullWidth
+              required
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Confirm Password"
+              type="password"
+              value={registerConfirmPassword}
+              onChange={e => setRegisterConfirmPassword(e.target.value)}
+              fullWidth
+              required
+              sx={{ mb: 2 }}
+            />
+          </>
         )}
-        <TextField
-          label="Email"
-          type="email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          fullWidth
-          required
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          label="Password"
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          fullWidth
-          required
-          sx={{ mb: 2 }}
-        />
+        {tab === 0 && (
+          <>
+            <TextField
+              label="Email"
+              type="email"
+              value={loginEmail}
+              onChange={e => setLoginEmail(e.target.value)}
+              fullWidth
+              required
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Password"
+              type="password"
+              value={loginPassword}
+              onChange={e => setLoginPassword(e.target.value)}
+              fullWidth
+              required
+              sx={{ mb: 2 }}
+            />
+          </>
+        )}
         <Button
           type="submit"
           variant="contained"

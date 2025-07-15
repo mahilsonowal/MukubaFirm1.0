@@ -22,8 +22,8 @@ const ContactInfo = () => {
     {
       icon: <EmailIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
       title: 'Email Address',
-      content: 'info@mukuba.com',
-      link: 'mailto:info@mukuba.com'
+      content: 'info@mukubaecon.io',
+      link: 'mailto:info@mukubaecon.io'
     },
     {
       icon: <AccessTimeIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,

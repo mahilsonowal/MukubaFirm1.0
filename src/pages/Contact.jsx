@@ -236,11 +236,10 @@ const Contact = () => {
                           name="terms"
                           checked={formData.terms}
                           onChange={handleChange}
-                          required
                         />
                       }
                       label={
-                        <Typography variant="body2">
+                        <Typography variant="body2" component="span">
                           I agree to the{' '}
                           <Link to="/terms" style={{ color: '#1B2441', textDecoration: 'underline' }}>
                             Terms and Conditions
@@ -249,6 +248,7 @@ const Contact = () => {
                           <Link to="/privacy" style={{ color: '#1B2441', textDecoration: 'underline' }}>
                             Privacy Policy
                           </Link>
+                          <span style={{ color: '#d32f2f', marginLeft: 4 }}>*</span>
                         </Typography>
                       }
                     />
@@ -328,8 +328,7 @@ const Contact = () => {
                       Email Address
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      info@mukuba.com<br />
-                      support@mukuba.com
+                      info@mukubaecon.io
                     </Typography>
                   </Box>
                 </Box>

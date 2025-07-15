@@ -10,14 +10,16 @@ import {
   MenuItem,
   Container,
   Popover,
+  Avatar,
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import MenuIcon from '@mui/icons-material/Menu';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import { supabase } from '../../utils/supabaseClient';
 
 const menuItems = [
@@ -68,6 +70,10 @@ const Navbar = () => {
   const { user, logoutUser } = useAuth();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
+  const location = useLocation();
+
+  // Add a helper to check if mobile view is active
+  const isMobile = window.innerWidth < 1200; // lg breakpoint is 1200px in MUI by default
 
   useEffect(() => {
     async function fetchProfile() {
@@ -96,6 +102,7 @@ const Navbar = () => {
   const handleDashboardClick = () => {
     handleProfileMenuClose();
     handleDropdownClose();
+    if (isMobile) handleMobileMenuClose();
     if (profile?.role === 'admin') {
       navigate('/admin-dashboard');
     } else {
@@ -243,108 +250,142 @@ const Navbar = () => {
               gap: { md: 2, lg: 1 }
             }}
           >
-            {menuItems.map((item) => (
-              <Box key={item.title}>
-                <Button
-                  color="inherit"
-                  onClick={item.subItems.length > 0 
-                    ? (e) => handleDropdownOpen(e, item.title)
-                    : () => handleNavigation(item.link)
-                  }
-                  sx={{
-                    textTransform: 'none',
-                    px: 2,
-                    py: 1,
-                    fontSize: { md: '0.875rem', lg: '0.8rem' },
-                    fontWeight: 600,
-                    color: 'inherit',
-                    '&:hover': {
-                      color: '#AF9871',
-                      backgroundColor: 'transparent',
-                    },
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 0.5,
-                  }}
-                >
-                  {item.title}
-                  {item.subItems.length > 0 && (
-                    activeMenu === item.title
-                      ? <KeyboardArrowUpIcon sx={{ fontSize: 20, transition: 'transform 0.2s' }} />
-                      : <KeyboardArrowDownIcon sx={{ fontSize: 20, transition: 'transform 0.2s' }} />
-                  )}
-                </Button>
-                {item.subItems.length > 0 && (
-                  <Popover
-                    ref={dropdownRef}
-                    open={activeMenu === item.title && Boolean(dropdownAnchorEl)}
-                    anchorEl={dropdownAnchorEl}
-                    onClose={handleDropdownClose}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left',
-                    }}
+            {menuItems.map((item) => {
+              // Determine if this menu or any of its subItems is active
+              const isActive = item.link
+                ? location.pathname === item.link
+                : item.subItems.some(sub => location.pathname === sub.link);
+              return (
+                <Box key={item.title}>
+                  <Button
+                    color="inherit"
+                    onClick={item.subItems.length > 0 
+                      ? (e) => handleDropdownOpen(e, item.title)
+                      : () => handleNavigation(item.link)
+                    }
                     sx={{
-                      '& .MuiPaper-root': {
-                        width: '220px',
-                        mt: 1,
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                        borderRadius: '6px',
-                      }
+                      textTransform: 'none',
+                      px: 2,
+                      py: 1,
+                      fontSize: { md: '0.875rem', lg: '0.8rem' },
+                      fontWeight: isActive ? 700 : 600,
+                      color: isActive ? '#AF9871' : 'inherit',
+                      borderBottom: isActive ? '2px solid #AF9871' : 'none',
+                      backgroundColor: isActive ? 'rgba(175,152,113,0.08)' : 'transparent',
+                      '&:hover': {
+                        color: '#AF9871',
+                        backgroundColor: 'transparent',
+                      },
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.5,
                     }}
                   >
-                    <Box sx={{ py: 1 }}>
-                      {item.subItems.map((subItem) => (
-                        <MenuItem 
-                          key={subItem.name}
-                          onClick={() => handleNavigation(subItem.link, true)}
-                          sx={{
-                            px: 2,
-                            py: 1.5,
-                            fontSize: '0.875rem',
-                            color: 'text.primary',
-                            '&:hover': {
-                              backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                              color: '#AF9871',
-                            },
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}
-                        >
-                          {subItem.name}
-                          <ChevronRightIcon 
-                            sx={{ 
-                              fontSize: 20,
-                              opacity: 0,
-                              transition: 'all 0.2s',
-                            }}
-                          />
-                        </MenuItem>
-                      ))}
-                    </Box>
-                  </Popover>
-                )}
-              </Box>
-            ))}
+                    {item.title}
+                    {item.subItems.length > 0 && (
+                      activeMenu === item.title
+                        ? <KeyboardArrowUpIcon sx={{ fontSize: 20, transition: 'transform 0.2s' }} />
+                        : <KeyboardArrowDownIcon sx={{ fontSize: 20, transition: 'transform 0.2s' }} />
+                    )}
+                  </Button>
+                  {item.subItems.length > 0 && (
+                    <Popover
+                      ref={dropdownRef}
+                      open={activeMenu === item.title && Boolean(dropdownAnchorEl)}
+                      anchorEl={dropdownAnchorEl}
+                      onClose={handleDropdownClose}
+                      anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                      }}
+                      transformOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                      }}
+                      sx={{
+                        '& .MuiPaper-root': {
+                          width: '220px',
+                          mt: 1,
+                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                          borderRadius: '6px',
+                        }
+                      }}
+                    >
+                      <Box sx={{ py: 1 }}>
+                        {item.subItems.map((subItem) => {
+                          const isSubActive = location.pathname === subItem.link;
+                          return (
+                            <MenuItem 
+                              key={subItem.name}
+                              onClick={() => handleNavigation(subItem.link, true)}
+                              sx={{
+                                px: 2,
+                                py: 1.5,
+                                fontSize: '0.875rem',
+                                color: isSubActive ? '#AF9871' : 'text.primary',
+                                fontWeight: isSubActive ? 700 : 400,
+                                borderLeft: isSubActive ? '3px solid #AF9871' : 'none',
+                                backgroundColor: isSubActive ? 'rgba(175,152,113,0.08)' : 'transparent',
+                                '&:hover': {
+                                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                                  color: '#AF9871',
+                                },
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                              }}
+                            >
+                              {subItem.name}
+                              <ChevronRightIcon 
+                                sx={{ 
+                                  fontSize: 20,
+                                  opacity: 0,
+                                  transition: 'all 0.2s',
+                                }}
+                              />
+                            </MenuItem>
+                          );
+                        })}
+                      </Box>
+                    </Popover>
+                  )}
+                </Box>
+              );
+            })}
             {user ? (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                {/* Desktop: Avatar icon */}
+                <IconButton
+                  onClick={handleProfileMenuOpen}
+                  sx={{
+                    display: { xs: 'none', lg: 'flex' },
+                    p: 0.4,
+                    border: '2px solid #C9AA74',
+                    bgcolor: 'white',
+                  }}
+                >
+                  <Avatar sx={{ bgcolor: '#C9AA74', color: 'white', width: 18, height: 18, fontWeight: 700 }}>
+                    <AccountCircle sx={{ fontSize: 20, color: 'white' }} />
+                  </Avatar>
+                </IconButton>
+
+                {/* Mobile: User name as button (no icon/avatar) */}
                 <Button
                   onClick={handleProfileMenuOpen}
                   sx={{
-                    fontWeight: 600,
+                    display: { xs: 'flex', lg: 'none' },
+                    fontWeight: 700,
                     color: '#C9AA74',
                     textTransform: 'none',
-                    boxShadow: '0 2px 8px 0 rgba(201, 170, 116, 0.25)',
+                    bgcolor: 'white',
+                    border: '2px solid #C9AA74',
                     borderRadius: 2,
+                    px: 2,
+                    py: 0.5,
+                    minWidth: 0,
                   }}
-                  endIcon={<KeyboardArrowDownIcon />}
                 >
-                  {user.user_metadata?.name || user.email}
+                  {user.user_metadata?.name || profile?.name || user.email}
                 </Button>
                 <Menu
                   anchorEl={profileAnchorEl}
@@ -353,11 +394,14 @@ const Navbar = () => {
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 >
+                  <MenuItem disabled sx={{ fontWeight: 700, opacity: 1, color: '#1B2441', cursor: 'default' }}>
+                    {user.user_metadata?.name || user.email}
+                  </MenuItem>
                   <MenuItem onClick={handleDashboardClick}>Dashboard</MenuItem>
                   {profile?.role === 'admin' && (
                     <MenuItem onClick={() => { handleProfileMenuClose(); handleDropdownClose(); navigate('/admin-upload-report'); }}>Upload documents</MenuItem>
                   )}
-                  <MenuItem onClick={() => { handleProfileMenuClose(); logoutUser(); }}>Logout</MenuItem>
+                  <MenuItem onClick={() => { handleProfileMenuClose(); if (isMobile) handleMobileMenuClose(); logoutUser(); }}>Logout</MenuItem>
                 </Menu>
               </Box>
             ) : (
@@ -470,33 +514,53 @@ const Navbar = () => {
             <Box sx={{ p: 2, borderTop: '1px solid rgba(0, 0, 0, 0.08)', mt: 1 }}>
               {user ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexDirection: 'column' }}>
-                  <Button
-                    onClick={handleMobileProfileMenuOpen}
-                    fullWidth
+                  {/* Desktop: Avatar icon */}
+                  <IconButton
+                    onClick={handleProfileMenuOpen}
                     sx={{
-                      fontWeight: 600,
+                      display: { xs: 'none', lg: 'flex' },
+                      p: 0.5,
+                      border: '2px solid #C9AA74',
+                      bgcolor: 'white',
+                    }}
+                  >
+                    <Avatar sx={{ bgcolor: '#C9AA74', color: 'white', width: 36, height: 36, fontWeight: 700 }}>
+                      <AccountCircle sx={{ fontSize: 30, color: 'white' }} />
+                    </Avatar>
+                  </IconButton>
+                  {/* Mobile: User name as button (no icon/avatar) */}
+                  <Button
+                    onClick={handleProfileMenuOpen}
+                    sx={{
+                      display: { xs: 'flex', lg: 'none' },
+                      fontWeight: 700,
                       color: '#C9AA74',
                       textTransform: 'none',
-                      mb: 1,
-                      boxShadow: '0 2px 8px 0 rgba(201, 170, 116, 0.25)',
+                      bgcolor: 'white',
+                      border: '2px solid #C9AA74',
                       borderRadius: 2,
+                      px: 2,
+                      py: 0.5,
+                      minWidth: 0,
                     }}
-                    endIcon={<KeyboardArrowDownIcon />}
                   >
-                    {user.user_metadata?.name || user.email}
+                    {user.user_metadata?.name || profile?.name || 'Profile'}
                   </Button>
                   <Menu
-                    anchorEl={mobileProfileAnchorEl}
-                    open={Boolean(mobileProfileAnchorEl)}
-                    onClose={handleMobileProfileMenuClose}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                    transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+                    anchorEl={profileAnchorEl}
+                    open={Boolean(profileAnchorEl)}
+                    onClose={handleProfileMenuClose}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                   >
-                    <MenuItem onClick={handleMobileDashboardClick}>Dashboard</MenuItem>
+                    <MenuItem disabled sx={{ fontWeight: 700, opacity: 1, color: '#1B2441', cursor: 'default' }}>
+                      {user.user_metadata?.name || user.email}
+                    </MenuItem>
+                    <MenuItem onClick={handleDashboardClick}>Dashboard</MenuItem>
                     {profile?.role === 'admin' && (
-                      <MenuItem onClick={() => { handleMobileProfileMenuClose(); handleMobileMenuClose(); navigate('/admin-upload-report'); }}>Upload Documents</MenuItem>
+                      <MenuItem onClick={() => { handleProfileMenuClose(); handleDropdownClose(); navigate('/admin-upload-report'); }}>Upload Documents</MenuItem>
                     )}
-                    <MenuItem onClick={() => { handleMobileProfileMenuClose(); logoutUser(); }}>Logout</MenuItem>
+                    <MenuItem onClick={() => { handleProfileMenuClose(); if (isMobile) handleMobileMenuClose(); logoutUser(); }}>Logout</MenuItem>
                   </Menu>
                 </Box>
               ) : (

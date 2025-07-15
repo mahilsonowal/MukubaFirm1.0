@@ -234,14 +234,14 @@ const Footer = () => {
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <EmailIcon sx={{ color: '#AF9871', mr: 1 }} />
                 <MuiLink 
-                  href="mailto:info@mukuba.com" 
+                  href="mailto:info@mukubaecon.io" 
                   sx={{ 
                     color: 'rgba(255, 255, 255, 0.7)',
                     textDecoration: 'none',
                     '&:hover': { color: '#AF9871' }
                   }}
                 >
-                  info@mukuba.com
+                  info@mukubaecon.io
                 </MuiLink>
               </Box>
             </Box>
