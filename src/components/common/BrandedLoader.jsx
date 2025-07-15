@@ -21,7 +21,7 @@ const BrandedLoader = () => (
     <img
       src="/assets/company-logo.jpg"
       alt="Mukuba Logo"
-      style={{ width: 100, height: 100, marginBottom: 24 }}
+      style={{ width: 200, height: 200, marginBottom: 24 }}
     />
     <CircularProgress sx={{ color: '#C9AA74' }} />
   </Box>

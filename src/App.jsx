@@ -61,6 +61,8 @@ import ServiceAgreement from './pages/ServiceAgreement';
 import B2BServiceAgreement from './pages/B2BServiceAgreement';
 import NDA from './pages/NDA';
 import DPA from './pages/DPA';
+import BrandedLoader from './components/common/BrandedLoader';
+import { useState } from 'react';
 
 // ScrollToTop component
 const ScrollToTop = () => {
@@ -90,6 +92,18 @@ const Home = () => (
 );
 
 function App() {
+  const [showLoader, setShowLoader] = useState(true);
+
+  // Show loader on first mount
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (showLoader) {
+    return <BrandedLoader />;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
