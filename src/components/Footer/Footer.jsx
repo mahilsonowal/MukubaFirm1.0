@@ -311,6 +311,19 @@ const Footer = () => {
                 </MuiLink>
                 <MuiLink 
                   component={RouterLink}
+                  to="/service-agreement"
+                  sx={{ 
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    textDecoration: 'none',
+                    transition: 'color 0.3s ease',
+                    fontSize: { xs: '0.75rem', md: '0.875rem' },
+                    '&:hover': { color: '#AF9871' }
+                  }}
+                >
+                  Service Agreement
+                </MuiLink>
+                <MuiLink 
+                  component={RouterLink}
                   to={profile?.role === 'admin' ? '/admin-dashboard' : '/admin-login'}
                   sx={{ 
                     color: profile?.role === 'admin' ? '#AF9871' : 'rgba(255, 255, 255, 0.7)',

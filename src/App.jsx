@@ -57,6 +57,10 @@ import { useAuth } from './context/AuthContext';
 import { Navigate, Outlet } from 'react-router-dom';
 import AdminPrivateRoute from './components/AdminPrivateRoute';
 import AdminReportUpload from './pages/AdminReportUpload';
+import ServiceAgreement from './pages/ServiceAgreement';
+import B2BServiceAgreement from './pages/B2BServiceAgreement';
+import NDA from './pages/NDA';
+import DPA from './pages/DPA';
 
 // ScrollToTop component
 const ScrollToTop = () => {
@@ -138,6 +142,10 @@ function App() {
               </Route>
               <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/service-agreement" element={<ServiceAgreement />} />
+              <Route path="/b2b-service-agreement" element={<B2BServiceAgreement />} />
+              <Route path="/nda" element={<NDA />} />
+              <Route path="/dpa" element={<DPA />} />
             </Routes>
           </main>
           <Footer />
