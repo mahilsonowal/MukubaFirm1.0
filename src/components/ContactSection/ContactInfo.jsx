@@ -18,7 +18,6 @@ const ContactInfo = () => {
       icon: <PhoneIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />, 
       title: 'Call',
       content: '+260768112551 | +260979140962 | +260979618112',
-      link: 'tel:+260768112551'
     },
     {
       icon: <WhatsAppIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
