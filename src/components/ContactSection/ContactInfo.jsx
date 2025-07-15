@@ -4,29 +4,36 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 const ContactInfo = () => {
   const contactDetails = [
     {
-      icon: <LocationOnIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
+      icon: <LocationOnIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />, 
       title: 'Our Location',
       content: 'Plot #38 Kudu Rd, Kabulonga, Lusaka',
       link: 'https://maps.google.com'
     },
     {
-      icon: <PhoneIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
-      title: 'Phone Number',
-      content: '+260 768 112 551',
+      icon: <PhoneIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />, 
+      title: 'Call',
+      content: '+260768112551 | +260979140962 | +260979618112',
       link: 'tel:+260768112551'
     },
     {
-      icon: <EmailIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
+      icon: <WhatsAppIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
+      title: 'WhatsApp',
+      content: '+260979618112',
+      link: 'https://wa.me/260979618112'
+    },
+    {
+      icon: <EmailIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />, 
       title: 'Email Address',
       content: 'info@mukubaecon.io',
       link: 'mailto:info@mukubaecon.io'
     },
     {
-      icon: <AccessTimeIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />,
+      icon: <AccessTimeIcon sx={{ color: '#C9AA74', fontSize: '2rem' }} />, 
       title: 'Working Hours',
       content: 'Mon - Fri: 9:00 AM - 4:00 PM',
       link: null

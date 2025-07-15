@@ -20,7 +20,9 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import SendIcon from '@mui/icons-material/Send';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import { supabase } from '../utils/supabaseClient'; // adjust path as needed
+import ContactInfo from '../components/ContactSection/ContactInfo';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -279,87 +281,7 @@ const Contact = () => {
           {/* Contact Information */}
           <Grid sx={{ width: { xs: '100%', md: '100%' } }}>
             <StyledPaper elevation={2}>
-              <Typography 
-                variant="h4" 
-                sx={{ 
-                  color: '#1B2441',
-                  fontWeight: 600,
-                  mb: 4,
-                  fontSize: { xs: '1.5rem', md: '1.75rem' }
-                }}
-              >
-                Contact Information
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
-                  <ContactIcon>
-                    <LocationOnIcon />
-                  </ContactIcon>
-                  <Box>
-                    <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mb: 0.5 }}>
-                      Our Location
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Plot #38 Kudu Rd<br />
-                      Kabulonga, lusaka
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
-                  <ContactIcon>
-                    <PhoneIcon />
-                  </ContactIcon>
-                  <Box>
-                    <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mb: 0.5 }}>
-                      Call
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      +260768112551 | +260979140962 | +260979618112
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
-                  <ContactIcon>
-                    <PhoneIcon />
-                  </ContactIcon>
-                  <Box>
-                    <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mb: 0.5 }}>
-                      WhatsApp
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      
-                      +260768112551
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
-                  <ContactIcon>
-                    <EmailIcon />
-                  </ContactIcon>
-                  <Box>
-                    <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mb: 0.5 }}>
-                      Email Address
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      info@mukubaecon.io
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
-                  <ContactIcon>
-                    <AccessTimeIcon />
-                  </ContactIcon>
-                  <Box>
-                    <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mb: 0.5 }}>
-                      Working Hours
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Monday - Fri: 9:00 AM - 4:00 PM<br />
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
-
+              <ContactInfo />
               {/* Map Section */}
               <Box sx={{ mt: 4 }}>
                 <Typography 
