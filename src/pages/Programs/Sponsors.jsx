@@ -11,10 +11,6 @@ const Sponsors = () => (
         <Typography variant="h6" sx={{ color: '#C9AA74', mb: 4 }}>
           Meet the organizations supporting our mission
         </Typography>
-        <Typography variant="body1" sx={{ mb: 4 }}>
-          Mukuba Economic Research and Consulting Firm is the official sponsor of the Pathways of Success program. With a strong commitment to youth empowerment, professional development and impactful knowledge sharing, Mukuba supports the program's mission to unlock the potential of young professionals across Zambia and beyond.
-        </Typography>
-
         <Grid container justifyContent="center" alignItems="center">
           <Grid item>
             <img
@@ -27,6 +23,13 @@ const Sponsors = () => (
             </Typography>
           </Grid>
         </Grid>
+        <Typography variant="body1" sx={{ mb: 4 }}>
+          Mukuba Economic Research and Consulting Firm is the official sponsor of the Pathways of Success program. With a strong commitment to youth empowerment, professional development and impactful knowledge sharing, Mukuba supports the program's mission to unlock the potential of young professionals across Zambia and beyond.
+        </Typography>
+        <Typography variant="body1" sx={{ mb: 4 }}>
+          We are grateful for the support and partnership of our sponsors.
+        </Typography>
+
       </Paper>
     </Container>
   </Box>
