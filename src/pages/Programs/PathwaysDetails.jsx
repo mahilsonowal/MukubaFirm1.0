@@ -11,7 +11,9 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Link as MuiLink
+  Link as MuiLink,
+  useTheme,
+  useMediaQuery
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -23,6 +25,10 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const PathwaysDetails = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [touchStartX, setTouchStartX] = useState(null);
+  const [touchEndX, setTouchEndX] = useState(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const slides = [
     {
@@ -94,6 +100,28 @@ const PathwaysDetails = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
+  // Touch event handlers for swipe
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+  const handleTouchMove = (e) => {
+    setTouchEndX(e.touches[0].clientX);
+  };
+  const handleTouchEnd = () => {
+    if (touchStartX !== null && touchEndX !== null) {
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          nextSlide(); // swipe left
+        } else {
+          prevSlide(); // swipe right
+        }
+      }
+    }
+    setTouchStartX(null);
+    setTouchEndX(null);
+  };
+
   return (
     <Box sx={{ py: { xs: 6, md: 10 }, bgcolor: 'white' }}>
       {/* Hero Section */}
@@ -159,6 +187,9 @@ const PathwaysDetails = () => {
               borderRadius: 2,
               overflow: 'hidden'
             }}
+            onTouchStart={isMobile ? handleTouchStart : undefined}
+            onTouchMove={isMobile ? handleTouchMove : undefined}
+            onTouchEnd={isMobile ? handleTouchEnd : undefined}
           >
             {slides.map((slide, index) => (
               <Box
@@ -208,38 +239,42 @@ const PathwaysDetails = () => {
             ))}
 
             {/* Navigation Buttons */}
-            <IconButton
-              onClick={prevSlide}
-              sx={{
-                position: 'absolute',
-                left: 16,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                bgcolor: 'rgba(0, 0, 0, 0.5)',
-                color: 'white',
-                '&:hover': {
-                  bgcolor: 'rgba(0, 0, 0, 0.7)'
-                }
-              }}
-            >
-              <ArrowBackIcon />
-            </IconButton>
-            <IconButton
-              onClick={nextSlide}
-              sx={{
-                position: 'absolute',
-                right: 16,
-                top: '50%',
-                transform: 'translateY(-50%)',
-                bgcolor: 'rgba(0, 0, 0, 0.5)',
-                color: 'white',
-                '&:hover': {
-                  bgcolor: 'rgba(0, 0, 0, 0.7)'
-                }
-              }}
-            >
-              <ArrowForwardIcon />
-            </IconButton>
+            {!isMobile && (
+              <>
+                <IconButton
+                  onClick={prevSlide}
+                  sx={{
+                    position: 'absolute',
+                    left: 16,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    bgcolor: 'rgba(0, 0, 0, 0.5)',
+                    color: 'white',
+                    '&:hover': {
+                      bgcolor: 'rgba(0, 0, 0, 0.7)'
+                    }
+                  }}
+                >
+                  <ArrowBackIcon />
+                </IconButton>
+                <IconButton
+                  onClick={nextSlide}
+                  sx={{
+                    position: 'absolute',
+                    right: 16,
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    bgcolor: 'rgba(0, 0, 0, 0.5)',
+                    color: 'white',
+                    '&:hover': {
+                      bgcolor: 'rgba(0, 0, 0, 0.7)'
+                    }
+                  }}
+                >
+                  <ArrowForwardIcon />
+                </IconButton>
+              </>
+            )}
 
             {/* Slide Indicators */}
             <Box
@@ -280,6 +315,73 @@ const PathwaysDetails = () => {
             Pathways of Success is a dynamic and impact-driven initiative designed to equip youth and professionals with the skills, insights, and strategies required to succeed in the modern corporate world. Through expert-led discussions and practical guidance, the program addresses key workplace challenges and supports career advancement by promoting personal and professional development.
             Participants are empowered to enhance their profiles, improve their workplace performance, and contribute meaningfully to their organizations and communities.
           </Typography>
+
+          <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mt: 2, mb: 1 }}>
+            Core Goals
+          </Typography>
+          <List sx={{ mb: 2 }}>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#C9AA74' }} />
+              </ListItemIcon>
+              <ListItemText primary="Career Development – Deliver career-building tools and strategic guidance tailored to emerging professionals." />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#C9AA74' }} />
+              </ListItemIcon>
+              <ListItemText primary="Workplace Issues – Address real-world challenges such as performance improvement, stress management, and personal growth." />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#C9AA74' }} />
+              </ListItemIcon>
+              <ListItemText primary="Skill Enhancement – Strengthen critical soft skills including leadership, communication, problem-solving, and branding." />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#C9AA74' }} />
+              </ListItemIcon>
+              <ListItemText primary="Networking and Mentorship – Connect participants with industry leaders and mentors for ongoing support and development." />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#C9AA74' }} />
+              </ListItemIcon>
+              <ListItemText primary="Empowerment – Build self-confidence and foster a strong sense of purpose in career navigation." />
+            </ListItem>
+          </List>
+
+          <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mt: 2, mb: 1 }}>
+            Program Activities
+          </Typography>
+          <List sx={{ mb: 2 }}>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#C9AA74' }} />
+              </ListItemIcon>
+              <ListItemText primary="Biannual Webinars: Themed sessions covering workplace skills, branding, and career growth." />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#C9AA74' }} />
+              </ListItemIcon>
+              <ListItemText primary="Special Events: Additional webinars or masterclasses organized on demand or by partner request." />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#C9AA74' }} />
+              </ListItemIcon>
+              <ListItemText primary="University and High School Outreach: Interactive career-building activities at educational institutions." />
+            </ListItem>
+            <ListItem sx={{ py: 0.5 }}>
+              <ListItemIcon sx={{ minWidth: 32 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#C9AA74' }} />
+              </ListItemIcon>
+              <ListItemText primary="Mentorship & Networking Forums: Direct interaction with professionals and industry mentors." />
+            </ListItem>
+          </List>
+
           <Typography 
             variant="body1" 
             sx={{ 

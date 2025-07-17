@@ -59,9 +59,12 @@ const PastEvents = () => (
           </ListItem>
           <ListItem>
             <ListItemIcon><CheckCircleIcon sx={{ color: '#C9AA74' }} /></ListItemIcon>
-            <ListItemText primary="Digital identity management" />
+            <ListItemText primary="Balancing personal and professional identity online" />
           </ListItem>
         </List>
+        <Typography variant="body1" sx={{ fontWeight: 500, color: '#1B2441', mb: 2 }}>
+          Attendance: 80 registered and 46 attended the webinar.
+        </Typography>
         <Divider sx={{ my: 4 }} />
         <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#1B2441' }}>
           Program Schedule
