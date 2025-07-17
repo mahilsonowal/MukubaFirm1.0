@@ -163,7 +163,7 @@ const PathwaysDetails = () => {
           elevation={0}
           sx={{ 
             p: { xs: 4, md: 6 },
-            mb: 6,
+            mb: 2,
             borderRadius: 2
           }}
         >
@@ -411,7 +411,7 @@ const PathwaysDetails = () => {
             variant="body1" 
             sx={{ 
               color: 'text.secondary',
-              mb: 3
+              mt: 2
             }}
           >
             The Pathways of Success Program is a transformative initiative that focuses on:
@@ -453,7 +453,7 @@ const PathwaysDetails = () => {
           elevation={0}
           sx={{ 
             p: { xs: 4, md: 6 },
-            mb: 6,
+            mb: 2,
             borderRadius: 2
           }}
         >
@@ -552,7 +552,7 @@ const PathwaysDetails = () => {
           elevation={0}
           sx={{ 
             p: { xs: 4, md: 6 },
-            mb: 6,
+            mb: 2,
             borderRadius: 2
           }}
         >
