@@ -382,6 +382,31 @@ const PathwaysDetails = () => {
             </ListItem>
           </List>
 
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: '#1B2441' }}>
+            Program Schedule
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            The "Pathways of Success" program occurs twice a year – once in the first half and once in the second half of each year. Additional events or webinars may be organized based on demand or specific organizational needs.
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Paper elevation={1} sx={{ p: 2, bgcolor: '#f8f9fa', borderRadius: 2 }}>
+                <Typography variant="subtitle1" sx={{ color: '#C9AA74', fontWeight: 600 }}>
+                  First Half
+                </Typography>
+                <Typography variant="body2">January - June</Typography>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Paper elevation={1} sx={{ p: 2, bgcolor: '#f8f9fa', borderRadius: 2 }}>
+                <Typography variant="subtitle1" sx={{ color: '#C9AA74', fontWeight: 600 }}>
+                  Second Half
+                </Typography>
+                <Typography variant="body2">July - December</Typography>
+              </Paper>
+            </Grid>
+          </Grid>
+
           <Typography 
             variant="body1" 
             sx={{ 
