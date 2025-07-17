@@ -32,6 +32,7 @@ const menuItems = [
       { name: "Staff Management", link: "/about/staff-management" },
       { name: "Governance", link: "/about/governance" },
       { name: "Internship", link: "/about/internship" },
+      { name: "Featured Program", link: "/program/pathways-details" },
     ],
   },
   {
