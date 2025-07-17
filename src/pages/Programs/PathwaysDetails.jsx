@@ -60,7 +60,7 @@ const PathwaysDetails = () => {
     },
     {
       title: "Vision & Mission",
-      description: "Discover our purpose and goals",
+      description: "Discover our purpose, goals, and values",
       path: "/pathways-details/vision-mission",
       icon: <SchoolIcon sx={{ color: '#C9AA74', fontSize: 40 }} />
     },
@@ -277,6 +277,16 @@ const PathwaysDetails = () => {
               mb: 3
             }}
           >
+            Pathways of Success is a dynamic and impact-driven initiative designed to equip youth and professionals with the skills, insights, and strategies required to succeed in the modern corporate world. Through expert-led discussions and practical guidance, the program addresses key workplace challenges and supports career advancement by promoting personal and professional development.
+            Participants are empowered to enhance their profiles, improve their workplace performance, and contribute meaningfully to their organizations and communities.
+          </Typography>
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              color: 'text.secondary',
+              mb: 3
+            }}
+          >
             The Pathways of Success Program is a transformative initiative that focuses on:
           </Typography>
           <List>
@@ -335,7 +345,10 @@ const PathwaysDetails = () => {
             display="flex" 
             justifyContent="center" 
             alignItems="stretch" 
-            spacing={3}
+            spacing={1}
+            sx={{
+              flexWrap: { xs: 'wrap', md: 'nowrap' }
+            }}
           >
             {sections.map((section, index) => (
               <Grid 
@@ -345,51 +358,63 @@ const PathwaysDetails = () => {
                   maxWidth: { xs: '100%', sm: '50%', md: '25%' }
                 }}
               >
-                <RouterLink 
-                  to={section.path}
-                  style={{ 
-                    textDecoration: 'none',
-                    display: 'flex',
-                    width: '100%'
+                <Paper 
+                  elevation={0}
+                  sx={{ 
+                    p: 3,
+                    height: '100%',
+                    transition: 'all 0.3s ease',
+                    border: '0px solid rgba(0, 0, 0, 0.08)',
+                    '&:hover': {
+                      transform: 'translateY(-4px)',
+                      borderColor: '#C9AA74',
+                      bgcolor: 'rgba(201, 170, 116, 0.02)'
+                    }
                   }}
                 >
-                  <Paper 
-                    elevation={0}
+                  <Box sx={{ mb: 2 }}>
+                    {section.icon}
+                  </Box>
+                  <Typography 
+                    variant="h6" 
                     sx={{ 
-                      p: 3,
-                      height: '100%',
-                      transition: 'all 0.3s ease',
-                      border: '0px solid rgba(0, 0, 0, 0.08)',
-                      '&:hover': {
-                        transform: 'translateY(-4px)',
-                        borderColor: '#C9AA74',
-                        bgcolor: 'rgba(201, 170, 116, 0.02)'
-                      }
+                      color: '#1B2441',
+                      fontWeight: 600,
+                      mb: 1
                     }}
                   >
-                    <Box sx={{ mb: 2 }}>
-                      {section.icon}
-                    </Box>
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        color: '#1B2441',
+                    {section.title}
+                  </Typography>
+                  <Typography 
+                    sx={{ 
+                      color: 'text.secondary',
+                      fontSize: '0.875rem'
+                    }}
+                  >
+                    {section.description}
+                  </Typography>
+                  <RouterLink 
+                    to={section.path}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    <Typography
+                      sx={{
+                        color: '#C9AA74',
                         fontWeight: 600,
-                        mb: 1
+                        fontSize: '0.95rem',
+                        mt: 2,
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                        '&:hover': {
+                          color: '#1B2441',
+                          textDecoration: 'underline',
+                        }
                       }}
                     >
-                      {section.title}
+                      See Details
                     </Typography>
-                    <Typography 
-                      sx={{ 
-                        color: 'text.secondary',
-                        fontSize: '0.875rem'
-                      }}
-                    >
-                      {section.description}
-                    </Typography>
-                  </Paper>
-                </RouterLink>
+                  </RouterLink>
+                </Paper>
               </Grid>
             ))}
           </Grid>
