@@ -59,18 +59,6 @@ const PathwaysDetails = () => {
 
   const sections = [
     {
-      title: "Target Audience",
-      description: "Learn about who can benefit from our program",
-      path: "/pathways-details/target-audience",
-      icon: <PersonIcon sx={{ color: '#C9AA74', fontSize: 40 }} />
-    },
-    {
-      title: "Vision & Mission",
-      description: "Discover our purpose, goals, and values",
-      path: "/pathways-details/vision-mission",
-      icon: <SchoolIcon sx={{ color: '#C9AA74', fontSize: 40 }} />
-    },
-    {
       title: "Past Events",
       description: "Explore our previous programs and webinars",
       path: "/pathways-details/past-events",
@@ -336,6 +324,64 @@ const PathwaysDetails = () => {
             Participants are empowered to enhance their profiles, improve their workplace performance, and contribute meaningfully to their organizations and communities.
           </Typography>
 
+                  {/* Target Audience Section */}
+        
+           <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: '#1B2441' }}>
+             Target Audience
+           </Typography>
+           <Typography variant="subtitle1" sx={{ color: '#C9AA74', mb: 2 }}>
+             Who can benefit from our program?
+           </Typography>
+           <Typography variant="body1" sx={{ mb: 1 }}>
+             The Pathways of Success program is designed to empower and support a diverse range of participants, including:
+           </Typography>
+           <List>
+             <ListItem>
+               <ListItemIcon><PersonIcon sx={{ color: '#C9AA74' }} /></ListItemIcon>
+               <ListItemText primary="Youth and Young Adults" />
+             </ListItem>
+             <ListItem>
+               <ListItemIcon><PersonIcon sx={{ color: '#C9AA74' }} /></ListItemIcon>
+               <ListItemText primary="University and College Students" />
+             </ListItem>
+             <ListItem>
+               <ListItemIcon><PersonIcon sx={{ color: '#C9AA74' }} /></ListItemIcon>
+               <ListItemText primary="Community Leaders" />
+             </ListItem>
+             <ListItem>
+               <ListItemIcon><PersonIcon sx={{ color: '#C9AA74' }} /></ListItemIcon>
+               <ListItemText primary="Non-Governmental Organizations (NGOs)" />
+             </ListItem>
+             <ListItem>
+               <ListItemIcon><PersonIcon sx={{ color: '#C9AA74' }} /></ListItemIcon>
+               <ListItemText primary="Aspiring Entrepreneurs" />
+             </ListItem>
+             <ListItem>
+               <ListItemIcon><PersonIcon sx={{ color: '#C9AA74' }} /></ListItemIcon>
+               <ListItemText primary="Educators and Mentors" />
+             </ListItem>
+           </List>
+      
+
+         {/* Vision & Mission Section */}
+
+           <Typography variant="h6" sx={{ fontWeight: 700, mb: 2,mt:2, color: '#1B2441' }}>
+             Vision & Mission
+           </Typography>
+           <Typography variant="h7" sx={{ fontWeight: 600, mb: 1, color: '#1B2441' }}>
+             Our Vision
+           </Typography>
+           <Typography variant="body1" sx={{ mb: 2 }}>
+             To create a world where young professionals are equipped with the skills, confidence, and networks necessary to thrive in the corporate world and make meaningful contributions to their industries.
+           </Typography>
+           <Typography variant="h7" sx={{ fontWeight: 600, mb: 1, color: '#1B2441' }}>
+             Our Mission
+           </Typography>
+           <Typography variant="body1">
+             To empower youth and professionals by providing access to expert knowledge, mentorship, and development resources that accelerate career growth and workplace success. Pathways of Success facilitates learning, networking, and personal branding through high-quality webinars and outreach activities.
+           </Typography>
+
+
           <Typography variant="h6" sx={{ color: '#1B2441', fontWeight: 600, mt: 2, mb: 1 }}>
             Core Goals
           </Typography>
@@ -467,6 +513,7 @@ const PathwaysDetails = () => {
             ))}
           </List>
         </Paper>
+ 
 
         {/* Program Sections */}
         <Paper 
