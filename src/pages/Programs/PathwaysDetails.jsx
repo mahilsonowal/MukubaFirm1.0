@@ -175,7 +175,7 @@ const PathwaysDetails = () => {
               mb: 4
             }}
           >
-            Program Overview
+            Program Profile
           </Typography>
           <Box sx={{ mb: 3 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1B2441' }}>
@@ -194,7 +194,10 @@ const PathwaysDetails = () => {
               Frequency: <Box component="span" sx={{ fontWeight: 400 }}>Biannual (with additional sessions as needed)</Box>
             </Typography>
           </Box>
-          
+
+          <Typography variant="h5" sx={{ color: '#1B2441', fontWeight: 600, mb: 2 }}>
+            Program Overview
+          </Typography>
           {/* Image Slider */}
           <Box 
             sx={{ 
