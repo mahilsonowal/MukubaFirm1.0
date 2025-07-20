@@ -177,6 +177,23 @@ const PathwaysDetails = () => {
           >
             Program Overview
           </Typography>
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1B2441' }}>
+              Program Name: <Box component="span" sx={{ fontWeight: 400 }}>Pathways of Success</Box>
+            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1B2441' }}>
+              Program Type: <Box component="span" sx={{ fontWeight: 400 }}>Youth and Professional Development Initiative</Box>
+            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1B2441' }}>
+              Powered by: <Box component="span" sx={{ fontWeight: 400 }}>Mukuba Economic Research and Consulting Firm</Box>
+            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1B2441' }}>
+              Delivery Format: <Box component="span" sx={{ fontWeight: 400 }}>Webinars, Events, Outreach, and Mentorship</Box>
+            </Typography>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, color: '#1B2441' }}>
+              Frequency: <Box component="span" sx={{ fontWeight: 400 }}>Biannual (with additional sessions as needed)</Box>
+            </Typography>
+          </Box>
           
           {/* Image Slider */}
           <Box 
