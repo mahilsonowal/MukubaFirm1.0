@@ -123,7 +123,7 @@ const PathwaysDetails = () => {
   };
 
   return (
-    <Box sx={{ py: { xs: 6, md: 10 }, bgcolor: 'white' }}>
+    <Box sx={{ py: { xs: 1, md: 2 }, bgcolor: 'white' }}>
       {/* Hero Section */}
       <Box 
         sx={{ 
