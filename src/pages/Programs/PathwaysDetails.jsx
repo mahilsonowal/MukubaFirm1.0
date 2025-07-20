@@ -118,7 +118,7 @@ const PathwaysDetails = () => {
           bgcolor: '#1B2441',
           color: 'white',
           py: { xs: 6, md: 8 },
-          mb: 6
+          mb: 2
         }}
       >
         <Container maxWidth="lg">
