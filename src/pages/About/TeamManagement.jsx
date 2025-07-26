@@ -75,7 +75,7 @@ const TeamManagement = () => {
     },
     {
       id: 'coo',
-      name: 'Chief Operating Officer (COO)',
+      name: 'Chief Research Officer (CRO)',
       title: 'COO',
       description: 'Manages daily operations, staff coordination, and process efficiency.',
       image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
@@ -100,7 +100,7 @@ const TeamManagement = () => {
     {
       id: 'blessings-ntesa',
       name: 'Mr. Ntesa Blessings',
-      title: 'Chief Research Officer (CRO)',
+      title: 'Chief Operation Officer (COO)',
       description: 'Heads research initiatives, methodologies, quality control, and publications.',
       image: '/assets/team/blessings.jpg',
       socials: {

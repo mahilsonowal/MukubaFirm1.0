@@ -168,7 +168,7 @@ const Governance = () => {
     },
     {
       id: 'technical-advisors',
-      name: 'Technical Advisors (On-call/Project-based)',
+      name: 'Technical Advisor (On-call/Project-based)',
       title: 'Mr. Brad Elledge',
       description: 'Specialists offering expert input in areas like agriculture, climate change, ESG, education, and economic transformation.',
       image: '/assets/team/brad.jpg',
