@@ -8,6 +8,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import GroupIcon from '@mui/icons-material/Group';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { Link } from 'react-router-dom';
 
 const GovernanceCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -128,49 +129,51 @@ const Governance = () => {
     }
   ];
 
-  const boardMembers = [
+  const advisoryTeams = [
     {
-      id: 'chairperson',
-      name: 'Chairperson',
-      title: '[To Be Appointed]',
-      description: 'Board Chairperson position',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
-      email: 'chairperson@mukuba.com',
+      id: 'legal-advisor',
+      name: 'Legal Advisor',
+      title: '[Vacant/To Be Announced]',
+      description: 'Advises on regulatory matters, contracts, legal structuring, and compliance.',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPg==',
+      email: 'legaladvisor@mukuba.com',
       placeholder: true
     },
     {
-      id: 'clement-malala-board',
-      name: 'Mr. Clement Malala',
-      title: 'Executive Director',
-      description: 'Current position and organization details',
-      image: '/assets/team/malala.jpg',
-      email: 'clement@mukuba.com'
+      id: 'finance-advisor',
+      name: 'Finance Advisor',
+      title: '[Vacant/To Be Announced]',
+      description: 'Guides budgeting, grant compliance, investment readiness, and financial sustainability.',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPg==',
+      email: 'financeadvisor@mukuba.com',
+      placeholder: true
     },
     {
-      id: 'brad-elledge-board',
-      name: 'Mr. Brad Elledge',
-      title: 'Independent Director',
-      description: 'Current position and organization details',
+      id: 'policy-research-advisor',
+      name: 'Policy & Research Advisor',
+      title: '[Vacant/To Be Announced]',
+      description: 'Supports research quality, relevance, and methodological soundness.',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPg==',
+      email: 'policyadvisor@mukuba.com',
+      placeholder: true
+    },
+    {
+      id: 'governance-strategy-advisor',
+      name: 'Governance & Strategy Advisor',
+      title: '[Vacant/To Be Announced]',
+      description: 'Assists with institutional development, organizational structuring, and long-term strategy.',
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPg==',
+      email: 'strategyadvisor@mukuba.com',
+      placeholder: true
+    },
+    {
+      id: 'technical-advisors',
+      name: 'Technical Advisors (On-call/Project-based)',
+      title: 'Mr. Brad Elledge',
+      description: 'Specialists offering expert input in areas like agriculture, climate change, ESG, education, and economic transformation.',
       image: '/assets/team/brad.jpg',
-      email: 'brad@mukuba.com'
-    },
-    {
-      id: 'legal-director',
-      name: 'Non-Executive Director (Legal)',
-      title: '[Vacant/To Be Filled]',
-      description: 'Legal expertise position on the board',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
-      email: 'legal@mukuba.com',
-      placeholder: true
-    },
-    {
-      id: 'finance-director',
-      name: 'Non-Executive Director (Finance)',
-      title: '[Vacant/To Be Filled]',
-      description: 'Financial expertise position on the board',
-      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzBDMTE2LjU2OSA3MCAxMzAgODMuNDMxIDgzLjQzMSAxMzBDNzAgMTE2LjU2OSA4My40MzEgMTAwIDEwMCAxMDBaIiBmaWxsPSIjQ0M5QTA3NCIvPgo8dGV4dCB4PSIxMDAiIHk9IjE2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5WYWNhbnQ8L3RleHQ+Cjwvc3ZnPgo=',
-      email: 'finance@mukuba.com',
-      placeholder: true
+      email: 'brelledge@gmail.com',
+      profileLink: '/about/team/brad-elledge' 
     }
   ];
 
@@ -288,7 +291,7 @@ const Governance = () => {
           </Grid>
         </Box>
 
-        {/* Board of Directors Section */}
+        {/* Advisory Team Section */}
         <Box sx={{ mb: { xs: 6, md: 8 } }}>
           <Box sx={{ textAlign: 'center', mb: { xs: 4, md: 6 } }}>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
@@ -301,18 +304,25 @@ const Governance = () => {
                   fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
                 }}
               >
-                Board of Directors
+                Advisory Team
               </Typography>
             </Box>
             <Typography 
               variant="body1" 
               sx={{ 
                 color: 'text.secondary',
-                maxWidth: '600px',
+                textAlign: 'justify',
+                maxWidth: 'auto',
                 mx: 'auto'
               }}
             >
-              Our board of directors provides strategic oversight and governance.
+              At Mukuba Economic Research and Consulting Firm, we are privileged to be supported by a distinguished Advisory Team composed of seasoned professionals with diverse expertise in law, finance, policy, governance, and sector-specific technical fields.
+
+Our Advisory Team plays a vital role in strengthening the firm’s strategic direction, ensuring legal and regulatory compliance, enhancing financial sustainability, and providing specialized knowledge that enriches our research and consulting services.
+
+While Mukuba operates as a sole proprietorship under the leadership of its founder, the Advisory Team offers non-executive, independent guidance that helps us maintain high standards of professionalism, innovation, and impact in all our engagements.
+
+Together, this team of advisors helps Mukuba navigate complex challenges, seize growth opportunities, and deliver value-driven solutions to our clients and stakeholders.
             </Typography>
           </Box>
 
@@ -321,7 +331,7 @@ const Governance = () => {
             spacing={3}
             sx={{ maxWidth: '1200px', mx: 'auto' }}
           >
-            {boardMembers.map((member, index) => (
+            {advisoryTeams.map((member, index) => (
               <Grid 
                 key={member.id}
                 item
@@ -349,7 +359,7 @@ const Governance = () => {
                     <img
                       src={member.image}
                       alt={member.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     />
                   </Box>
                   <Typography 
@@ -386,10 +396,27 @@ const Governance = () => {
                     {member.description}
                   </Typography>
                   {!member.placeholder && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 'auto' }}>
-                      <a href={`mailto:${member.email}`} style={{ color: '#C9AA74', fontSize: '0.9rem', textDecoration: 'none' }}>Email</a>
-                    </Box>
-                  )}
+  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 'auto' }}>
+    <a href={`mailto:${member.email}`} style={{ color: '#C9AA74', fontSize: '0.9rem', textDecoration: 'none' }}>Email</a>
+    {member.id === 'technical-advisors' && (
+      <Link 
+        to={member.profileLink}
+        style={{ 
+          fontSize: '0.85rem',
+          padding: '4px 8px',
+          borderRadius: '4px',
+          backgroundColor: '#C9AA74',
+          color: '#fff',
+          textDecoration: 'none',
+          fontWeight: 500
+        }}
+      >
+        View Profile
+      </Link>
+    )}
+  </Box>
+)}
+
                 </GovernanceCard>
               </Grid>
             ))}
