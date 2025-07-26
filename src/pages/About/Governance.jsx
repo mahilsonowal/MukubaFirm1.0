@@ -89,23 +89,20 @@ const Governance = () => {
                 Advisory Team
               </Typography>
             </Box>
-            <Typography 
-              variant="body1" 
-              sx={{ 
-                color: 'text.secondary',
-                textAlign: 'justify',
-                maxWidth: 'auto',
-                mx: 'auto'
-              }}
-            >
-              At Mukuba Economic Research and Consulting Firm, we are privileged to be supported by a distinguished Advisory Team composed of seasoned professionals with diverse expertise in law, finance, policy, governance, and sector-specific technical fields.
 
-Our Advisory Team plays a vital role in strengthening the firm’s strategic direction, ensuring legal and regulatory compliance, enhancing financial sustainability, and providing specialized knowledge that enriches our research and consulting services.
+    <Typography variant="body1" paragraph sx={{ color: 'text.secondary', textAlign: 'justify', maxWidth: 'auto', mx: 'auto' }}>
+      At Mukuba Economic Research and Consulting Firm, we are privileged to be supported by a distinguished Advisory Team composed of seasoned professionals with diverse expertise in law, finance, policy, governance, and sector-specific technical fields.
+    </Typography>
+    <Typography variant="body1" paragraph sx={{ color: 'text.secondary', textAlign: 'justify', maxWidth: 'auto', mx: 'auto' }}>
+      Our Advisory Team plays a vital role in strengthening the firm’s strategic direction, ensuring legal and regulatory compliance, enhancing financial sustainability, and providing specialized knowledge that enriches our research and consulting services.
+    </Typography>
+    <Typography variant="body1" paragraph sx={{ color: 'text.secondary', textAlign: 'justify', maxWidth: 'auto', mx: 'auto', lineHeight: 1.8 }}>
+      While Mukuba operates as a sole proprietorship under the leadership of its founder, the Advisory Team offers non-executive, independent guidance that helps us maintain high standards of professionalism, innovation, and impact in all our engagements.
+    </Typography>
+    <Typography variant="body1" paragraph sx={{ color: 'text.secondary', textAlign: 'justify', maxWidth: 'auto', mx: 'auto' }}>
+      Together, this team of advisors helps Mukuba navigate complex challenges, seize growth opportunities, and deliver value-driven solutions to our clients and stakeholders.
+    </Typography>
 
-While Mukuba operates as a sole proprietorship under the leadership of its founder, the Advisory Team offers non-executive, independent guidance that helps us maintain high standards of professionalism, innovation, and impact in all our engagements.
-
-Together, this team of advisors helps Mukuba navigate complex challenges, seize growth opportunities, and deliver value-driven solutions to our clients and stakeholders.
-            </Typography>
           </Box>
 
           <Grid 
