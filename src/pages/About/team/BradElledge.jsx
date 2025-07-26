@@ -88,7 +88,7 @@ const BradElledge = () => {
                 fontSize: { xs: '1.25rem', md: '1.5rem' }
               }}
             >
-              Chief Business Development Officer / Business Development Manager
+             Technical Advisor
             </Typography>
             <Typography 
               variant="subtitle1" 

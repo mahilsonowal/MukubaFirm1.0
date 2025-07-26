@@ -88,7 +88,7 @@ const BlessingsNtesa = () => {
                 fontSize: { xs: '1.25rem', md: '1.5rem' }
               }}
             >
-              Managing Director
+              Chief Operation Officer (COO)
             </Typography>
           </HeaderSection>
 
