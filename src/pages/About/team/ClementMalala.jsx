@@ -267,7 +267,7 @@ const ClementMalala = () => {
                     Website:
                   </Typography>
                   <Link 
-                    href="https://www.mukubaconsulting.com"
+                    href="https://mukubaecon.io/"
                     target="_blank"
                     rel="noopener noreferrer"
                     sx={{ 
@@ -276,7 +276,7 @@ const ClementMalala = () => {
                       '&:hover': { color: '#C9AA74' }
                     }}
                   >
-                    www.mukubaconsulting.com
+                    mukubaecon.io
                   </Link>
                 </ListItem>
                 <ListItem sx={{ color: 'text.secondary', fontSize: '1.1rem' }}>
