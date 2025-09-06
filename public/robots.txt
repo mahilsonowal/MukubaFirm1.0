@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://mukubaecon.io/sitemap.xml
+
+# Disallow admin and private routes
+Disallow: /admin-dashboard
+Disallow: /admin-upload-report
+Disallow: /user-dashboard
+Disallow: /login
+Disallow: /reset-password
+Disallow: /totp-reset
+Disallow: /totp-setup
+
+# Allow important pages
+Allow: /about/
+Allow: /services/
+Allow: /research/
+Allow: /reports/
+Allow: /program/
+Allow: /notice-board/
+
+# Crawl delay (optional)
+Crawl-delay: 1

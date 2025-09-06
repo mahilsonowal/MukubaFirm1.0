@@ -1,11 +1,13 @@
 {
-  "name": "mukuba-consulting",
+  "name": "mukubaecon",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run generate-seo && vite build",
+    "build:seo": "npm run generate-seo && vite build",
+    "generate-seo": "node sitemap-generator.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -20,12 +22,15 @@
     "axios": "^1.8.4",
     "chart.js": "^4.4.9",
     "file-saver": "^2.0.5",
+    "qrcode": "^1.5.4",
     "react": "^19.0.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",
+    "react-helmet-async": "^2.0.5",
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.5.1",
+    "speakeasy": "^2.0.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
