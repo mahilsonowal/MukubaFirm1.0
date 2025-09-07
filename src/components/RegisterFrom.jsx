@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import { Box, Paper, Typography, TextField, Button, Stack, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import GoogleIcon from '@mui/icons-material/Google';
 
 const RegisterFrom = ({ setActiveForm }) => {
     const formRef = useRef(null);
@@ -8,6 +10,7 @@ const RegisterFrom = ({ setActiveForm }) => {
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { registerUser, loginWithGoogle } = useAuth();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -24,14 +27,25 @@ const RegisterFrom = ({ setActiveForm }) => {
         setSuccess("");
         setLoading(true);
         try {
-            // Supabase registration logic would go here
-            // For now, we'll simulate a successful registration
+            await registerUser(email, password, name);
             setSuccess("Registration successful! Redirecting to home page...");
             setTimeout(() => navigate('/'), 1500);
         } catch (err) {
             setError(err.message || "Registration failed");
         }
         setLoading(false);
+    };
+
+    const handleGoogleRegister = async () => {
+        setLoading(true);
+        setError("");
+        try {
+            await loginWithGoogle(navigate);
+        } catch (err) {
+            setError(err.message || "Google sign up failed");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -74,6 +88,16 @@ const RegisterFrom = ({ setActiveForm }) => {
                         />
                         <Button type="submit" variant="contained" color="primary" size="large" fullWidth sx={{ fontWeight: 600 }} disabled={loading}>
                             {loading ? "Signing up..." : "Signup"}
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            fullWidth
+                            startIcon={<GoogleIcon />}
+                            onClick={handleGoogleRegister}
+                            disabled={loading}
+                            sx={{ color: '#AF9871', borderColor: '#AF9871', '&:hover': { borderColor: '#977F59', backgroundColor: 'rgba(175, 152, 113, 0.08)' } }}
+                        >
+                            Continue with Google
                         </Button>
                     </Stack>
                 </Box>

@@ -1,91 +1,250 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
-import { Box, Typography, CircularProgress, Paper, Avatar, Stack, Divider, Button } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { 
+  Box, 
+  Typography, 
+  Button, 
+  Paper, 
+  Grid, 
+  Card, 
+  CardContent, 
+  Alert,
+  Chip,
+  Divider
+} from '@mui/material';
+import { 
+  Security, 
+  Person, 
+  Email, 
+  CalendarToday,
+  Settings,
+  QrCode2
+} from '@mui/icons-material';
 
 const UserDashboard = () => {
-  const { user, loading } = useAuth();
-  const [profile, setProfile] = useState(null);
-  const [profileLoading, setProfileLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { user, logoutUser } = useAuth();
   const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!loading && !user) {
-      navigate('/login');
-    }
     if (user) {
-      const fetchProfile = async () => {
-        setProfileLoading(true);
-        setError('');
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('name, email, role')
-          .eq('id', user.id)
-          .single();
-        if (error) {
-          setError('Failed to load profile.');
-        } else {
-          if (data.role === 'admin') {
-            navigate('/admin-dashboard');
-            return;
-          }
-          setProfile(data);
-        }
-        setProfileLoading(false);
-      };
-      fetchProfile();
+      fetchUserProfile();
     }
-  }, [user, loading, navigate]);
+  }, [user]);
 
-  if (loading || profileLoading) {
+  const fetchUserProfile = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+      
+      if (error) throw error;
+      setProfile(data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await logoutUser();
+    navigate('/');
+  };
+
+  const handle2FASetup = () => {
+    navigate('/totp-setup');
+  };
+
+  if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-        <Typography color="error">{error}</Typography>
+        <Typography>Loading...</Typography>
       </Box>
     );
   }
 
   return (
-    <Box maxWidth={500} mx="auto" mt={10}>
-      <Paper elevation={4} sx={{ p: 5, borderRadius: 3, bgcolor: 'background.paper', boxShadow: '0 4px 24px rgba(0,0,0,0.07)' }}>
-        <Stack direction="column" alignItems="center" spacing={2}>
-          <Avatar sx={{ width: 80, height: 80, bgcolor: '#C9AA74' }}>
-            <AccountCircleIcon sx={{ fontSize: 60, color: 'white' }} />
-          </Avatar>
-          <Typography variant="h5" fontWeight={700} color="text.primary" gutterBottom>
-            {profile?.name || 'User'}
-          </Typography>
-          <Divider flexItem sx={{ my: 1, width: '100%' }} />
-          <Box width="100%">
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-              Email
+    <Box sx={{ py: 4, px: 2, maxWidth: 1200, mx: 'auto' }}>
+      <Typography variant="h3" sx={{ fontWeight: 700, color: '#AF9871', mb: 4, textAlign: 'center' }}>
+        Welcome to Your Dashboard
+      </Typography>
+
+      <Grid container spacing={4}>
+        {/* User Info Card */}
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Person sx={{ fontSize: 32, color: '#AF9871', mr: 2 }} />
+              <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                Account Information
+              </Typography>
+            </Box>
+            
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="body2" color="textSecondary">
+                Name
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                {profile?.name || 'Not set'}
+              </Typography>
+            </Box>
+            
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="body2" color="textSecondary">
+                Email
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                {user?.email}
+              </Typography>
+            </Box>
+            
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="body2" color="textSecondary">
+                Role
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 500, textTransform: 'capitalize' }}>
+                {profile?.role || 'user'}
+              </Typography>
+            </Box>
+            
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="body2" color="textSecondary">
+                Member Since
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                {profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : 'Unknown'}
+              </Typography>
+            </Box>
+
+            <Button
+              variant="outlined"
+              onClick={handleLogout}
+              sx={{ borderColor: '#AF9871', color: '#AF9871' }}
+            >
+              Logout
+            </Button>
+          </Paper>
+        </Grid>
+
+        {/* Security Card */}
+        <Grid item xs={12} md={6}>
+          <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Security sx={{ fontSize: 32, color: '#AF9871', mr: 2 }} />
+              <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                Security Settings
+              </Typography>
+            </Box>
+            
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+                Two-Factor Authentication
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                <Chip 
+                  label={profile?.totp_enabled ? 'Enabled' : 'Disabled'} 
+                  color={profile?.totp_enabled ? 'success' : 'default'}
+                  size="small"
+                />
+                {profile?.totp_enabled && (
+                  <Chip 
+                    label="Secure" 
+                    color="success" 
+                    variant="outlined"
+                    size="small"
+                  />
+                )}
+              </Box>
+              
+              {profile?.totp_enabled ? (
+                <Alert severity="success" sx={{ mb: 2 }}>
+                  Your account is protected with 2FA. You can use TOTP password reset if needed.
+                </Alert>
+              ) : (
+                <Alert severity="warning" sx={{ mb: 2 }}>
+                  Enable 2FA to secure your account and use TOTP password reset.
+                </Alert>
+              )}
+            </Box>
+
+            <Button
+              variant="contained"
+              startIcon={profile?.totp_enabled ? <Settings /> : <QrCode2 />}
+              onClick={handle2FASetup}
+              sx={{ 
+                backgroundColor: profile?.totp_enabled ? '#AF9871' : '#1976d2',
+                '&:hover': { 
+                  backgroundColor: profile?.totp_enabled ? '#977F59' : '#1565c0' 
+                }
+              }}
+            >
+              {profile?.totp_enabled ? 'Manage 2FA' : 'Set Up 2FA'}
+            </Button>
+          </Paper>
+        </Grid>
+
+        {/* Quick Actions */}
+        <Grid item xs={12}>
+          <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, mb: 3 }}>
+              Quick Actions
             </Typography>
-            <Typography variant="body1" color="text.primary" gutterBottom sx={{ mb: 2 }}>
-              {profile?.email}
-            </Typography>
-          </Box>
-          <Divider flexItem sx={{ my: 2, width: '100%' }} />
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ bgcolor: '#C9AA74', color: 'white', fontWeight: 600, px: 4, py: 1, borderRadius: 2, '&:hover': { bgcolor: '#AF9871' } }}
-            onClick={async () => { await supabase.auth.signOut(); navigate('/login'); }}
-          >
-            Logout
-          </Button>
-        </Stack>
-      </Paper>
+            
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} md={3}>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => navigate('/reset-password')}
+                  sx={{ borderColor: '#AF9871', color: '#AF9871' }}
+                >
+                  Change Password
+                </Button>
+              </Grid>
+              
+              <Grid item xs={12} sm={6} md={3}>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => navigate('/totp-reset')}
+                  disabled={!profile?.totp_enabled}
+                  sx={{ borderColor: '#AF9871', color: '#AF9871' }}
+                >
+                  Reset Password (2FA)
+                </Button>
+              </Grid>
+              
+              <Grid item xs={12} sm={6} md={3}>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => navigate('/')}
+                  sx={{ borderColor: '#AF9871', color: '#AF9871' }}
+                >
+                  Go to Home
+                </Button>
+              </Grid>
+              
+              <Grid item xs={12} sm={6} md={3}>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => navigate('/login')}
+                  sx={{ borderColor: '#AF9871', color: '#AF9871' }}
+                >
+                  Account Settings
+                </Button>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

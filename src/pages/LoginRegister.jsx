@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../utils/supabaseClient';
-import { Box, Button, TextField, Typography, Tabs, Tab, Alert, CircularProgress, Divider } from '@mui/material';
+import { Box, Button, TextField, Typography, Tabs, Tab, Alert, CircularProgress, Divider, IconButton } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
+import SecurityIcon from '@mui/icons-material/Security';
 import { useAuth } from '../context/AuthContext';
 
 const LoginRegister = () => {
@@ -17,7 +18,7 @@ const LoginRegister = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-  const { loginUser, registerUser } = useAuth();
+  const { loginUser, registerUser, loginWithGoogle } = useAuth();
 
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
@@ -38,48 +39,22 @@ const LoginRegister = () => {
     try {
       if (tab === 0) {
         // Login
-        const { data, error: signInError } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
-        if (signInError) throw signInError;
-        const user = data?.user;
-        if (user) {
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', user.id)
-            .single();
-          if (profileError) throw profileError;
-          if (profile?.role === 'admin') {
-            await supabase.auth.signOut();
-            throw new Error("Didn't find account");
-          }
-        }
+        await loginUser(loginEmail, loginPassword);
         setTimeout(() => {
           navigate('/');
         }, 500);
       } else {
         // Register
-        const { data, error: signUpError } = await supabase.auth.signUp({ email: registerEmail, password: registerPassword });
-        if (signUpError) throw signUpError;
-        const user = data?.user;
-        if (user) {
-          const { error: profileError } = await supabase.from('profiles').insert([
-            {
-              id: user.id,
-              email: registerEmail,
-              name: registerName,
-              role: 'user',
-            },
-          ]);
-          if (profileError) throw profileError;
-        }
-        setSuccess('Successfully registered! Redirecting to home...');
-        setTimeout(() => {
-          navigate('/');
-        }, 2000);
+        await registerUser(registerEmail, registerPassword, registerName);
+        setSuccess('Registration successful! Please check your email to confirm your account before logging in.');
         return;
       }
     } catch (err) {
-      setError(err.message || 'Authentication error');
+      if (tab === 0 && err.message && err.message.toLowerCase().includes('confirm')) {
+        setError('Please confirm your email before logging in. Check your inbox for a confirmation link.');
+      } else {
+        setError(err.message || 'Authentication error');
+      }
     } finally {
       setLoading(false);
     }
@@ -89,41 +64,16 @@ const LoginRegister = () => {
     setLoading(true);
     setError('');
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-      if (error) throw error;
-      const checkProfile = async () => {
-        const session = await supabase.auth.getSession();
-        const user = session.data.session?.user;
-        if (!user) return;
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-        if (profileError && profileError.code !== 'PGRST116') throw profileError;
-        if (!profile) {
-          const { error: insertError } = await supabase.from('profiles').insert([
-            {
-              id: user.id,
-              email: user.email,
-              name: user.user_metadata?.name || '',
-              role: 'user',
-            },
-          ]);
-          if (insertError) throw insertError;
-          navigate('/user-dashboard');
-        } else if (profile.role === 'admin') {
-          await supabase.auth.signOut();
-          throw new Error("Didn't find account");
-        } else {
-          navigate('/user-dashboard');
-        }
-      };
-      setTimeout(checkProfile, 1000);
+      await loginWithGoogle(navigate);
     } catch (err) {
       setError(err.message || 'Google login error');
+    } finally {
       setLoading(false);
     }
+  };
+
+  const handleTOTPReset = () => {
+    navigate('/totp-reset');
   };
 
   return (
@@ -195,6 +145,25 @@ const LoginRegister = () => {
               required
               sx={{ mb: 2 }}
             />
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+              <Typography variant="body2" color="textSecondary">
+                Forgot your password?
+              </Typography>
+              <Button
+                color="primary"
+                startIcon={<SecurityIcon />}
+                onClick={handleTOTPReset}
+                sx={{ 
+                  textTransform: 'none', 
+                  p: 0, 
+                  minWidth: 0,
+                  color: '#AF9871',
+                  '&:hover': { color: '#977F59' }
+                }}
+              >
+                Reset with 2FA
+              </Button>
+            </Box>
           </>
         )}
         <Button

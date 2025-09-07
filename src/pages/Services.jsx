@@ -8,6 +8,7 @@ import StorageIcon from '@mui/icons-material/Storage';
 import SchoolIcon from '@mui/icons-material/School';
 import HandshakeIcon from '@mui/icons-material/Handshake';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import SEOHead from '../components/common/SEOHead';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -98,83 +99,178 @@ const mainServices = [
 
 const ServicePage = () => {
   return (
-    <Box sx={{ bgcolor: '#f5f5f5' }}>
-      {/* Hero Section */}
-      <Box sx={{ bgcolor: '#1B2441', py: { xs: 6, md: 8 }, color: 'white' }}>
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
-            <Typography 
-              variant="h2" 
-              component="h1" 
-              sx={{ 
-                fontWeight: 700,
-                mb: 2,
-                fontSize: { xs: '1.75rem', sm: '2rem', md: '2.5rem' }
-              }}
-            >
-              Our Services
-            </Typography>
-            <Typography 
-              variant="h5" 
-              sx={{ 
-                color: 'rgba(255, 255, 255, 0.9)',
-                fontWeight: 400,
-                fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' }
-              }}
-            >
-              Comprehensive economic research and consultancy services to drive sustainable growth and development in Zambia and beyond.
-            </Typography>
-          </Box>
-        </Container>
-      </Box>
+    <>
+      <SEOHead 
+        title="Economic Research & Consulting Services Zambia"
+        description="Comprehensive economic research, feasibility studies, data collection, capacity building, and consultancy services in Zambia. Expert solutions for government and private sector."
+        keywords={['mukuba firm', 'mukuba economic research', 'mukuba consulting', 'mukuba firm', 'mukuba consulting firm', 'consulting firm', 'Zambia', 'economic development', 'policy analysis', 'feasibility studies', 'capacity building', 'economic indicators', 'GDP analysis', 'parliamentary submissions']}
+        image="/assets/serv1.jpg"
+        url="/pages/services"
+      />
+      <Box sx={{ bgcolor: '#f5f5f5' }}>
+        {/* Hero Section */}
+        <Box sx={{ bgcolor: '#1B2441', py: { xs: 6, md: 8 }, color: 'white' }}>
+          <Container maxWidth="lg">
+            <Box sx={{ textAlign: 'center', maxWidth: '800px', mx: 'auto' }}>
+              <Typography 
+                variant="h2" 
+                component="h1" 
+                sx={{ 
+                  fontWeight: 700,
+                  mb: 2,
+                  fontSize: { xs: '1.75rem', sm: '2rem', md: '2.5rem' }
+                }}
+              >
+                Our Services
+              </Typography>
+              <Typography 
+                variant="h5" 
+                sx={{ 
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontWeight: 400,
+                  fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' }
+                }}
+              >
+                Comprehensive economic research and consultancy services to drive sustainable growth and development in Zambia and beyond.
+              </Typography>
+            </Box>
+          </Container>
+        </Box>
 
-      {/* Services Showcase */}
-      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 3, md: 4 } }}>
-          {mainServices.map((service) => (
-            <StyledPaper key={service.id} elevation={2}>
-              <Grid container>
-                <Grid 
-                  sx={{ 
-                    flexBasis: { xs: '100%', md: '50%' },
-                    maxWidth: { xs: '100%', md: '50%' }
-                  }}
-                >
-                  <Box sx={{ p: { xs: 3, md: 4 }, pb: { xs: 8, md: 4 } }}>
-                    <Box 
-                      sx={{ 
-                        display: 'inline-block',
-                        p: { xs: 1.5, md: 2 },
-                        borderRadius: 2,
-                        bgcolor: service.color,
-                        mb: 2
-                      }}
-                    >
-                      {service.icon}
+        {/* Services Showcase */}
+        <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 3, md: 4 } }}>
+            {mainServices.map((service) => (
+              <StyledPaper key={service.id} elevation={2}>
+                <Grid container>
+                  <Grid 
+                    sx={{ 
+                      flexBasis: { xs: '100%', md: '50%' },
+                      maxWidth: { xs: '100%', md: '50%' }
+                    }}
+                  >
+                    <Box sx={{ p: { xs: 3, md: 4 }, pb: { xs: 8, md: 4 } }}>
+                      <Box 
+                        sx={{ 
+                          display: 'inline-block',
+                          p: { xs: 1.5, md: 2 },
+                          borderRadius: 2,
+                          bgcolor: service.color,
+                          mb: 2
+                        }}
+                      >
+                        {service.icon}
+                      </Box>
+                      <Typography 
+                        variant="h4" 
+                        sx={{ 
+                          color: '#1B2441',
+                          fontWeight: 600,
+                          mb: 1,
+                          fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' }
+                        }}
+                      >
+                        {service.title}
+                      </Typography>
+                      <Typography 
+                        sx={{ 
+                          color: 'text.secondary',
+                          mb: 2,
+                          fontSize: { xs: '0.875rem', md: '1rem' }
+                        }}
+                      >
+                        {service.description}
+                      </Typography>
+                      <List dense>
+                        {service.features.map((feature, index) => (
+                          <ListItem key={index} sx={{ py: 0.5 }}>
+                            <ListItemIcon sx={{ minWidth: 24 }}>
+                              <Box 
+                                sx={{ 
+                                  width: 6, 
+                                  height: 6, 
+                                  borderRadius: '50%', 
+                                  bgcolor: '#C9AA74' 
+                                }} 
+                              />
+                            </ListItemIcon>
+                            <ListItemText 
+                              primary={feature}
+                              sx={{ 
+                                '& .MuiListItemText-primary': {
+                                  color: 'text.secondary',
+                                  fontSize: { xs: '0.75rem', md: '0.875rem' }
+                                }
+                              }}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                      <Button
+                        component={Link}
+                        to={service.link}
+                        variant="contained"
+                        endIcon={<ArrowForwardIcon />}
+                        size="small"
+                        sx={{
+                          mt: 2,
+                          bgcolor: '#1B2441',
+                          '&:hover': {
+                            bgcolor: '#2a3a6d',
+                          }
+                        }}
+                      >
+                        Learn More
+                      </Button>
                     </Box>
-                    <Typography 
-                      variant="h4" 
-                      sx={{ 
-                        color: '#1B2441',
-                        fontWeight: 600,
-                        mb: 1,
-                        fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' }
+                  </Grid>
+                  <Grid 
+                    sx={{ 
+                      flexBasis: { xs: '100%', md: '50%' },
+                      maxWidth: { xs: '100%', md: '50%' },
+                      position: 'relative',
+                      minHeight: { xs: 200, md: 'auto' }
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={service.image}
+                      alt={service.title}
+                      sx={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0
+                      }}
+                    />
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        bottom: { xs: 16, md: 24 },
+                        left: { xs: 16, md: 24 },
+                        right: { xs: 16, md: 24 },
+                        bgcolor: 'white',
+                        borderRadius: 2,
+                        p: { xs: 2, md: 3 },
+                        boxShadow: 1,
+                        zIndex: 1
                       }}
                     >
-                      {service.title}
-                    </Typography>
-                    <Typography 
-                      sx={{ 
-                        color: 'text.secondary',
-                        mb: 2,
-                        fontSize: { xs: '0.875rem', md: '1rem' }
-                      }}
-                    >
-                      {service.description}
-                    </Typography>
-                    <List dense>
-                      {service.features.map((feature, index) => (
-                        <ListItem key={index} sx={{ py: 0.5 }}>
+                      <Typography 
+                        variant="h6" 
+                        sx={{ 
+                          color: '#1B2441',
+                          fontWeight: 600,
+                          mb: 1,
+                          fontSize: { xs: '0.875rem', md: '1rem' }
+                        }}
+                      >
+                        Why Choose Our {service.title}?
+                      </Typography>
+                      <List dense>
+                        <ListItem sx={{ py: 0.5 }}>
                           <ListItemIcon sx={{ minWidth: 24 }}>
                             <Box 
                               sx={{ 
@@ -186,209 +282,123 @@ const ServicePage = () => {
                             />
                           </ListItemIcon>
                           <ListItemText 
-                            primary={feature}
+                            primary={`Expert team with extensive experience in ${service.title.toLowerCase()}`}
                             sx={{ 
                               '& .MuiListItemText-primary': {
-                                color: 'text.secondary',
-                                fontSize: { xs: '0.75rem', md: '0.875rem' }
+                                fontSize: { xs: '0.75rem', md: '0.875rem' },
+                                color: 'text.secondary'
                               }
                             }}
                           />
                         </ListItem>
-                      ))}
-                    </List>
-                    <Button
-                      component={Link}
-                      to={service.link}
-                      variant="contained"
-                      endIcon={<ArrowForwardIcon />}
-                      size="small"
-                      sx={{
-                        mt: 2,
-                        bgcolor: '#1B2441',
-                        '&:hover': {
-                          bgcolor: '#2a3a6d',
-                        }
-                      }}
-                    >
-                      Learn More
-                    </Button>
-                  </Box>
+                        <ListItem sx={{ py: 0.5 }}>
+                          <ListItemIcon sx={{ minWidth: 24 }}>
+                            <Box 
+                              sx={{ 
+                                width: 6, 
+                                height: 6, 
+                                borderRadius: '50%', 
+                                bgcolor: '#C9AA74' 
+                              }} 
+                            />
+                          </ListItemIcon>
+                          <ListItemText 
+                            primary="Tailored solutions to meet your specific needs and objectives"
+                            sx={{ 
+                              '& .MuiListItemText-primary': {
+                                fontSize: { xs: '0.75rem', md: '0.875rem' },
+                                color: 'text.secondary'
+                              }
+                            }}
+                          />
+                        </ListItem>
+                        <ListItem sx={{ py: 0.5 }}>
+                          <ListItemIcon sx={{ minWidth: 24 }}>
+                            <Box 
+                              sx={{ 
+                                width: 6, 
+                                height: 6, 
+                                borderRadius: '50%', 
+                                bgcolor: '#C9AA74' 
+                              }} 
+                            />
+                          </ListItemIcon>
+                          <ListItemText 
+                            primary="Proven track record of successful project delivery"
+                            sx={{ 
+                              '& .MuiListItemText-primary': {
+                                fontSize: { xs: '0.75rem', md: '0.875rem' },
+                                color: 'text.secondary'
+                              }
+                            }}
+                          />
+                        </ListItem>
+                      </List>
+                    </Box>
+                  </Grid>
                 </Grid>
-                <Grid 
-                  sx={{ 
-                    flexBasis: { xs: '100%', md: '50%' },
-                    maxWidth: { xs: '100%', md: '50%' },
-                    position: 'relative',
-                    minHeight: { xs: 200, md: 'auto' }
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={service.image}
-                    alt={service.title}
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      position: 'absolute',
-                      top: 0,
-                      left: 0
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      bottom: { xs: 16, md: 24 },
-                      left: { xs: 16, md: 24 },
-                      right: { xs: 16, md: 24 },
-                      bgcolor: 'white',
-                      borderRadius: 2,
-                      p: { xs: 2, md: 3 },
-                      boxShadow: 1,
-                      zIndex: 1
-                    }}
-                  >
-                    <Typography 
-                      variant="h6" 
-                      sx={{ 
-                        color: '#1B2441',
-                        fontWeight: 600,
-                        mb: 1,
-                        fontSize: { xs: '0.875rem', md: '1rem' }
-                      }}
-                    >
-                      Why Choose Our {service.title}?
-                    </Typography>
-                    <List dense>
-                      <ListItem sx={{ py: 0.5 }}>
-                        <ListItemIcon sx={{ minWidth: 24 }}>
-                          <Box 
-                            sx={{ 
-                              width: 6, 
-                              height: 6, 
-                              borderRadius: '50%', 
-                              bgcolor: '#C9AA74' 
-                            }} 
-                          />
-                        </ListItemIcon>
-                        <ListItemText 
-                          primary={`Expert team with extensive experience in ${service.title.toLowerCase()}`}
-                          sx={{ 
-                            '& .MuiListItemText-primary': {
-                              fontSize: { xs: '0.75rem', md: '0.875rem' },
-                              color: 'text.secondary'
-                            }
-                          }}
-                        />
-                      </ListItem>
-                      <ListItem sx={{ py: 0.5 }}>
-                        <ListItemIcon sx={{ minWidth: 24 }}>
-                          <Box 
-                            sx={{ 
-                              width: 6, 
-                              height: 6, 
-                              borderRadius: '50%', 
-                              bgcolor: '#C9AA74' 
-                            }} 
-                          />
-                        </ListItemIcon>
-                        <ListItemText 
-                          primary="Tailored solutions to meet your specific needs and objectives"
-                          sx={{ 
-                            '& .MuiListItemText-primary': {
-                              fontSize: { xs: '0.75rem', md: '0.875rem' },
-                              color: 'text.secondary'
-                            }
-                          }}
-                        />
-                      </ListItem>
-                      <ListItem sx={{ py: 0.5 }}>
-                        <ListItemIcon sx={{ minWidth: 24 }}>
-                          <Box 
-                            sx={{ 
-                              width: 6, 
-                              height: 6, 
-                              borderRadius: '50%', 
-                              bgcolor: '#C9AA74' 
-                            }} 
-                          />
-                        </ListItemIcon>
-                        <ListItemText 
-                          primary="Proven track record of successful project delivery"
-                          sx={{ 
-                            '& .MuiListItemText-primary': {
-                              fontSize: { xs: '0.75rem', md: '0.875rem' },
-                              color: 'text.secondary'
-                            }
-                          }}
-                        />
-                      </ListItem>
-                    </List>
-                  </Box>
-                </Grid>
-              </Grid>
-            </StyledPaper>
-          ))}
-        </Box>
-      </Container>
+              </StyledPaper>
+            ))}
+          </Box>
+        </Container>
 
-      {/* CTA Section */}
-      <Box sx={{ bgcolor: '#1B2441', py: { xs: 4, md: 6 } }}>
-        <Container maxWidth="lg">
-          <Paper 
-            elevation={0}
-            sx={{ 
-              p: { xs: 3, md: 4 },
-              textAlign: 'center',
-              bgcolor: 'white',
-              borderRadius: 2
-            }}
-          >
-            <Typography 
-              variant="h3" 
+        {/* CTA Section */}
+        <Box sx={{ bgcolor: '#1B2441', py: { xs: 4, md: 6 } }}>
+          <Container maxWidth="lg">
+            <Paper 
+              elevation={0}
               sx={{ 
-                color: '#1B2441',
-                fontWeight: 600,
-                mb: 2,
-                fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
+                p: { xs: 3, md: 4 },
+                textAlign: 'center',
+                bgcolor: 'white',
+                borderRadius: 2
               }}
             >
-              Ready to Get Started?
-            </Typography>
-            <Typography 
-              sx={{ 
-                color: 'text.secondary',
-                mb: 3,
-                maxWidth: '600px',
-                mx: 'auto',
-                fontSize: { xs: '0.875rem', md: '1rem' }
-              }}
-            >
-              Let our team of experts help you achieve your economic research and development goals.
-            </Typography>
-            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Button
-                component={Link}
-                to="/pages/contact"
-                variant="contained"
-                size="small"
-                sx={{
-                  bgcolor: '#1B2441',
-                  px: 3,
-                  py: 1,
-                  '&:hover': {
-                    bgcolor: '#2a3a6d',
-                  }
+              <Typography 
+                variant="h3" 
+                sx={{ 
+                  color: '#1B2441',
+                  fontWeight: 600,
+                  mb: 2,
+                  fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' }
                 }}
               >
-                Request a Service
-              </Button>
-            </Box>
-          </Paper>
-        </Container>
+                Ready to Get Started?
+              </Typography>
+              <Typography 
+                sx={{ 
+                  color: 'text.secondary',
+                  mb: 3,
+                  maxWidth: '600px',
+                  mx: 'auto',
+                  fontSize: { xs: '0.875rem', md: '1rem' }
+                }}
+              >
+                Let our team of experts help you achieve your economic research and development goals.
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Button
+                  component={Link}
+                  to="/pages/contact"
+                  variant="contained"
+                  size="small"
+                  sx={{
+                    bgcolor: '#1B2441',
+                    px: 3,
+                    py: 1,
+                    '&:hover': {
+                      bgcolor: '#2a3a6d',
+                    }
+                  }}
+                >
+                  Request a Service
+                </Button>
+              </Box>
+            </Paper>
+          </Container>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 
