@@ -18,23 +18,23 @@ const ExpertTeam = () => {
       }
     },
     {
-      name: "Brad Elledge",
-      title: "Independent Director",
-      description: "Driving business growth and fostering key partnerships with expertise in operational improvements and growth strategies.",
+      name: "Mr. Brad Elledge",
+      title: "Technical Advisor (On-call/Project-based)",
+      description: "Specialists offering expert input in areas like agriculture, climate change, ESG, education, and economic transformation.",
       image: "/assets/team/brad.jpg",
       socials: {
         linkedin: "#",
-        email: "brad@mukuba.com"
+        email: "brelledge@gmail.com"
       }
     },
     {
-      name: "Blessings Ntesa",
-      title: "Chief Research Officer (CRO)",
-      description: "Economics professional specializing in risk management, investment analysis, and social economic sustainability with expertise in resource optimization and strategic planning.",
-      image: "/assets/team/blessings.jpg",
+      name: "Legal Advisor",
+      title: "Senior Legal Counsel",
+      description: "Providing comprehensive legal guidance and expertise in corporate law, regulatory compliance, and strategic legal planning for business operations.",
+      image: "/assets/team/legal1.jpg",
       socials: {
         linkedin: "#",
-        email: "blessings@mukuba.com"
+        email: "legaladvisor@mukuba.com"
       }
     }
   ];

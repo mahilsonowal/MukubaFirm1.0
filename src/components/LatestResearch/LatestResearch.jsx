@@ -1,33 +1,49 @@
-import { Box, Container, Typography, Grid, Button, Paper, Link } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Container, Typography, Grid, Button, Paper, Link, CircularProgress } from '@mui/material';
 import DescriptionIcon from '@mui/icons-material/Description';
 import DownloadIcon from '@mui/icons-material/Download';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { Link as RouterLink } from 'react-router-dom';
+import { supabase } from '../../utils/supabaseClient';
 
 const LatestResearch = () => {
-  const reports = [
-    {
-      category: "Annual Reports",
-      title: "Economic Outlook 2024",
-      description: "Comprehensive analysis of economic trends and forecasts for the year ahead.",
-      date: "March 15, 2024",
-      type: "Annual Reports"
-    },
-    {
-      category: "Budget Analysis",
-      title: "National Budget Analysis",
-      description: "Detailed breakdown and implications of the national budget allocation.",
-      date: "February 8, 2024",
-      type: "Budget Analysis"
-    },
-    {
-      category: "Policy Briefs",
-      title: "Renewable Energy Investments",
-      description: "Analysis of investment opportunities in the renewable energy sector.",
-      date: "January 22, 2024",
-      type: "Policy Briefs"
-    }
-  ];
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecentReports = async () => {
+      setLoading(true);
+      try {
+        // Fetch from multiple tables and combine
+        const [reportsResult, researchResult, policyResult, budgetResult] = await Promise.all([
+          supabase.from('reports').select('*, category: "Annual Reports", type: "annual-report"').order('created_at', { ascending: false }).limit(1),
+          supabase.from('research_work').select('*, category: "Research Work", type: "research-work"').order('created_at', { ascending: false }).limit(1),
+          supabase.from('policy_briefs').select('*, category: "Policy Briefs", type: "policy-brief"').order('created_at', { ascending: false }).limit(1),
+          supabase.from('budget_analysis').select('*, category: "Budget Analysis", type: "budget-analysis"').order('created_at', { ascending: false }).limit(1)
+        ]);
+
+        const allReports = [
+          ...(reportsResult.data || []),
+          ...(researchResult.data || []),
+          ...(policyResult.data || []),
+          ...(budgetResult.data || [])
+        ];
+
+        // Sort by created_at and take the 3 most recent
+        const sortedReports = allReports
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+          .slice(0, 3);
+
+        setReports(sortedReports);
+      } catch (error) {
+        console.error('Error fetching recent reports:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecentReports();
+  }, []);
 
   return (
     <Box sx={{ py: { xs: 6, md: 10 }, bgcolor: 'white' }}>
@@ -67,29 +83,36 @@ const LatestResearch = () => {
           </Typography>
         </Box>
 
-        {/* Mobile Horizontal Scroll */}
-        <Box 
-          sx={{ 
-            display: { xs: 'block', md: 'none' },
-            overflowX: 'auto',
-            pb: 3,
-            mx: -2,
-            px: 2,
-            '&::-webkit-scrollbar': {
-              height: '6px'
-            },
-            '&::-webkit-scrollbar-track': {
-              background: '#f1f1f1',
-              borderRadius: '3px'
-            },
-            '&::-webkit-scrollbar-thumb': {
-              background: '#C9AA74',
-              borderRadius: '3px'
-            }
-          }}
-        >
-          <Box sx={{ display: 'flex', gap: 3, minWidth: 'max-content' }}>
-            {reports.map((report, index) => (
+        {/* Loading State */}
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="300px">
+            <CircularProgress sx={{ color: '#C9AA74' }} />
+          </Box>
+        ) : reports.length > 0 ? (
+          <>
+            {/* Mobile Horizontal Scroll */}
+            <Box 
+              sx={{ 
+                display: { xs: 'block', md: 'none' },
+                overflowX: 'auto',
+                pb: 3,
+                mx: -2,
+                px: 2,
+                '&::-webkit-scrollbar': {
+                  height: '6px'
+                },
+                '&::-webkit-scrollbar-track': {
+                  background: '#f1f1f1',
+                  borderRadius: '3px'
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  background: '#C9AA74',
+                  borderRadius: '3px'
+                }
+              }}
+            >
+              <Box sx={{ display: 'flex', gap: 3, minWidth: 'max-content' }}>
+                {reports.map((report, index) => (
               <Paper
                 key={index}
                 elevation={2}
@@ -127,7 +150,7 @@ const LatestResearch = () => {
                       }}
                     >
                       <DescriptionIcon fontSize="small" />
-                      {report.date}
+                      {report.created_at ? new Date(report.created_at).toLocaleDateString() : ''}
                     </Typography>
                   </Box>
 
@@ -163,7 +186,12 @@ const LatestResearch = () => {
                     }}
                   >
                     <Link
-                      href={`/research/${report.title.toLowerCase().replace(/ /g, '-')}`}
+                      component={RouterLink}
+                      to={`/${report.type === 'annual-report' ? 'reports/annual-reports' : 
+                           report.type === 'research-work' ? 'research/research-work' : 
+                           report.type === 'policy-brief' ? 'research/policy-briefs' :
+                           report.type === 'budget-analysis' ? 'research/budget-analysis' :
+                           'research'}`}
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -177,11 +205,16 @@ const LatestResearch = () => {
                       }}
                     >
                       <MenuBookIcon fontSize="small" />
-                      Read Summary
+                      View Details
                     </Link>
 
                     <Link
-                      href={`/download/${report.title.toLowerCase().replace(/ /g, '-')}`}
+                      component={RouterLink}
+                      to={`/${report.type === 'annual-report' ? 'reports/annual-reports' : 
+                           report.type === 'research-work' ? 'research/research-work' : 
+                           report.type === 'policy-brief' ? 'research/policy-briefs' :
+                           report.type === 'budget-analysis' ? 'research/budget-analysis' :
+                           'research'}`}
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -272,7 +305,7 @@ const LatestResearch = () => {
                       }}
                     >
                       <DescriptionIcon fontSize="small" />
-                      {report.date}
+                      {report.created_at ? new Date(report.created_at).toLocaleDateString() : ''}
                     </Typography>
                   </Box>
 
@@ -308,7 +341,12 @@ const LatestResearch = () => {
                     }}
                   >
                     <Link
-                      href={`/research/${report.title.toLowerCase().replace(/ /g, '-')}`}
+                      component={RouterLink}
+                      to={`/${report.type === 'annual-report' ? 'reports/annual-reports' : 
+                           report.type === 'research-work' ? 'research/research-work' : 
+                           report.type === 'policy-brief' ? 'research/policy-briefs' :
+                           report.type === 'budget-analysis' ? 'research/budget-analysis' :
+                           'research'}`}
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -322,11 +360,16 @@ const LatestResearch = () => {
                       }}
                     >
                       <MenuBookIcon fontSize="small" />
-                      Read Summary
+                      View Details
                     </Link>
 
                     <Link
-                      href={`/download/${report.title.toLowerCase().replace(/ /g, '-')}`}
+                      component={RouterLink}
+                      to={`/${report.type === 'annual-report' ? 'reports/annual-reports' : 
+                           report.type === 'research-work' ? 'research/research-work' : 
+                           report.type === 'policy-brief' ? 'research/policy-briefs' :
+                           report.type === 'budget-analysis' ? 'research/budget-analysis' :
+                           'research'}`}
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
@@ -348,6 +391,19 @@ const LatestResearch = () => {
             </Grid>
           ))}
         </Grid>
+          </>
+        ) : (
+          <Typography
+            variant="body1"
+            sx={{
+              color: 'text.secondary',
+              textAlign: 'center',
+              py: 4
+            }}
+          >
+            No recent publications available.
+          </Typography>
+        )}
 
         <Box sx={{ textAlign: 'center', mt: 6 }}>
           <Button
