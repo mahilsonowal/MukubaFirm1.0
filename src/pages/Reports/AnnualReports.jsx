@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, Button, CircularProgress, Alert } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Button, CircularProgress, Alert, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import DescriptionIcon from '@mui/icons-material/Description';
+import ShareIcon from '@mui/icons-material/Share';
 import { supabase } from '../../utils/supabaseClient';
+import { shareDocument } from '../../utils/shareUtils';
+import { useAuth } from '../../context/AuthContext';
 
 const ReportCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -25,6 +28,8 @@ const AnnualReports = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [downloading, setDownloading] = useState(null);
+  const [shareSnackbar, setShareSnackbar] = useState({ open: false, message: '' });
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -46,7 +51,14 @@ const AnnualReports = () => {
     fetchReports();
   }, []);
 
-  // Download handler for paid reports (signed URL)
+  const handleShare = async (report) => {
+    await shareDocument(report, 'annual-reports', setShareSnackbar);
+  };
+
+  const handleCloseSnackbar = () => {
+    setShareSnackbar({ open: false, message: '' });
+  };
+
   const handleDownload = async (report) => {
     setDownloading(report.id);
     try {
@@ -241,8 +253,9 @@ const AnnualReports = () => {
                       <Box 
                         sx={{ 
                           display: 'flex', 
-                          justifyContent: 'space-between',
+                          justifyContent: 'center',
                           alignItems: 'center',
+                          gap: 2,
                           pt: { xs: 1.5, sm: 2 },
                           mt: 'auto',
                           borderTop: 1,
@@ -254,6 +267,7 @@ const AnnualReports = () => {
                           sx={{ 
                             color: '#C9AA74',
                             fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                            fontWeight: 600,
                             '&:hover': { 
                               color: '#AF9871',
                               bgcolor: 'transparent'
@@ -262,11 +276,24 @@ const AnnualReports = () => {
                           onClick={() => handleDownload(report)}
                           disabled={downloading === report.id}
                         >
-                          {downloading === report.id ? 'Preparing...' : 'Download Report'}
+                          {downloading === report.id ? 'Preparing...' : 'DOWNLOAD REPORT'}
                         </Button>
-                        <Typography variant="body2" color="text.secondary">
-                          {report.access === 'paid' ? 'Paid' : 'Free'}
-                        </Typography>
+                        <Button
+                          startIcon={<ShareIcon sx={{ fontSize: { xs: 16, sm: 20 } }} />}
+                          sx={{ 
+                            color: '#1B2441',
+                            fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                            fontWeight: 600,
+                            '&:hover': { 
+                              color: '#C9AA74',
+                              bgcolor: 'transparent'
+                            }
+                          }}
+                          onClick={() => handleShare(report)}
+                          title="Share this annual report (Login required to access)"
+                        >
+                          SHARE
+                        </Button>
                       </Box>
                     </Box>
                   </ReportCard>
@@ -346,6 +373,22 @@ const AnnualReports = () => {
           </Paper>
         </Container>
       </Box>
+
+      {/* Share Success Snackbar */}
+      <Snackbar
+        open={shareSnackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={shareSnackbar.message}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{
+          '& .MuiSnackbarContent-root': {
+            bgcolor: '#1B2441',
+            color: 'white',
+            fontWeight: 500
+          }
+        }}
+      />
     </Box>
   );
 };

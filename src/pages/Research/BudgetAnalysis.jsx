@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Container, Typography, Grid, Paper, Button, Chip, CircularProgress, Alert } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Button, Chip, CircularProgress, Alert, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import ShareIcon from '@mui/icons-material/Share';
 import { supabase } from '../../utils/supabaseClient';
+import { shareDocument } from '../../utils/shareUtils';
+import { useAuth } from '../../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 const ReportCard = styled(Paper)(({ theme }) => ({
@@ -27,6 +30,8 @@ const BudgetAnalysis = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [downloading, setDownloading] = useState(null);
+  const [shareSnackbar, setShareSnackbar] = useState({ open: false, message: '' });
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -47,6 +52,14 @@ const BudgetAnalysis = () => {
     };
     fetchReports();
   }, []);
+
+  const handleShare = async (report) => {
+    await shareDocument(report, 'budget-analysis', setShareSnackbar);
+  };
+
+  const handleCloseSnackbar = () => {
+    setShareSnackbar({ open: false, message: '' });
+  };
 
   const handleDownload = async (report) => {
     setDownloading(report.id);
@@ -185,26 +198,21 @@ const BudgetAnalysis = () => {
                     <Box 
                       sx={{ 
                         display: 'flex', 
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         alignItems: 'center',
+                        gap: 2,
                         pt: 2,
                         mt: 'auto',
                         borderTop: 1,
                         borderColor: 'divider'
                       }}
                     >
-                      <Typography 
-                        variant="body2" 
-                        color="text.secondary"
-                        sx={{ fontSize: '0.875rem' }}
-                      >
-                        {report.original_file_name ? report.original_file_name : report.file_name}
-                      </Typography>
                       <Button
                         startIcon={<DownloadIcon sx={{ fontSize: '1rem' }} />}
                         sx={{ 
                           color: '#C9AA74',
                           fontSize: '0.875rem',
+                          fontWeight: 600,
                           '&:hover': { 
                             color: '#AF9871',
                             bgcolor: 'transparent'
@@ -213,7 +221,23 @@ const BudgetAnalysis = () => {
                         onClick={() => handleDownload(report)}
                         disabled={downloading === report.id}
                       >
-                        {downloading === report.id ? 'Preparing...' : 'Download Report'}
+                        {downloading === report.id ? 'Preparing...' : 'DOWNLOAD REPORT'}
+                      </Button>
+                      <Button
+                        startIcon={<ShareIcon sx={{ fontSize: '1rem' }} />}
+                        sx={{ 
+                          color: '#1B2441',
+                          fontSize: '0.875rem',
+                          fontWeight: 600,
+                          '&:hover': { 
+                            color: '#C9AA74',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                        onClick={() => handleShare(report)}
+                        title="Share this budget analysis (Login required to access)"
+                      >
+                        SHARE
                       </Button>
                     </Box>
                   </Box>
@@ -293,6 +317,22 @@ const BudgetAnalysis = () => {
           </Paper>
         </Container>
       </Box>
+
+      {/* Share Success Snackbar */}
+      <Snackbar
+        open={shareSnackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={shareSnackbar.message}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{
+          '& .MuiSnackbarContent-root': {
+            bgcolor: '#1B2441',
+            color: 'white',
+            fontWeight: 500
+          }
+        }}
+      />
     </Box>
   );
 };

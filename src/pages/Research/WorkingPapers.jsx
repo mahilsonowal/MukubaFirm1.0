@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, Button, Chip, CircularProgress, Alert } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Button, Chip, CircularProgress, Alert, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DescriptionIcon from '@mui/icons-material/Description';
 import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ShareIcon from '@mui/icons-material/Share';
 import { supabase } from '../../utils/supabaseClient';
+import { shareDocument } from '../../utils/shareUtils';
+import { useAuth } from '../../context/AuthContext';
 
 const PaperCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -27,6 +32,9 @@ const WorkingPapers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [downloading, setDownloading] = useState(null);
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
+  const [shareSnackbar, setShareSnackbar] = useState({ open: false, message: '' });
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchPapers = async () => {
@@ -66,6 +74,14 @@ const WorkingPapers = () => {
     } finally {
       setDownloading(null);
     }
+  };
+
+  const handleShare = async (paper) => {
+    await shareDocument(paper, 'working-papers', setShareSnackbar);
+  };
+
+  const handleCloseSnackbar = () => {
+    setShareSnackbar({ open: false, message: '' });
   };
 
   return (
@@ -196,26 +212,21 @@ const WorkingPapers = () => {
                     <Box 
                       sx={{ 
                         display: 'flex', 
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         alignItems: 'center',
+                        gap: 2,
                         pt: 2,
                         mt: 'auto',
                         borderTop: 1,
                         borderColor: 'divider'
                       }}
                     >
-                      <Typography 
-                        variant="body2" 
-                        color="text.secondary"
-                        sx={{ fontSize: '0.875rem' }}
-                      >
-                        {paper.original_file_name ? paper.original_file_name : paper.file_name}
-                      </Typography>
                       <Button
                         startIcon={<DownloadIcon sx={{ fontSize: '1rem' }} />}
                         sx={{ 
                           color: '#C9AA74',
                           fontSize: '0.875rem',
+                          fontWeight: 600,
                           '&:hover': { 
                             color: '#AF9871',
                             bgcolor: 'transparent'
@@ -224,7 +235,23 @@ const WorkingPapers = () => {
                         onClick={() => handleDownload(paper)}
                         disabled={downloading === paper.id}
                       >
-                        {downloading === paper.id ? 'Preparing...' : 'Download Paper'}
+                        {downloading === paper.id ? 'Preparing...' : 'DOWNLOAD PAPER'}
+                      </Button>
+                      <Button
+                        startIcon={<ShareIcon sx={{ fontSize: '1rem' }} />}
+                        sx={{ 
+                          color: '#1B2441',
+                          fontSize: '0.875rem',
+                          fontWeight: 600,
+                          '&:hover': { 
+                            color: '#C9AA74',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                        onClick={() => handleShare(paper)}
+                        title="Share this working paper (Login required to access)"
+                      >
+                        SHARE
                       </Button>
                     </Box>
                   </Box>
@@ -304,6 +331,22 @@ const WorkingPapers = () => {
           </Paper>
         </Container>
       </Box>
+
+      {/* Share Success Snackbar */}
+      <Snackbar
+        open={shareSnackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={shareSnackbar.message}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{
+          '& .MuiSnackbarContent-root': {
+            bgcolor: '#1B2441',
+            color: 'white',
+            fontWeight: 500
+          }
+        }}
+      />
     </Box>
   );
 };

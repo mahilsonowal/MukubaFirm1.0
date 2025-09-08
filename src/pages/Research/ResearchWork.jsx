@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, Button, Chip, CircularProgress, Alert } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Button, Chip, CircularProgress, Alert, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DescriptionIcon from '@mui/icons-material/Description';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ShareIcon from '@mui/icons-material/Share';
 import { supabase } from '../../utils/supabaseClient';
+import { shareDocument } from '../../utils/shareUtils';
+import { useAuth } from '../../context/AuthContext';
 
 const ResearchCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -25,6 +30,9 @@ const ResearchWork = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [downloading, setDownloading] = useState(null);
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
+  const [shareSnackbar, setShareSnackbar] = useState({ open: false, message: '' });
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchPapers = async () => {
@@ -64,6 +72,26 @@ const ResearchWork = () => {
     } finally {
       setDownloading(null);
     }
+  };
+
+  const toggleDescription = (paperId) => {
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [paperId]: !prev[paperId]
+    }));
+  };
+
+  const handleShare = async (paper) => {
+    await shareDocument(paper, 'research-work', setShareSnackbar);
+  };
+
+  const handleCloseSnackbar = () => {
+    setShareSnackbar({ open: false, message: '' });
+  };
+
+  const truncateText = (text, maxLength = 150) => {
+    if (!text) return '';
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
 
   return (
@@ -165,16 +193,44 @@ const ResearchWork = () => {
                       </Box>
                     </Box>
 
-                    <Typography 
-                      sx={{ 
-                        color: 'text.secondary',
-                        mb: 2,
-                        fontSize: '0.875rem',
-                        lineHeight: 1.5
-                      }}
-                    >
-                      {paper.description}
-                    </Typography>
+                    {/* Improved Description Display */}
+                    <Box sx={{ mb: 2 }}>
+                      <Typography 
+                        sx={{ 
+                          color: 'text.secondary',
+                          fontSize: '0.875rem',
+                          lineHeight: 1.5,
+                          mb: paper.description && paper.description.length > 150 ? 1 : 0
+                        }}
+                      >
+                        {expandedDescriptions[paper.id] 
+                          ? paper.description 
+                          : truncateText(paper.description, 150)
+                        }
+                      </Typography>
+                      
+                      {paper.description && paper.description.length > 150 && (
+                        <Button
+                          size="small"
+                          onClick={() => toggleDescription(paper.id)}
+                          sx={{
+                            color: '#C9AA74',
+                            fontSize: '0.75rem',
+                            textTransform: 'none',
+                            fontWeight: 500,
+                            p: 0,
+                            minWidth: 'auto',
+                            '&:hover': {
+                              backgroundColor: 'transparent',
+                              color: '#AF9871'
+                            }
+                          }}
+                          endIcon={expandedDescriptions[paper.id] ? <ExpandLessIcon sx={{ fontSize: '1rem' }} /> : <ExpandMoreIcon sx={{ fontSize: '1rem' }} />}
+                        >
+                          {expandedDescriptions[paper.id] ? 'Show Less' : 'Read More'}
+                        </Button>
+                      )}
+                    </Box>
 
                     <Box sx={{ mb: 2 }}>
                       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
@@ -196,26 +252,21 @@ const ResearchWork = () => {
                     <Box 
                       sx={{ 
                         display: 'flex', 
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         alignItems: 'center',
+                        gap: 2,
                         pt: 2,
                         mt: 'auto',
                         borderTop: 1,
                         borderColor: 'divider'
                       }}
                     >
-                      <Typography 
-                        variant="body2" 
-                        color="text.secondary"
-                        sx={{ fontSize: '0.875rem' }}
-                      >
-                        {paper.original_file_name ? paper.original_file_name : paper.file_name}
-                      </Typography>
                       <Button
                         startIcon={<DownloadIcon sx={{ fontSize: '1rem' }} />}
                         sx={{ 
                           color: '#C9AA74',
                           fontSize: '0.875rem',
+                          fontWeight: 600,
                           '&:hover': { 
                             color: '#AF9871',
                             bgcolor: 'transparent'
@@ -224,7 +275,23 @@ const ResearchWork = () => {
                         onClick={() => handleDownload(paper)}
                         disabled={downloading === paper.id}
                       >
-                        {downloading === paper.id ? 'Preparing...' : 'Download Paper'}
+                        {downloading === paper.id ? 'Preparing...' : 'DOWNLOAD PAPER'}
+                      </Button>
+                      <Button
+                        startIcon={<ShareIcon sx={{ fontSize: '1rem' }} />}
+                        sx={{ 
+                          color: '#1B2441',
+                          fontSize: '0.875rem',
+                          fontWeight: 600,
+                          '&:hover': { 
+                            color: '#C9AA74',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                        onClick={() => handleShare(paper)}
+                        title="Share this research paper (Login required to access)"
+                      >
+                        SHARE
                       </Button>
                     </Box>
                   </Box>
@@ -304,6 +371,22 @@ const ResearchWork = () => {
           </Paper>
         </Container>
       </Box>
+
+      {/* Share Success Snackbar */}
+      <Snackbar
+        open={shareSnackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={shareSnackbar.message}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{
+          '& .MuiSnackbarContent-root': {
+            bgcolor: '#1B2441',
+            color: 'white',
+            fontWeight: 500
+          }
+        }}
+      />
     </Box>
   );
 };

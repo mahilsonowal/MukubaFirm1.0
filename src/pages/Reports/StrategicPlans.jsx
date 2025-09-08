@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, Button, CircularProgress, Alert } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Button, CircularProgress, Alert, Snackbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DownloadIcon from '@mui/icons-material/Download';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import DescriptionIcon from '@mui/icons-material/Description';
+import ShareIcon from '@mui/icons-material/Share';
 import { supabase } from '../../utils/supabaseClient';
+import { shareDocument } from '../../utils/shareUtils';
+import { useAuth } from '../../context/AuthContext';
 
 const ReportCard = styled(Paper)(({ theme }) => ({
   height: '100%',
@@ -24,6 +27,8 @@ const StrategicPlans = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [downloading, setDownloading] = useState(null);
+  const [shareSnackbar, setShareSnackbar] = useState({ open: false, message: '' });
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -44,6 +49,14 @@ const StrategicPlans = () => {
     };
     fetchPlans();
   }, []);
+
+  const handleShare = async (plan) => {
+    await shareDocument(plan, 'strategic-plans', setShareSnackbar);
+  };
+
+  const handleCloseSnackbar = () => {
+    setShareSnackbar({ open: false, message: '' });
+  };
 
   const handleDownload = async (plan) => {
     setDownloading(plan.id);
@@ -183,8 +196,9 @@ const StrategicPlans = () => {
                     <Box 
                       sx={{ 
                         display: 'flex', 
-                        justifyContent: 'space-between',
+                        justifyContent: 'center',
                         alignItems: 'center',
+                        gap: 2,
                         pt: { xs: 1.5, sm: 2 },
                         mt: 'auto',
                         borderTop: 1,
@@ -196,6 +210,7 @@ const StrategicPlans = () => {
                         sx={{ 
                           color: '#C9AA74',
                           fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                          fontWeight: 600,
                           '&:hover': { 
                             color: '#AF9871',
                             bgcolor: 'transparent'
@@ -204,11 +219,24 @@ const StrategicPlans = () => {
                         onClick={() => handleDownload(plan)}
                         disabled={downloading === plan.id}
                       >
-                        {downloading === plan.id ? 'Preparing...' : 'Download'}
+                        {downloading === plan.id ? 'Preparing...' : 'DOWNLOAD PLAN'}
                       </Button>
-                      <Typography variant="body2" color="text.secondary">
-                        {plan.access === 'paid' ? 'Paid' : 'Free'}
-                      </Typography>
+                      <Button
+                        startIcon={<ShareIcon sx={{ fontSize: { xs: 16, sm: 20 } }} />}
+                        sx={{ 
+                          color: '#1B2441',
+                          fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                          fontWeight: 600,
+                          '&:hover': { 
+                            color: '#C9AA74',
+                            bgcolor: 'transparent'
+                          }
+                        }}
+                        onClick={() => handleShare(plan)}
+                        title="Share this strategic plan (Login required to access)"
+                      >
+                        SHARE
+                      </Button>
                     </Box>
                   </Box>
                 </ReportCard>
@@ -287,6 +315,22 @@ const StrategicPlans = () => {
           </Paper>
         </Container>
       </Box>
+
+      {/* Share Success Snackbar */}
+      <Snackbar
+        open={shareSnackbar.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        message={shareSnackbar.message}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{
+          '& .MuiSnackbarContent-root': {
+            bgcolor: '#1B2441',
+            color: 'white',
+            fontWeight: 500
+          }
+        }}
+      />
     </Box>
   );
 };
