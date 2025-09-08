@@ -65,16 +65,16 @@ const Footer = () => {
               Your trusted partner in economic research and consulting excellence, providing actionable insights and strategic guidance.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
-              <MuiLink href="#" sx={{ color: 'rgba(255, 255, 255, 0.7)', '&:hover': { color: '#AF9871' } }}>
+              <MuiLink href="https://www.facebook.com/share/16v9hTFpc2/?mibextid=wwXIfr" sx={{ color: 'rgba(255, 255, 255, 0.7)', '&:hover': { color: '#AF9871' } }}>
                 <FaFacebook size={20} />
               </MuiLink>
               <MuiLink href="#" sx={{ color: 'rgba(255, 255, 255, 0.7)', '&:hover': { color: '#AF9871' } }}>
                 <FaTwitter size={20} />
               </MuiLink>
-              <MuiLink href="#" sx={{ color: 'rgba(255, 255, 255, 0.7)', '&:hover': { color: '#AF9871' } }}>
+              <MuiLink href="http://linkedin.com/in/mukuba-economic-research-and-consulting-firm-045bb2376" sx={{ color: 'rgba(255, 255, 255, 0.7)', '&:hover': { color: '#AF9871' } }}>
                 <FaLinkedin size={20} />
               </MuiLink>
-              <MuiLink href="#" sx={{ color: 'rgba(255, 255, 255, 0.7)', '&:hover': { color: '#AF9871' } }}>
+              <MuiLink href="https://www.instagram.com/mukubaecon?igsh=NTYxeDJieTE3MWo0" sx={{ color: 'rgba(255, 255, 255, 0.7)', '&:hover': { color: '#AF9871' } }}>
                 <FaInstagram size={20} />
               </MuiLink>
             </Box>
