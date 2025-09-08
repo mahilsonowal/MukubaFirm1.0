@@ -65,7 +65,14 @@ const AdminReportUpload = () => {
     try {
       // 1. Upload PDF to Supabase Storage (bucket: 'reports')
       const fileExt = form.file.name.split('.').pop();
-      const fileName = `${form.title.replace(/\s+/g, '_')}_${Date.now()}.${fileExt}`;
+      // Keep the original title for display, but sanitize for filename
+      const sanitizedTitle = form.title
+        .replace(/['"]/g, '') // Remove apostrophes and quotes
+        .replace(/[:;]/g, '') // Remove colons and semicolons
+        .replace(/[<>|*?]/g, '') // Remove other problematic characters
+        .replace(/\s+/g, '_') // Replace spaces with underscores
+        .replace(/[^\w\-_.]/g, ''); // Keep only safe characters
+      const fileName = `${sanitizedTitle}_${Date.now()}.${fileExt}`;
       const originalFileName = form.file.name;
       const selectedType = reportTypes.find(t => t.value === form.reportType);
       const bucket = selectedType.value;
